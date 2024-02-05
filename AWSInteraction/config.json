@@ -1,0 +1,16 @@
+{
+	"insurance": {
+		"LANGCHAIN_TRACING_V2": "true",
+		"LANGCHAIN_ENDPOINT": "https://api.smith.langchain.com",
+		"LANGCHAIN_PROJECT": "insurance",
+		"AZURE_FORM_RECOGNIZER_ENPOINT": "https://assicurativikidanalysis.cognitiveservices.azure.com/",
+		"OPENAI_API_BASE": "https://insurancekidapplicativo.openai.azure.com/",
+		"OPENAI_API_VERSION": "2023-08-01-preview",
+		"TT": "23-09-15-preview",
+		"OPENAI_GPT35_DEP_NAME": "insurancegpt35",
+		"OPENAI_GPT35_16K_DEP_NAME": "insurancegpt3516k",
+		"OPENAI_GPT4_DEP_NAME": "insurancegpt4",
+		"OPENAI_GPT4_TURBO_DEP_NAME": "insurancegpt4turbo",
+		"OPENAI_EMBEDDING_DEP_NAME": "insuranceembedding",
+	}
+}

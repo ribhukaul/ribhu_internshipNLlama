@@ -1,0 +1,148 @@
+from ..models import Models
+from .config.cost_config import cost_per_token
+from ..utils import get_document_text
+from extractors.general_extractors.config.cost_config import cost_per_token
+from .llm_functions import get_doc_language
+from extractors.azure.document_intelligence import get_tables_from_doc
+from .utils import select_desired_page, select_desired_table
+from extractors.general_extractors.config.json_config import (
+    renaming,
+)
+from .config.JsonClasses import JSONExtraction
+from .config.prompt_config import word_representation
+
+class Extractor:
+    """parent class for all extractors"""
+
+    def __init__(self, doc_path, predefined_language=False):
+        self.file_id = doc_path
+        self.doc_path = doc_path
+        self.text = get_document_text(doc_path)
+        if predefined_language:
+            self.language = predefined_language
+        else:
+            self.language = get_doc_language(self.text, self.file_id)
+
+        self.di_tables_pages = {}
+        self.extraction = {}
+    
+    
+    
+    def _extract_table(self, type, black_list_pages=[]):
+        """General table extractor, given a table type it first finds the page within
+        the document where the table is located, it then extracts all the tables from
+        that page and returns the one with the most occurrences of the words of the table
+        type.
+
+        Args:
+           type (str): type of table to extract, used to get configuration.
+           black_list_pages (int[], optional): Pages to ignore. Defaults to [].
+
+        Returns:
+            pandas.DataFrame: dataframe containing the table.
+        """
+        try:
+            # Select page with table
+            keywords = word_representation[self.language][type]
+            text = [
+                page if i not in black_list_pages else ""
+                for i, page in enumerate(self.text)
+            ]
+            page = select_desired_page(text, keywords)
+
+            # Get all the tables from the page
+            if (
+                self.di_tables_pages is not None
+                and page not in self.di_tables_pages.keys()
+            ):
+                page_num = int(page) + 1
+                tables = get_tables_from_doc(
+                    self.doc_path, specific_pages=page_num, language=self.language
+                )
+                self.di_tables_pages[page] = tables
+            else:
+                tables = self.di_tables_pages[page]
+
+            # Select the right table
+            table_nr = select_desired_table(tables, keywords)
+            return tables[int(table_nr)]
+        
+        except Exception as error:
+            print("extract table error" + repr(error))
+            return None
+            # @ELIA?
+            # exreturn = dict()
+            # for table in tables:
+            #     exreturn.update(table)
+
+    
+    def _process_costs(self):
+        """processes the cost of the calls given local config and prepares them for the output
+
+        Returns:
+            _type_: _description_
+        """
+        api_costs = Models.get_costs(self.file_id)
+        azure_costs = {"azure": {"pages":len(self.di_tables_pages), "cost": len(self.di_tables_pages) * cost_per_token["azure"]}}
+        api_costs.update(azure_costs)
+        
+        total_tokens = sum(entry.get("tokens", 0) for entry in api_costs.values())
+        total_cost = sum(entry.get("cost", 0) for entry in api_costs.values())
+
+        # Add the "total" element to the dictionary
+        api_costs["total"] = {"tokens": total_tokens, "cost": total_cost}
+        for entry in api_costs.values():
+            if "cost" in entry:
+                entry["cost"] = round(entry["cost"], 2)
+        return api_costs
+
+    def create_json(self, results, type="kid"):
+        """creates a json from the results
+
+        Args:
+            results (dict()): results to convert
+
+        Returns:
+            json: json of the results
+        """
+        #dict for filename and costs, replace is for json format
+        
+        #complete={renaming[key]:value for key,value in results.items() if key in renaming.keys()}
+        
+        #return complete
+        
+        extraction = JSONExtraction(doc_type=type, results=results, doc_path=self.doc_path)
+        
+        json_output = extraction.to_json()
+        
+        return json_output
+
+
+
+    def raccorda(self, dictionary, type, keep=False):#could tecnically go to utils
+        """renames fiels
+
+        Args:
+            dictionary (dict()): dict to rename
+            rename (dict()): dict containing the renaming
+            keep (bool, optional): if true, keeps the old field. Defaults to False.
+
+        Returns:
+            new_dict dict(): dict renamed
+        """
+        # uncomment for extra fields
+        # dictionary=self.create_json(dictionary)
+        new_dict = {
+            renaming[type][key]: value
+            for key, value in dictionary.items()
+            if key in renaming[type].keys()
+        }
+        if keep:
+            new_dict.update(
+                {
+                    key: value
+                    for key, value in dictionary.items()
+                    if key not in renaming[type].keys()
+                }
+            )
+        return new_dict
