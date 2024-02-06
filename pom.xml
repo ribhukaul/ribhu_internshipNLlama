@@ -4,7 +4,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
     <groupId>it.prometeia</groupId>
-    <artifactId>dde_llm_engine</artifactId>
+    <artifactId>dde-llm-engine</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <build>
         <plugins>
