@@ -1,5 +1,5 @@
 
-FROM public.ecr.aws/lambda/python:3.11.2024.01.25.10-arm64
+FROM public.ecr.aws/lambda/python:3.11.2024.01.25.10-amd64
 
 COPY requirements.txt ${LAMBDA_TASK_ROOT}
 
