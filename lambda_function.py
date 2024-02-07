@@ -24,7 +24,7 @@ def lambda_handler(event, context):
 
     try:
         extraction_handler = ExtractionHandler(requestContext)
-        extraction_handler.run(parallel=True, max_workers=8)
+        extraction_handler.run()#parallel=True, max_workers=8)
         extracted_data = extraction_handler.extractions
         extracted_data_json = json.dumps(extracted_data)
     ## MOCKUP OUTPUT
@@ -47,5 +47,6 @@ if __name__ == '__main__':
     os.environ['ENV'] = 'local'
     event = {"body": "{\r\n  \"files\": [\"basepfts/workspaces/JACOPO/202212_CNP Cross Life.pdf\"], \"TENANT\": \"insurance\", \"extractor_type\": \"kid\"\r\n}"}
     x = lambda_handler(event, None)
+    print(x)
 
     
