@@ -1,5 +1,5 @@
 import json
-
+import asyncio
 from RequestContext import RequestContext
 from ExtractionHandler import ExtractionHandler
 from AWSInteraction.EnvVarSetter import EnvVarSetter
@@ -24,7 +24,7 @@ def lambda_handler(event, context):
 
     try:
         extraction_handler = ExtractionHandler(requestContext)
-        extraction_handler.run()#parallel=True, max_workers=8)
+        asyncio.run(extraction_handler.runallfiles())#parallel=True, max_workers=8)
         extracted_data = extraction_handler.extractions
         extracted_data_json = json.dumps(extracted_data)
     ## MOCKUP OUTPUT

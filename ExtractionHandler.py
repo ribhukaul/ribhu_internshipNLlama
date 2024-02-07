@@ -35,7 +35,7 @@ class ExtractionHandler:
         self.local_saved_files = {} # filekey: local_path
 
 
-    def run(self, parallel=False, max_workers=7):
+    async def runallfiles(self, parallel=True):
 
         files_list = self.requestContext.payload['files']
 
@@ -46,34 +46,33 @@ class ExtractionHandler:
                 file_path = file['body']
                 self.local_saved_files[file_key] = file_path
                 print(file_path)
+                #@ELIA TO ASK
                 if not parallel:
                     # Run extraction
                     self.extractions[file_key] = self.run_async_function(file_path, self.extactor)
-                    
+
             else:
                 self.extractions[file_path]= {'error': 'file not found'}
         if parallel:
             # async processing of the files
-            partial_run_async_func = partial(self.run_async_function, function=self.extactor)
+            #partial_run_async_func = partial(self.run_async_function, function=self.extactor)
+            task = []
+            for _, file_local in self.local_saved_files.items():
+                task.append(asyncio.create_task(self.run_async_function(file_local, self.extactor)))
+            
+            await asyncio.wait(task, return_when=asyncio.ALL_COMPLETED)
 
-            with ProcessPoolExecutor(max_workers=max_workers) as executor:
-                results = executor.map(partial_run_async_func, self.local_saved_files.values())
-
-            for res in results:
-                import json
-                # create inverse of the local_saved_files
-                inverse_local_saved_files = {v: k for k, v in self.local_saved_files.items()}
-                res_dict = json.loads(res)
-                file_path = res_dict["file_path"]
-                self.extractions[inverse_local_saved_files[file_path]] = res
+            for i, it in enumerate(self.local_saved_files.items()):
+                file_key, _ = it
+                self.extractions[file_key] = task[i].result()
         
         self.delete_local_files()
         
         return self.extractions
                 
-    def run_async_function(self, file, function, *args):
+    async def run_async_function(self, file, function, *args):
         doc_extractor = function(file, *args)
-        return asyncio.run(doc_extractor.process())
+        return await doc_extractor.process()
     
     def delete_local_files(self):
         """
