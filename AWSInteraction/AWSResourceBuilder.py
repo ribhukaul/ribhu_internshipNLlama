@@ -5,12 +5,13 @@ import os
 class AWSResourceBuilder():
     
     def __init__(self) -> None:
-        self.profile = os.environ['AWS_PROFILE']
-        self.region = os.environ['REGION']
         self.session = self._create_session()
+        
 
     def _create_session(self):
         if os.getenv('ENV') == 'local':
+            self.profile = os.environ['AWS_PROFILE']
+            self.region = os.environ['REGION']
             return boto3.Session(profile_name=self.profile, region_name=self.region)
         else:
             return boto3.Session()

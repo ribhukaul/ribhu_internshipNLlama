@@ -15,6 +15,7 @@ separate*
 *.pdf
 
 tmp/*
+AWSInteraction/config.json
 
 # C extensions
 *.so
