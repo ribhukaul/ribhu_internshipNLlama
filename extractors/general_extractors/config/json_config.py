@@ -1,4 +1,7 @@
 
+from numpy import isin
+
+
 NA="N/A"
 
 
@@ -143,7 +146,7 @@ renaming = {
     "target_market": "Target Market",
     "api_costs": "Costi API",
 },
-    "certificates": {
+    "leonteq": {
     "data_realizzazione_cedola": "Data di Realizzazione della Cedola",
     "data_pagamento": "Data Pagamento",
     "data_osservazione_cedola": "Data di Osservazione della Cedola",
@@ -198,6 +201,51 @@ renaming = {
     "liv_attiv_cedola": "Livello di Attivazione Cedola",
     "liv_attiv_autocall": "Livello di Attivazione Autocall",
 },
+    "bnp": {
+        "isin":"Codice Isin",
+        "description":"Descrizione",
+        "currency":"Valuta del prodotto",
+        "issuer_desc":"Emittente",
+        "strike_date":"Data di Strike",
+        "issue_date":"Data di Emissione",
+        "expiry_date":"Data di Liquidazione",
+        "final_valuation_date":"Data di Valutazione dell'Importo di Liquidazione",
+        "leva_cedolare":"Leva Cedolare",
+        "nominal":"Importo Nozionale",
+        "market":"quotazione",
+        "unconditional_protection":"Protezione",
+        "protection":"Protezione < 100%",
+        "barrier":"Barriera",
+        "barrier_type":"Tipo barriera",
+        "callable":"Liquidazione Anticipata Facoltativa",
+        "putable":"Putability",
+        "unconditional_coupon_min":"Premio/i",
+        "conditional_coupon_min":"Premio/i Condizionato/i",
+        "memory":"Effetto memoria",
+        "autocall":"Scadenza Anticipata Automatica",
+        "autocall barrier":"Barriera per la scadenza anticipata",
+        "conditional_coupon_barrier":"Barriera/e per il Versamento del Premio/i Condizionato/i",
+        "cap":"Livello Cap",
+        "airbag":"airbag",
+        "issue_price_perc":"Prezzo di Emissione",
+        "instrument_isin":"ISIN",
+        "instrument_bloombergcode":"Codice Bloomberg",
+        "instrument_description":"Sottostante",
+        "observation_coupon_date":"Data/e di Valutazione del/i Premio/i Condizionato/i",
+        "payment_coupon_date":"Data/e di Pagamento del/i Premio/i",
+        "barrier_coupon":"Barriera/e per il Versamento del Premio/i Condizionato/i",
+        "unconditional_coupon":"Premio/i",
+        "conditional_coupon":"Premio/i Condizionato/i",
+        "payment_callable_date":"Data di Liquidazione Anticipata Facoltativa",
+        "observation_autocall_date":"Data/e di Valutazione dell’Importo di Liquidazione (rimborso) Anticipato",
+        "barrier_autocall":"Barriera/e per la Scadenza Anticipata",
+        "payment_autocall_date":"Data di Scadenza Anticipata",
+        "value_autocall":"Premio/I di Uscita",
+        "periodo_detenzione_raccomandato":"Periodo di detenzione raccomandato",
+        "indicatore_sintetico_rischio":"Indicatore sintetico di rischio",
+        
+        
+    },
  "transform" :{
     "costi_totali_min": "incidenza_costo_eur_rhp_min",
     "costi_totali_max": "incidenza_costo_eur_rhp_max",
@@ -622,7 +670,7 @@ model_of = {
     "scenario_morte_1": "€",
     "scenario_morte_rhp": "€",
     "sfavorevole_return": "%",
-    "sfavorevole_return_rhp": ",%",
+    "sfavorevole_return_rhp": "%",
     "stress_return": "%",
     "stress_return_rhp": "%",
     "incidenza_costo_1": "%",
@@ -750,24 +798,12 @@ decimals_of= {
 
 
 
-PERCENT_RANGE={
-        "min": 1,
-        "max": 100
-        }
-ISIN_RANGE={
-        "min": 12,
-        "max": 12
-        }
-DATE_RANGE={
-        "min": 10,
-        "max": 10
-        }
+PERCENT_RANGE=[]
+ISIN_RANGE=[]
+DATE_RANGE=[]
 
-SRI_RANGE={
-        "min": 1,
-        "max": 7
-        }
-        
+SRI_RANGE=[]
+NO_RANGE=[]     
         
 range_of= {
     "kid":{
@@ -780,8 +816,8 @@ range_of= {
     "indicatore_sintetico_rischio": SRI_RANGE,
     "moderato_return":  PERCENT_RANGE,
     "moderato_return_rhp":  PERCENT_RANGE,
-    "scenario_morte_1":  NA,
-    "scenario_morte_rhp":  NA,
+    "scenario_morte_1":  NO_RANGE,
+    "scenario_morte_rhp":  NO_RANGE,
     "sfavorevole_return":  PERCENT_RANGE,
     "sfavorevole_return_rhp":  PERCENT_RANGE,
     "stress_return":  PERCENT_RANGE,
@@ -793,7 +829,7 @@ range_of= {
     "commissione_gestione": PERCENT_RANGE,
     "commissione_transazione": PERCENT_RANGE,
     "commissione_performance": PERCENT_RANGE,
-    "target_market": NA,
+    "target_market": NO_RANGE,
     },
     "gkid":{
         
@@ -806,8 +842,8 @@ range_of= {
     "indicatore_sintetico_rischio_max": PERCENT_RANGE,
     "moderato_return": PERCENT_RANGE,
     "moderato_return_rhp": PERCENT_RANGE,
-    "scenario_morte_1": NA,
-    "scenario_morte_rhp": NA,
+    "scenario_morte_1": NO_RANGE,
+    "scenario_morte_rhp": NO_RANGE,
     "sfavorevole_return": PERCENT_RANGE,
     "sfavorevole_return_rhp": PERCENT_RANGE,
     "stress_return": PERCENT_RANGE,
@@ -834,7 +870,7 @@ range_of= {
     "commissione_transazione_gkid_max": PERCENT_RANGE,
     "commissione_performance_gkid_min": PERCENT_RANGE,
     "commissione_performance_gkid_max": PERCENT_RANGE,
-    "target_market": NA,
+    "target_market": NO_RANGE,
 },
 }
 

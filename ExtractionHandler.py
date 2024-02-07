@@ -78,25 +78,18 @@ class ExtractionHandler:
         deleter after 30 minutes from the download or if they have been already
         processed in the current run.
         """
-        current_time = time.time()
+        # current_time = time.time()
 
-        # list all the files in the directory tmp
-        refernece_folder = "/tmp"
-        if os.getenv('ENV') == 'local':
-            refernece_folder = "tmp"
+        # # lis
+        # refernece_folder = "/tmp"
+        # if os.getenv('ENV') == 'local':
+        #     refernece_folder = "tmp"
 
-        list_all_files = os.listdir(refernece_folder)
+        # list_all_files = os.listdir(refernece_folder)
         
-        for file in list_all_files:
+        for file in self.local_saved_files:
             try:
-                modified_time = os.path.getmtime(file)
-                # file not modified in the last 30 minutes
-                time_condition = (current_time - modified_time) / 60* 30 > 1
-                # If file in the list of files that have been processed
-                current_run_condition = file in self.local_saved_files
-                if current_run_condition or time_condition:
-                    os.remove(file)
-                    continue
+                os.remove(file)
             except Exception as error:
                 print("Could not delete file{} for error:{}".format(file, repr(error)))
                 continue

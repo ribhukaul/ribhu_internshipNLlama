@@ -21,13 +21,21 @@ class Field:
         self.value = results.get(key, "ERROR")
         self.metric = model_of[doc_type].get(key, "N/A")
         self.data_type = type_of[doc_type].get(key, "N/A")
-        self.range = range_of[doc_type].get(key, "N/A")
+        self.range = range_of[doc_type].get(key)
         self.coord = {}  # Placeholder for future implementation
         self.decimals = decimals_of[doc_type].get(key, "N/A")
         self.allownull = allow_null[doc_type].get(key, False)
-        self.location = {}  # Placeholder for future implementation
 
+    def check_validity(self):
+        if self.name in ["SMOR RHP (€)", "SMOR 1Y (€)"]:
+            self.value=self.value.replace(".", "")
+        if self.data_type=="Float":
+            self.value= self.value.replace(",",".")
+        if self.data_type == "Date":
+            self.value = re.sub(r"(\d{2})/(\d{2})/(\d{4})", r"\3-\2-\1", self.value)
+    
     def to_dict(self):
+        self.check_validity()
         return {
             "name": self.name,
             "value": self.value,
@@ -37,7 +45,6 @@ class Field:
             "coord": self.coord,
             "decimals": self.decimals,
             "allownull": self.allownull,
-            "location": self.location,
         }
 
 
