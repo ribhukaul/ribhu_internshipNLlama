@@ -14,7 +14,7 @@ at AWSInteraction\config.json:
     https://docs.aws.amazon.com/cli/latest/userguide/sso-configure-profile-token.html#sso-configure-profile-token-auto-sso)
     - "ENV":"local"
 """
-
+# TODO: CODE TO ELIMINATE OLDER FILE FROM /TMP
 def lambda_handler(event, context):
 
     requestContext = RequestContext(event)

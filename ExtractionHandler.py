@@ -32,7 +32,7 @@ class ExtractionHandler:
         self.extractor_type = requestContext.payload['extractor_type']
         self.extactor = self.custom_extractors[self.tenant][self.extractor_type]
         self.extractions = {}
-        self.local_saved_files = {}
+        self.local_saved_files = {} # filekey: local_path
 
 
     def run(self, parallel=False, max_workers=7):
@@ -44,11 +44,12 @@ class ExtractionHandler:
             file = s3handler.route(download=True)
             if file['statusCode'] == 200:
                 file_path = file['body']
-                self.local_saved_files[file_path] = file_path
+                self.local_saved_files[file_key] = file_path
                 print(file_path)
                 if not parallel:
                     # Run extraction
-                    self.extractions[file_path] = self.run_async_function(file_path, self.extactor)
+                    self.extractions[file_key] = self.run_async_function(file_path, self.extactor)
+                    
             else:
                 self.extractions[file_path]= {'error': 'file not found'}
         if parallel:
@@ -57,13 +58,15 @@ class ExtractionHandler:
 
             with ProcessPoolExecutor(max_workers=max_workers) as executor:
                 results = executor.map(partial_run_async_func, self.local_saved_files.values())
+
+            for res in results:
+                import json
+                # create inverse of the local_saved_files
+                inverse_local_saved_files = {v: k for k, v in self.local_saved_files.items()}
+                res_dict = json.loads(res)
+                file_path = res_dict["file_path"]
+                self.extractions[inverse_local_saved_files[file_path]] = res
         
-
-            # NEED TO CHANGE THE OUTPUT
-            # # # # # # to review
-            # # # # # for file, result in zip(self.local_saved_files.values(), results):
-            # # # # #     self.extractions[file]= result
-
         self.delete_local_files()
         
         return self.extractions
@@ -87,7 +90,7 @@ class ExtractionHandler:
 
         # list_all_files = os.listdir(refernece_folder)
         
-        for file in self.local_saved_files:
+        for file in self.local_saved_files.values():
             try:
                 os.remove(file)
             except Exception as error:
