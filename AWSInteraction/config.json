@@ -11,6 +11,7 @@
 		"OPENAI_GPT35_16K_DEP_NAME": "insurancegpt3516k",
 		"OPENAI_GPT4_DEP_NAME": "insurancegpt4",
 		"OPENAI_GPT4_TURBO_DEP_NAME": "insurancegpt4turbo",
-		"OPENAI_EMBEDDING_DEP_NAME": "insuranceembedding",
+		"OPENAI_EMBEDDING_DEP_NAME": "insuranceembedding"
+
 	}
 }
