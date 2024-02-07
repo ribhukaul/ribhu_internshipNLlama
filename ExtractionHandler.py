@@ -82,9 +82,11 @@ class ExtractionHandler:
 
         # list all the files in the directory tmp
         refernece_folder = "/tmp"
+        if os.getenv('ENV') == 'local':
+            refernece_folder = "tmp"
+
         list_all_files = os.listdir(refernece_folder)
         
-
         for file in list_all_files:
             try:
                 modified_time = os.path.getmtime(file)

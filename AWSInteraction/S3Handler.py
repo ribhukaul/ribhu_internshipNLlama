@@ -11,9 +11,9 @@ STATUS_CODE_KEY = 'statusCode'
 
 class S3ExtractionHandler:
 
-    download_folder = '/tmp'
 
     def __init__(self, requestContext, file_key, bucket=None) -> None:
+        self.__set_download_folder()
         self.requestContext = requestContext
         self.file_key = file_key
         if bucket is None:
@@ -23,6 +23,12 @@ class S3ExtractionHandler:
         builder = AWSResourceBuilder()
         self.s3 = builder.get_s3_client()
     
+    def __set_download_folder(self):
+        if os.getenv('ENV') == 'local':
+            self.download_folder = 'tmp'
+        else:
+            self.download_folder = '/tmp'
+    
     def route(self, download=False):
         
         if download:
@@ -31,7 +37,6 @@ class S3ExtractionHandler:
             download_response = self.download(self.file_key, download_path)
             return download_response
 
-        #if True:#requestContext.path == DWM_CONFIGURATIONS_BLOB_READ_PATH:
         return self.read()
         
     def read(self):
