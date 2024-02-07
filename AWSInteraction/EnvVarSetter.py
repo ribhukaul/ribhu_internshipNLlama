@@ -15,9 +15,6 @@ class EnvVarSetter():
         self.payload = payload
         self.tenant = payload['TENANT']
 
-        
-        self.region = 'mockupregion' #os.environ['REGION']
-
 
     def set_all_env_vars(self) -> None:
         """

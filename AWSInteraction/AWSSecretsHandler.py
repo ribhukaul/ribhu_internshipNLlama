@@ -5,9 +5,8 @@ from AWSInteraction.AWSResourceBuilder import AWSResourceBuilder
 class SecretsManagerExtractionHandler:
 
     def __init__(self) -> None:
-
-        # Establish Secret Manager client AWSResourceBuilder.get_secret_manager_client(requestContext.sessionContext)
-        self.sm = AWSResourceBuilder.get_secret_manager_client()
+        builder = AWSResourceBuilder()
+        self.sm = builder.get_secret_manager_client()
 
     
     def get_secret(self, secret_name):

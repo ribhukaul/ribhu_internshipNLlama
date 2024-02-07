@@ -20,7 +20,8 @@ class S3ExtractionHandler:
             self.bucket = os.getenv('S3_BUCKET')
         else:
             self.bucket = bucket
-        self.s3 = AWSResourceBuilder.get_s3_client()
+        builder = AWSResourceBuilder()
+        self.s3 = builder.get_s3_client()
     
     def route(self, download=False):
         
