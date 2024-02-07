@@ -15,7 +15,10 @@ def upload_df_as_excel(df):
     Returns:
         str: path of the uploaded file
     """
-    tmp_path = "extractors\\tmp"
+    if os.environ.get("ENV") == "local":
+        tmp_path = "tmp"
+    else:
+        tmp_path = "/tmp"
     # Modify empty cells with " " to avoid upload errors
     df = df.replace(to_replace="", value=" ")
 
