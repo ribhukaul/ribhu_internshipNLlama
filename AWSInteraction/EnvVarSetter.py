@@ -13,10 +13,6 @@ class EnvVarSetter():
     def __init__(self, payload) -> None:
         
         self.payload = payload
-        if "ENV" not in os.environ:
-            self.env = "dev"
-        else:
-            self.env = os.environ['ENV']
         self.tenant = payload['TENANT']
 
         
@@ -53,20 +49,18 @@ class EnvVarSetter():
         """
 
         sm_handler = SecretsManagerExtractionHandler()
-        sm_client = sm_handler.sm
 
         # Create secret name
-        secret_suffix = os.environ["ARN_SECRET_MANAGER_SUFFIX"]
-        secret_prefix = os.environ["ARN_SECRET_MANAGER_PREFIX"]
+        secret_suffix = os.environ["SECRET_MANAGER_SUFFIX"]
+        secret_prefix = os.environ["SECRET_MANAGER_PREFIX"]
         secret_name = f"{secret_prefix}{self.tenant}{secret_suffix}"
 
         # Get secret
-        secret = sm_client.get_secret_value(secret_name)
+        secret = sm_handler.get_secret_value(secret_name, as_dict=True)
 
         # set the API keys
         for key, value in secret.items():
             os.environ[key] = value
-
 
 
 

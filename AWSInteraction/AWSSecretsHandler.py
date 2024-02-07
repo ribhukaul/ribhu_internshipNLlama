@@ -1,10 +1,10 @@
+import json
 from AWSInteraction.AWSResourceBuilder import AWSResourceBuilder
-
 
 
 class SecretsManagerExtractionHandler:
 
-    def __init__(self, requestContext) -> None:
+    def __init__(self) -> None:
 
         # Establish Secret Manager client AWSResourceBuilder.get_secret_manager_client(requestContext.sessionContext)
         self.sm = AWSResourceBuilder.get_secret_manager_client()
@@ -33,16 +33,19 @@ class SecretsManagerExtractionHandler:
        
         return secret
     
-    def get_secret_value(self, secret_name):
+    def get_secret_value(self, secret_name, as_dict=False):
         """ Get the secret from AWS Secrets Manager.
 
         secret_name: The name of the secret to retrieve.
+        as_dict: If True, the secret is returned as a dictionary, otherwise as a string.
 
         Returns the secret string.
         """  
 
         secret = self.get_secret(secret_name)
         secret_value = secret['SecretString']
+        if as_dict:
+            secret_value = json.loads(secret_value)
 
         return secret_value
 
