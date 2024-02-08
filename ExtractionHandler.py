@@ -38,7 +38,7 @@ class ExtractionHandler:
     async def runallfiles(self, parallel=True):
 
         files_list = self.requestContext.payload['files']
-
+        print("working_files:", files_list)
         for file_key in files_list:
             s3handler = S3ExtractionHandler(self.requestContext, file_key)
             file = s3handler.route(download=True)
@@ -58,6 +58,7 @@ class ExtractionHandler:
             #partial_run_async_func = partial(self.run_async_function, function=self.extactor)
             task = []
             for _, file_local in self.local_saved_files.items():
+                print("file items:", self.local_saved_files.items())
                 task.append(asyncio.create_task(self.run_async_function(file_local, self.extactor)))
             
             await asyncio.wait(task, return_when=asyncio.ALL_COMPLETED)

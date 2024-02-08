@@ -16,7 +16,7 @@ at AWSInteraction\config.json:
 """
 # TODO: CODE TO ELIMINATE OLDER FILE FROM /TMP
 def lambda_handler(event, context):
-
+    print("RICEVUTO RICHIESTA: ", event)
     requestContext = RequestContext(event)
 
     env_setter = EnvVarSetter(requestContext.payload)
@@ -30,6 +30,7 @@ def lambda_handler(event, context):
     ## MOCKUP OUTPUT
     #     with open('mock_output.json', 'r') as f:
     #         extracted_data_json = f.read()
+
         return {
             'statusCode': 200,
             'extraction': extracted_data_json
@@ -41,12 +42,11 @@ def lambda_handler(event, context):
                 'extraction': json.dumps({'error': repr(error)})
             }
 
-
-if __name__ == '__main__':
-    import os
-    os.environ['ENV'] = 'local'
-    event = {"body": "{\r\n  \"files\": [\"basepfts/workspaces/JACOPO/202212_CNP Cross Life.pdf\"], \"TENANT\": \"insurance\", \"extractor_type\": \"kid\"\r\n}"}
-    x = lambda_handler(event, None)
-    print(x)
+#if __name__ == '__main__':
+#    import os
+#    os.environ['ENV'] = 'local'
+#    event = {"body": "{\r\n  \"files\": [\"basepfts/workspaces/JACOPO/202212_CNP Cross Life.pdf\"], \"TENANT\": \"insurance\", \"extractor_type\": \"kid\"\r\n}"}
+#    x = lambda_handler(event, None)
+#    print(x)
 
     
