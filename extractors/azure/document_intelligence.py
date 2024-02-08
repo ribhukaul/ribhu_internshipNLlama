@@ -3,6 +3,8 @@ import pandas as pd
 from azure.ai.documentintelligence import DocumentIntelligenceClient
 from azure.core.credentials import AzureKeyCredential
 
+from extractors.utils import format_pages_num
+
 # Will need authentication for prod app
 # https://medium.com/@tophamcherie/using-python-to-programmatically-authenticate-to-azure-use-resources-6997ff326fb6
 
@@ -37,6 +39,8 @@ def analyze_general_documents(doc_path, specific_pages=None, language="it", api_
     if query_list is not None:
         features_chosen=["queryFields"]
         
+    specific_pages=format_pages_num(specific_pages)
+        
     with open(doc_path, "rb") as pdf_file:
         # Analyze full document or specific pages
         poller = document_analysis_client.begin_analyze_document(
@@ -45,6 +49,7 @@ def analyze_general_documents(doc_path, specific_pages=None, language="it", api_
             locale=language_locale,
             features=features_chosen,
             query_fields=query_list,
+            pages=specific_pages
         )
         result = poller.result()
     return result

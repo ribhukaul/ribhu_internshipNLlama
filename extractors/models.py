@@ -1,6 +1,5 @@
 from .azure.openai import azure_openai_model
 import threading
-import random
 from langchain.chains.openai_functions.tagging import create_tagging_chain_pydantic
 import tiktoken
 from .general_extractors.config.cost_config import cost_per_token
@@ -55,7 +54,7 @@ class Models:
             return cls._models[group_id][model_name][temperature]
 
     @classmethod
-    def tag(cls, text, schema, file_id, model="gpt-3.5-turbo"):
+    def tag(cls, text, schema, file_id, model="gpt-4-turbo"):
         """Extract tags from text using a schema and a language model.
         It uses the function create_tagging_chain_pydantic from langchain.
 
@@ -97,8 +96,6 @@ class Models:
                 page_content = "".join(
                     getattr(page, "page_content", "") for page in pages
                 )
-            elif isinstance(pages, dict):
-                pass
         cls.calc_costs(
             file_id, model, inputs=[page_content, prompt], outputs=[response]
         )

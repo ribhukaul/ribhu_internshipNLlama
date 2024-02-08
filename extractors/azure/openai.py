@@ -2,7 +2,7 @@ from langchain_community.chat_models import AzureChatOpenAI
 import os
 
 
-def azure_openai_model(model="gpt-3.5-turbo", temperature=0, verbose=True):
+def azure_openai_model(model="gpt-4-turbo", temperature=0, verbose=True):
     """Create an AzureChatOpenAI object.
 
     Args:

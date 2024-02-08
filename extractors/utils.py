@@ -1,3 +1,4 @@
+import re
 from langchain_community.document_loaders import PyPDFLoader
 import tiktoken
 #import PyPDF2
@@ -131,7 +132,60 @@ def get_document_text(file_path):
         print("get document text error" + repr(error))
         raise error
 
+def is_in_text(pattern, text)->bool:
+    
+    pattern = re.compile(pattern, re.IGNORECASE)
+    ret = bool(
+        pattern.search(text)
+    )
+    return ret
+    
+def search_in_pattern_in_text(pattern, text, pattern_inside):
+    match= re.search(pattern, text, re.IGNORECASE)
+    if not match:
+        return
+    match= re.search(pattern_inside, match.group(0), re.IGNORECASE)
+    if not match:
+        return 
+    return match.group(0)
 
+def extract_between(text, start, end):
+    pattern = f"(\\n)?\s*{re.escape(start)}\s*(\\n)?\s*(\S.*?)\s*(?={re.escape(end)})"
+    matches = re.findall(pattern, text, re.IGNORECASE)
+    return matches[0][-1] if matches and matches[0] else None 
+        
+def format_pages_num(arr):
+    if not arr:
+        return None
+    if isinstance(arr, str):
+        return arr
+    if isinstance(arr, int):
+        return str(arr)
+    
+    
+    arr = sorted(set(arr))  # Sort the array and remove duplicates
+    ranges = []
+    start = arr[0]
+    end = arr[0]
+
+    for i in range(1, len(arr)):
+        if arr[i] - arr[i-1] == 1:
+            end = arr[i]
+        else:
+            if start == end:
+                ranges.append(str(start))
+            else:
+                ranges.append(f"{start}-{end}")
+            start = arr[i]
+            end = arr[i]
+
+    # Add the last range or number
+    if start == end:
+        ranges.append(str(start))
+    else:
+        ranges.append(f"{start}-{end}")
+
+    return ",".join(ranges)
 ###############
 # LEGACY CODE #
 ###############

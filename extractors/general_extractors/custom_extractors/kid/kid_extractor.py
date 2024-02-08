@@ -64,6 +64,7 @@ class KidExtractor(Extractor):
             if (
                 "periodo_detenzione_raccomandato" in extraction
                 and extraction["periodo_detenzione_raccomandato"] != "-"
+                and re.search(r'\d+',extraction["periodo_detenzione_raccomandato"])
             ):
                 
                 rhp_temp = extraction["periodo_detenzione_raccomandato"]

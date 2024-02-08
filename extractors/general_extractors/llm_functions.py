@@ -29,7 +29,7 @@ def get_doc_language(pages, file_id):
     return doc_language
 
 
-def llm_extraction(page, type, file_id, language="it", model="gpt-4", rhp=None):
+def llm_extraction(page, type, file_id, language="it", model="gpt-4-turbo", rhp=None):
     """extracts data from a document text
 
     Args:
@@ -80,7 +80,7 @@ async def general_table_inspection(
         schema = table_schemas[language][table_type]
 
         # First normal extraction, then tagging
-        tag_model = "gpt-4"
+        tag_model = "gpt-4-turbo"
         if add_text != "":
             table = f"considera questo quando analizzi la tabella=-> {add_text} TABELLA-> {table}"
 
@@ -116,7 +116,7 @@ async def complex_table_inspection(
         schema = table_schemas[language][type]
 
         # First normal extraction, then tagging
-        tag_model = "gpt-4"
+        tag_model = "gpt-4-turbo"
         if not direct_tag:
             table = llm_extraction(
                 table, type, file_id, language=language, model=tag_model, rhp=rhp
