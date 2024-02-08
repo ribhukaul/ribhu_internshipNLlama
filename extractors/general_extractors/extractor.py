@@ -1,3 +1,4 @@
+import pandas as pd
 from ..models import Models
 from .config.cost_config import cost_per_token
 from ..utils import get_document_text
@@ -5,6 +6,7 @@ from extractors.general_extractors.config.cost_config import cost_per_token
 from .llm_functions import get_doc_language
 from extractors.azure.document_intelligence import get_tables_from_doc
 from .utils import select_desired_page, select_desired_table
+from extractors.general_extractors.llm_functions import general_table_inspection, llm_extraction_and_tag
 from extractors.general_extractors.config.json_config import (
     renaming,
 )
@@ -95,6 +97,39 @@ class Extractor:
             if "cost" in entry:
                 entry["cost"] = round(entry["cost"], 2)
         return api_costs
+    
+    async def extract_from_multiple_tables(self, pages, tags):
+        """extracts from multiple tables
+
+        Args:
+            pages (int[]): pages to extract from
+
+        Returns:
+            dict(): dict containing the results
+        """
+        try:
+            
+            extraction = dict()
+            list_tables=list(self.di_tables_pages)
+            tables=[]
+            for page in pages:
+                tables+=self.di_tables_pages[list_tables[page]]
+            concatenated_table = pd.concat(tables, ignore_index=False)
+
+
+            for tag in tags:
+                extraction.update(dict(await general_table_inspection(
+                concatenated_table,
+                tag,
+                self.file_id,
+                language=self.language,
+                )))
+                
+        except Exception as error:
+            print("extract multiple tables error" + repr(error))
+            
+        return extraction   
+                
 
     def create_json(self, results, type="kid"):
         """creates a json from the results

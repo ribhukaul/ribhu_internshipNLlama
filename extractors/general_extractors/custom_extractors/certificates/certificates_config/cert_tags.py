@@ -56,7 +56,7 @@ class InformazioniBaseCertificati(BaseModel):
     descrizione: str = Field(NF, description="descrizione completa del certificato")
     emittente: str = Field(NF, description="ideatore del certificato")
 
-class SottostantiHeader(BaseModel):
+class TabellaSottostantiHeader(BaseModel):
     liv_fixing_iniziale: str = Field(NA, description="Livello di Fixing iniziale in percentuale")
     liv_att_cedola_perc: str = Field(NA, description="Coupon Trigger in percentuale")
     strike_level_perc: str = Field(NA, description="Strike Level in percentuale")
@@ -64,4 +64,54 @@ class SottostantiHeader(BaseModel):
     livello_cap: str = Field(NA, description="Livello Cap, in percentuale")
 
 class CedolaStr(BaseModel):
-    cedola: str = Field(NF, description="il testo, o N/A")
+    cedola: str = Field(NA, description="il testo")
+    
+    
+class InformazioniBaseBNP(BaseModel):
+    periodo_detenzione_raccomandato: str = Field("-", description="il periodo detenzione raccomandato")
+    indicatore_sintetico_rischio: str = Field(NF, description="l'indicatore sintetico di rischio")
+    
+
+
+
+class TabellaSottostanteBNP(BaseModel):
+    instrument_description: List[str] = Field([NF], description="Sottostante, allegato se si riferisce ad un allegato")
+    instrument_bloombergcode: List[str] = Field([NF], description="codice Bloomberg")
+    instrument_isin: List[str] = Field([NA], description="ISIN")
+    
+class TabellaFirstInfoBNP(BaseModel):
+    isin: str = Field(NF, description="codice ISIN")
+    issuer_desc: str = Field(NF, description="emittente")
+    
+    
+    
+class TabellaAllegatoPremioBNP(BaseModel):
+    observation_coupon_date:List[str] = Field([NF], description="Data/e di Valutazione del/i Premio/i Condizionato/i")
+    payment_coupon_date: List[str] = Field([NF], description="Data/e di Pagamento del/i Premio/i")
+    barrier_coupon: List[str] = Field([NF], description="Barriera/e per il Versamento del Premio/i Condizionato/i")
+    unconditional_coupon: List[str] = Field([NF], description="Premio/i")
+    conditional_coupon: List[str] = Field([NF], description="Premio/i Condizionato/i")
+    
+class TabellaAllegatoScadenzaBNP(BaseModel):
+    payment_callable_date: List[str] = Field([NF], description="Data di Liquidazione Anticipata Facoltativa")
+    observation_autocall_date: List[str] = Field([NF], description="Data/e di Valutazione dell’Importo di Liquidazione (rimborso) Anticipato")
+    barrier_autocall: List[str] = Field([NF], description="Barriera/e per la Scadenza Anticipata")
+    payment_autocall_date: List[str] = Field([NF], description="Data di Scadenza Anticipata")
+    value_autocall: List[str] = Field([NF], description="Pemio/I di Uscita")
+    
+    
+class TabellaMainInfoBNP(BaseModel):
+    currency: str = Field(NF, description="Valuta del prezzo di emissione / Valuta del prodotto")
+    strike_date: str = Field(NF, description="Data di Strike")
+    issue_date: str = Field(NF, description="Data di Emissione")
+    expiry_date: str = Field(NF, description="Data di Liquidazione (rimborso)")
+    final_valuation_date: str = Field(NF, description="Data di Valutazione dell'Importo di Liquidazione (rimborso)")
+    nominal: str = Field(NF, description="Valore Nominale")
+    market: str = Field(NF, description="Mercato di Quotazione")
+    barrier: str = Field(NF, description="Barriera")
+    unconditional_coupon_min: str = Field(NA, description="Premio/i")
+    conditional_coupon_min: str = Field(NF, description="Premio/i Condizionato/i")
+    autocall: str = Field(NA, description="Indicato dala presenza di Data/e di Valutazione dell’Importo di Liquidazione (rimborso) Anticipato")
+    autocall_barrier: str = Field(NA, description="Barriera/e per la Scadenza Anticipata")
+    conditional_coupon_barrier: str = Field(NA, description="Barriera/e per il Versamento del Premio/i Condizionato/i")
+    issue_price_perc: str = Field(NF, description="Prezzo di Emissione")

@@ -8,7 +8,6 @@ from .json_config import (
     type_of,
     range_of,
     decimals_of,
-    position_of,
     allow_null,
 )
 import json

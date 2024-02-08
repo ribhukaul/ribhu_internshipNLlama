@@ -14,7 +14,7 @@ class InformazioniBase(BaseModel):
     periodo_detenzione_raccomandato: str = Field(NF, description="periodo di detenzione raccomandato in anni")
     date: str = Field(NF, description="data di realizzazione del documento")
 
-class ScenariPerformance(BaseModel):
+class TabellaScenariPerformance(BaseModel):
     stress_return: str = Field(NF,description="Rendimento percetuale(%) o '-' 1 anno scenario di stress")
     sfavorevole_return: str = Field(NF,description="Rendimento percentuale(%) o '-'  a 1 anno scenario sfavorevole ")
     moderato_return: str = Field(NF, description="Rendimento percentuale(%) o '-'  1 anno scenario moderato")
@@ -51,7 +51,7 @@ class InformazioniBaseGkid(BaseModel):
     periodo_detenzione_raccomandato: List[int] = Field(NF, description="il periodo di detenzione massimo raccomandato in anni,ritorna solo un valore, quello maggiore di quelli dati")
     date: str = Field(NF, description="data di realizzazione del documento")
 
-class ScenariPerformanceGkid(BaseModel):
+class TabellaScenariPerformanceGkid(BaseModel):
     stress_return: str = Field( NF,description="Rendimento percetuale(%) o '-' 1 anno scenario di stress")
     sfavorevole_return: str = Field(NF,description="Rendimento percentuale(%) o '-'  a 1 anno scenario sfavorevole ")
     moderato_return: str = Field(NF, description="Rendimento percentuale(%) o '-'  1 anno scenario moderato")

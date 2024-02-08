@@ -1,21 +1,27 @@
 
 from extractors.general_extractors.custom_extractors.certificates.certificates_config.cert_tags import (
+    InformazioniBaseBNP,
+    TabellaAllegatoScadenzaBNP,
     TabellaCedola,
     TabellaSottostanti,
     TabellaMainInfo,
     CedolaStr,
     InformazioniBaseCertificati,
-    SottostantiHeader,
+    TabellaSottostantiHeader,
+    TabellaAllegatoPremioBNP,
+    TabellaFirstInfoBNP,
+    TabellaSottostanteBNP,
+    TabellaMainInfoBNP,
 )
 
 from extractors.general_extractors.custom_extractors.kid.kid_config.kid_tags import (
     InformazioniBase,
-    ScenariPerformance,
+    TabellaScenariPerformance,
     TabellaRiy,
     TabellaCostiIngresso,
     TabellaCostiGestione,
     InformazioniBaseGkid,
-    ScenariPerformanceGkid,
+    TabellaScenariPerformanceGkid,
     TabellaRiyPercGkid,
     TabellaRiyEurGkid,
     TabellaCostiIngressoGkid,
@@ -127,6 +133,11 @@ prompts = {
             potrebbe non esistere, in quel caso ritorna N/A
             DOCUMENTO:
             {context}""",
+             "general_info_bnp":"""Dal documento seguente, estrai 
+             -il periodo di detenzione raccomandato
+             -l'indicatore di rischio su 7 come dato
+            DOCUMENTO:
+            {context}""",
             
     },
     "en": {
@@ -162,12 +173,12 @@ prompts = {
 table_schemas = {
     "it": {
         "general_info": InformazioniBase,
-        "performance": ScenariPerformance,
+        "performance": TabellaScenariPerformance,
         "riy": TabellaRiy,
         "costi_ingresso": TabellaCostiIngresso,
         "costi_gestione": TabellaCostiGestione,
         "general_info_gkid": InformazioniBaseGkid,
-        "performance-gkid": ScenariPerformanceGkid,
+        "performance-gkid": TabellaScenariPerformanceGkid,
         "riy%/-gkid": TabellaRiyPercGkid,
         "riy€-gkid": TabellaRiyEurGkid,
         "costi_ingresso_gkid": TabellaCostiIngressoGkid,
@@ -177,7 +188,13 @@ table_schemas = {
         "main_info":TabellaMainInfo,
         "cedola_str":CedolaStr,
         "general_info_certificati":InformazioniBaseCertificati,
-        "sottostanti_header":SottostantiHeader,
+        "sottostanti_header":TabellaSottostantiHeader,
+        "general_info_bnp":InformazioniBaseBNP,
+        "main_info_bnp":TabellaMainInfoBNP,
+        "allegato_bnp_premio":TabellaAllegatoPremioBNP,
+        "allegato_bnp_scadenza":TabellaAllegatoScadenzaBNP,
+        "first_info_bnp":TabellaFirstInfoBNP,
+        "sottostante_bnp":TabellaSottostanteBNP,
     },
     "en": {
         "performance": PerformanceScenarios, 
@@ -196,44 +213,43 @@ word_representation = {
             "stress",
             "possibile rimborso al",
         ],
-        "riy": ["costi totali", "Costi totali", "riy", "Riy", "RIY"],
-        "riy_perc_gkid": ["costi totali", "Costi totali", "riy", "Riy", "RIY"],
+        "riy": ["costi totali", "riy"],
+        "riy_perc_gkid": ["costi totali", "riy"],
         "costi_ingresso": [
             "costi di ingresso",
             "costi di uscita",
-            "Costi di ingresso",
-            "Costi di uscita",
         ],
         "costi_gestione": [
             "commissioni di gestione",
             "costi di transazione",
             "commissioni di performance",
             "costi amministrativi",
-            "Commissioni di gestione",
-            "Costi di transazione",
-            "Commissioni di performance",
-            "Costi amministrativi",
         ],
         "costi_ingresso_gkid": [
             "costi di ingresso",
             "costi di uscita",
-            "Costi di ingresso",
-            "Costi di uscita",
         ],
         "costi_gestione_gkid": [
             "commissioni di gestione",
             "costi di transazione",
             "commissioni di performance",
             "costi amministrativi",
-            "Commissioni di gestione",
-            "Costi di transazione",
-            "Commissioni di performance",
-            "Costi amministrativi",
         ],
         
         "cedola": ["cedola", "Cedola","Data di Osservazione della Cedola", "Data di Pagamento della Cedola Condizionale", "Importo della Cedola Condizionale"],
         "sottostanti": [ "Bloomberg Ticker", "bloomberg Ticker","Ticker", "Sottostante", "ISIN",],
         "main_info": ["Valuta del prodotto", "Performance Peggiore", "Modalità di Pagamento"],
+        "sottostanti_table": ["Bloomberg Ticker", "bloomberg Ticker","Ticker", "Sottostante", "ISIN",],
+        
+        "first_info_bnp": ["Codice ISIN","ISIN", "Autorità competente","redazione","Produttore"],
+        "main_info_bnp": ["Data di Strike","Strike" ,"Prezzo di Emissione", "Emissione","(rimborso)"],
+        "main_info_bnp2": ["valuta","valuta del prodotto", "importo nozionale", "nozionale"],
+        "sottostante_bnp": ["Bloomberg","codice Bloomberg", "Sottostante", "ISIN",],
+        "allegato_bnp_premio": ["Premio","Barriera/e","Condizionato"],
+        "allegato_bnp_scadenza": ["Liquidazione","Anticipata","Facoltativa","Scadenza",],
+        
+        
+        
     },
     "en": {
         "performance": [

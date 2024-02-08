@@ -116,7 +116,7 @@ class KidExtractor(Extractor):
         return market
 
     #REVIEW: NEED TO UPLOAD TABLE AS DF
-    async def extract_riy(self):
+    async def extract_riy(self, page=1):
         """extracts riy from the document
 
         Returns:
@@ -125,10 +125,10 @@ class KidExtractor(Extractor):
         try:
             # Select page with RIY
             extraction_riy = tag_only(
-                self.text[1:], "riy", self.language, self.file_id, rhp=self.rhp
+                self.text[page:], "riy", self.language, self.file_id, rhp=self.rhp
             )
             extraction_riy = clean_response_regex(
-                "riy", self.language, extraction_riy, to_add="%"
+                "riy", self.language, extraction_riy
             )
         except Exception as error:
             print("extract riy error" + repr(error))
@@ -150,7 +150,7 @@ class KidExtractor(Extractor):
                 add_text="estrai il valore % dopo {} anni".format(self.rhp),
             )
             extraction = clean_response_regex(
-                "costi_ingresso", self.language, extraction, to_add="%"
+                "costi_ingresso", self.language, extraction
             )
         except Exception as error:
             print("extract entry exit costs error" + repr(error))
@@ -163,6 +163,7 @@ class KidExtractor(Extractor):
     async def extract_management_costs(self, table):
 
         try:
+            extraction=dict()
             extraction = await general_table_inspection(
                 table,
                 "costi_gestione",
@@ -171,7 +172,7 @@ class KidExtractor(Extractor):
                 add_text="estrai il valore % dopo {} anni".format(self.rhp),
             )
             extraction = clean_response_regex(
-                "costi_gestione", self.language, extraction, to_add="%"
+                "costi_gestione", self.language, extraction
             )
         except Exception as error:
             print("extract management costs error" + repr(error))
@@ -189,40 +190,32 @@ class KidExtractor(Extractor):
         Returns:
             dict(): dict containing the performances
         """
-        performance = None
+        performance = dict()
         try:
-            tasks = []
-            if table is not None:
-                tasks.append(
-                    asyncio.create_task(
-                        complex_table_inspection(
-                            table,
-                            self.rhp,
-                            "performance",
-                            self.file_id,
-                            direct_tag=True,
-                            language=self.language,
-                        )
-                    )
-                )
+            performance=dict(await complex_table_inspection(
+                table,
+                self.rhp,
+                "performance",
+                self.file_id,
+                direct_tag=True,
+                language=self.language,
+            ))
 
-                await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
 
-                performance = tasks[0].result()
-                morte = dict(
-                    [
-                        ("scenario_morte_1", performance.scenario_morte_1),
-                        ("scenario_morte_rhp", performance.scenario_morte_rhp),
-                    ]
-                )
-                performance = clean_response_regex(
-                    "performance", self.language, performance, to_add="%"
-                )
-                morte = clean_response_regex(
-                    "performance_morte", self.language, morte, to_add="€"
-                )
-                setattr(performance, "scenario_morte_1", morte["scenario_morte_1"])
-                setattr(performance, "scenario_morte_rhp", morte["scenario_morte_rhp"])
+            morte = dict(
+                [
+                    ("scenario_morte_1", performance.get("scenario_morte_1")),
+                    ("scenario_morte_rhp", performance.get("scenario_morte_rhp")),
+                ]
+            )
+            performance = clean_response_regex(
+                "performance", self.language, performance
+            )
+            morte = clean_response_regex(
+                "performance_morte", self.language, morte
+            )
+            performance["scenario_morte_1"]=morte.get("scenario_morte_1")
+            performance["scenario_morte_rhp"]= morte.get("scenario_morte_rhp")
         except Exception as error:
             print("extract performances error" + repr(error))
             error_list = [
