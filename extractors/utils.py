@@ -21,6 +21,7 @@ def upload_df_as_excel(df):
         tmp_path = "/tmp"
     # Modify empty cells with " " to avoid upload errors
     df = df.replace(to_replace="", value=" ")
+    df.fillna(' ', inplace=True)
 
     # Save table to excel and upload it back
     random_file_name = str(uuid.uuid4()) + ".xlsx"

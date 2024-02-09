@@ -104,4 +104,3 @@ def get_tables_from_doc(doc_path, specific_pages=None, language="it",api_version
 
     return df_tables
 
-
