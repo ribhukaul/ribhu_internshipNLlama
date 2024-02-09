@@ -131,6 +131,8 @@ async def complex_table_inspection(
         )
     except Exception as error:
         print("table extraction error" + repr(error))
+        extraction_adapted = {"ERROR": "ERROR"}
+        
     return extraction_adapted
 
 

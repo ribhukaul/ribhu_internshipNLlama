@@ -10,10 +10,12 @@ TEST THIS CLASS
 
 class EnvVarSetter():
 
-    def __init__(self, payload) -> None:
-        
-        self.payload = payload
-        self.tenant = payload['TENANT']
+    def __init__(self, payload=None, tenant=None) -> None:
+
+        self.tenant = tenant
+        if payload is not None:
+            self.payload = payload
+            self.tenant = payload['TENANT']
 
 
     def set_all_env_vars(self) -> None:

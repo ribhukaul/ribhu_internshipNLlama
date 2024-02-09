@@ -45,6 +45,7 @@ def analyze_general_documents(doc_path, specific_pages=None, language="it", api_
             locale=language_locale,
             features=features_chosen,
             query_fields=query_list,
+            pages=specific_pages
         )
         result = poller.result()
     return result
@@ -103,8 +104,4 @@ def get_tables_from_doc(doc_path, specific_pages=None, language="it",api_version
 
     return df_tables
 
-
-if __name__ == "__main__":
-    path = "test.pdf"
-    analyze_general_documents(path)
 
