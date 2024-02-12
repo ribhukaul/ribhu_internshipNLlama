@@ -42,6 +42,8 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
                 tasks.append(asyncio.create_task(self.fill_tables(i)))
 
             await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
+            
+            
 
             first_info_table = self._extract_table("first_info_bnp")
             performance_table = self._extract_table("performance", black_list_pages=[0])
@@ -244,8 +246,8 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
         Returns:
             dict(): dictionary containing the main info
         """
+        extraction = dict()
         try:
-            extraction = dict()
             extraction = await general_table_inspection(
                 table,
                 "first_info_bnp",

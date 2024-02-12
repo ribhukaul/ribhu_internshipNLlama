@@ -1,6 +1,5 @@
 from collections import defaultdict
 import re
-import string
 
 
 def select_desired_page(text, words_repr):
@@ -79,3 +78,4 @@ def select_desired_table_only_header(tables, words_repr):  # change from normal 
     # Page with most occurrences
     tb_number = max(counter, key=counter.get)
     return tb_number
+

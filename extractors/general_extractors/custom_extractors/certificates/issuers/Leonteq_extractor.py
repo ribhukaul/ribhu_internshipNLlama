@@ -25,7 +25,7 @@ from extractors.general_extractors.custom_extractors.kid.kid_utils import (
     clean_response_regex,
     clean_response_strips,
 )
-from extractors.utils import is_in_text, upload_df_as_excel
+from extractors.utils import is_in_text, upload_df_as_excel, check_valid
 from ..certificates_config.cert_cleaning import header_mappings, regex_callable
 from extractors.general_extractors.config.prompt_config import word_representation
 
@@ -34,7 +34,7 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
 
     def __init__(self, doc_path) -> None:
         self.doc_path = doc_path
-        super().__init__(doc_path, "it")
+        super().__init__(doc_path)
 
     async def extract_general_data(self):
         """
@@ -192,7 +192,7 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
             await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
 
             # Merging results from the tasks
-            extraction.update({**tasks[0].result(), **tasks[1].result()})
+            extraction.update({**dict(tasks[0].result()), **dict(tasks[1].result())})
         except Exception as error:
             print(f"extract_sottostanti first phase error: {error}")
 
@@ -250,29 +250,11 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
         fill = get_tables_from_doc(self.doc_path, specific_pages=page, language=self.language)
 
         self.di_tables_pages[page - 1] = fill
-
-    async def get_tables(self):
-        """Calc table extractor, it extracts the three tables from the document asynchronously
-
-        Returns:
-            dict([pandas.dataframe]): tables as dataframe
-        """
-        tasks = [asyncio.create_task(self.fill_tables(i)) for i in range(1, 3)]
-        await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
-
-        sottostanti_table = self._extract_table_sottostanti("sottostanti", api_version="2023-10-31-preview")
-        main_info_table = self._extract_table("main_info")
-        cedola_table = self._extract_table("cedola", black_list_pages=[1])
-        cedola_table_2 = self._extract_table("cedola", black_list_pages=[0])
-
-        cedola_valid = all(
-            not cedola_table.equals(other) for other in [main_info_table, sottostanti_table]
-        ) and isinstance(cedola_table, pd.DataFrame)
-        cedola2_valid = (
-            all(not cedola_table_2.equals(other) for other in [main_info_table, sottostanti_table])
-            and isinstance(cedola_table_2, pd.DataFrame)
-            and not re.search(r"detenzion", cedola_table_2.iloc[0, 0], re.IGNORECASE)
-        )
+        
+    def check_sottostanti(self, sottostanti_table, main_info_table, cedola_table, cedola_table_2):
+        cedola_valid= check_valid(cedola_table, [sottostanti_table, main_info_table])
+        
+        cedola2_valid = check_valid(cedola_table_2, [sottostanti_table, main_info_table])
 
         if not cedola_valid and not cedola2_valid:
             cedola_table = (
@@ -280,13 +262,40 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
             )
         elif cedola_valid and cedola2_valid:
             try:
-                while re.search(r"[A-Za-z].*[A-Za-z]", cedola_table_2.iloc[0, 0]):
+                while not cedola_table_2.empty and re.search(r"[A-Za-z].*[A-Za-z]", cedola_table_2.iloc[0, 0]):
                     cedola_table_2 = cedola_table_2.iloc[1:, :]
                 cedola_table = pd.concat([cedola_table, cedola_table_2], ignore_index=True)
             except Exception as error:
                 print("more lines ignored:" + self.file_id+ error)
         elif not cedola_valid and cedola2_valid:
             cedola_table = cedola_table_2
+        
+        return cedola_table, cedola_table_2
+
+
+    async def get_tables(self):
+        """Calc table extractor, it extracts the three tables from the document asynchronously
+
+        Returns:
+            dict([pandas.dataframe]): tables as dataframe
+        """
+        try:
+            tasks = [asyncio.create_task(self.fill_tables(i)) for i in range(1, 3)]
+            await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
+
+            sottostanti_table = self._extract_table_sottostanti("sottostanti", api_version="2023-10-31-preview")
+            main_info_table = self._extract_table("main_info")
+            cedola_table = self._extract_table("cedola", black_list_pages=[1])
+            cedola_table_2 = self._extract_table("cedola", black_list_pages=[0])
+
+            cedola_table,cedola_table_2 = self.check_sottostanti(cedola_table, main_info_table, sottostanti_table, cedola_table_2)
+                
+        except Exception as error:
+            print("calc table error" + repr(error))
+            error_list=["cedola_table", "sottostanti_table", "main_info_table"]
+            for error in error_list:
+                if error not in locals():
+                    locals()[error] = "ERROR"
 
         return {"cedola": cedola_table, "sottostanti": sottostanti_table, "main_info": main_info_table}
 
@@ -374,11 +383,11 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
             results1 = pd.DataFrame(complete, index=[filename]).T
             results1.to_excel(excel_writer, sheet_name="info_anagrafiche", header=True)
 
-            results2 = pd.DataFrame(self.raccorda(exploded_cedola, "derivati", keep=True))
+            results2 = pd.DataFrame(self.raccorda(exploded_cedola, "leonteq", keep=True))
             results2.to_excel(excel_writer, sheet_name="date cedole autocall", header=True)
 
             # Write the second DataFrame to Sheet2
-            results3 = pd.DataFrame(self.raccorda(dict(sottostanti), "derivati", keep=True)).T
+            results3 = pd.DataFrame(self.raccorda(dict(sottostanti), "leonteq", keep=True)).T
             results3.to_excel(excel_writer, sheet_name="sottostanti", header=True)
 
             # Write the second DataFrame to Sheet2

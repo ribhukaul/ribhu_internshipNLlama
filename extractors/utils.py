@@ -1,5 +1,6 @@
 import re
 from langchain_community.document_loaders import PyPDFLoader
+import pandas as pd
 import tiktoken
 
 # import PyPDF2
@@ -185,6 +186,13 @@ def format_pages_num(arr):
         ranges.append(f"{start}-{end}")
 
     return ",".join(ranges)
+
+
+def check_valid(main_table, other_tables):
+    return all(
+        not main_table.equals(other) for other in other_tables
+    ) and isinstance(main_table, pd.DataFrame)
+
 
 
 ###############
