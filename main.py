@@ -70,7 +70,7 @@ def main(doc_folder):
         
         partial_process_file = partial(process_file, file_type=file_type)
         # async processing of the files
-        with ProcessPoolExecutor(max_workers=3) as executor:
+        with ProcessPoolExecutor(max_workers=6) as executor:
             results = executor.map(partial_process_file, all_files)
 
         # give request id
@@ -89,7 +89,7 @@ def main(doc_folder):
 
 
 if __name__ == "__main__":
-    folder = "kid\\documents\\testdoc\\BNP"
+    folder = "kid\\documents\\testdoc\\temptemptemptemp"
     
     for root, dirs, files in os.walk(folder):
         # Check if there are PDF files in the current directory

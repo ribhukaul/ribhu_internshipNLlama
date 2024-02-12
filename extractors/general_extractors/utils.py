@@ -1,6 +1,6 @@
 from collections import defaultdict
 import re
-
+import string
 
 def select_desired_page(text, words_repr):
     """Select the page with the most occurrences of the words in words_repr.
@@ -13,17 +13,20 @@ def select_desired_page(text, words_repr):
         str: page nindex with the most occurrences of the words in words_repr
     """
     counter = defaultdict(int)
+
     for i, page in enumerate(text):
         if page == "":
             continue
 
-        content = page.page_content.lower()
+        # Remove punctuation and replace \n with space
+        content = page.page_content.lower().replace('\n', ' ')
         for word in words_repr:
             # count how many times the word is in the page
             counter[str(i)] += content.count(word)
 
     # Page with most occurrences
     pg_number = max(counter, key=counter.get)
+
 
     return pg_number
 

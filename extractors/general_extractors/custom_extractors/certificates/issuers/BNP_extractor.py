@@ -9,6 +9,7 @@ from extractors.general_extractors.config.json_config import NA
 from extractors.general_extractors.custom_extractors.certificates.derivati_extractor import DerivatiKidExtractor
 from extractors.general_extractors.custom_extractors.kid.kid_config.kid_tags import NF
 from extractors.general_extractors.llm_functions import general_table_inspection, llm_extraction_and_tag
+from extractors.general_extractors.utils import select_desired_page
 from extractors.models import Models
 from extractors.utils import extract_between, is_in_text, search_in_pattern_in_text
 
@@ -49,19 +50,18 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
             
 
             first_info_table = self._extract_table("first_info_bnp")
-            allegato_table_scadenza= self._extract_table("allegato_bnp_scadenza", black_list_pages=[0,1])
             performance_table = self._extract_table("performance", black_list_pages=[0])
+            
             
         except Exception as error:
             print("get_tables error" + repr(error))
-            tables = [allegato_table_scadenza, first_info_table, performance_table]
+            tables = [first_info_table, performance_table]
             for i, table in enumerate(tables):
                 if not table:
                     tables[i] = None
 
         return dict(
             [
-                ("allegato_scadenza", allegato_table_scadenza),
                 ("first_info", first_info_table),
                 ("performance", performance_table),
             ]
@@ -147,9 +147,7 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
             
         """
         
-        pages_for_main = [0]
-        if len(self.di_tables_pages) > 3:
-            pages_for_main.extend([-1, -2])
+        pages_for_main = [0,1]
             
         extraction = await self.extract_from_multiple_tables(pages_for_main, ["main_info_bnp"])
         # extraction = clean_response_regex( "main_info", self.language, extraction)
@@ -163,7 +161,7 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
 
         return extraction
     
-    async def extract_allegato(self,table_scadenza):
+    async def extract_allegato(self):
         """extracts the main info from the table
 
         Args:
@@ -173,25 +171,40 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
             dict(): dictionary containing the main info
             
         """
+        extraction=dict()
         
         try:
-            extraction = dict()
-            
-            extraction.update(dict( await general_table_inspection(
-                table_scadenza,
+            if len(self.di_tables_pages)>3:
+                    
+                allegato_scadenza= self._extract_table("allegato_bnp_scadenza",black_list_pages=[0,2])
+                allegato_premio= self._extract_table("allegato_bnp_premio",black_list_pages=[0,2])
+                    
+                extraction=dict(await general_table_inspection(
+                allegato_scadenza,
                 "allegato_bnp_scadenza",
                 self.file_id,
                 language=self.language,
-            )))
-            
-            # extraction = clean_response_regex( "allegato_bnp", self.language, extraction)
+                ))
+                
+                extraction.update(dict(await general_table_inspection(
+                allegato_premio,
+                "allegato_bnp_premio",
+                self.file_id,
+                language=self.language,
+                )))
+                # extraction = clean_response_regex( "main_info", self.language, extraction)
+                
+                error_list = ["observation_coupon_date","payment_coupon_date","barrier_coupon","unconditional_coupon","conditional_coupon","payment_callable_date",
+                "observation_autocall_date","barrier_autocall","payment_autocall_date","value_autocall"]
+
+                extraction= {key: (extraction[key] if extraction.get(key) != ["not found"] else ["-"]) for key in error_list}
+
         except Exception as error:
             print("extract_allegato error" + repr(error))
             error_list = [
                 "observation_coupon_date", "payment_coupon_date", "barrier_coupon", "unconditional_coupon",
                 "conditional_coupon", "payment_callable_date", "observation_autocall_date", "barrier_autocall",
-                "payment_autocall_date", "value_autocall"
-            ]
+                "payment_autocall_date", "value_autocall"]
             extraction= {key: (extraction[key] if extraction.get(key) is not None else "ERROR") for key in error_list}
 
         return extraction
@@ -290,7 +303,7 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
         # SECOND STAGE: extract RIY, costs, commissions and performances
         try:
             tasks = []
-            tasks.append(asyncio.create_task(self.extract_allegato(tables["allegato_scadenza"])))
+            tasks.append(asyncio.create_task(self.extract_allegato()))
             tasks.append(
                 asyncio.create_task(self.extract_sottostanti())
             )
@@ -331,7 +344,7 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
             for key, value in allegato.items():
                 if isinstance(value, list):
                     # If the array is shorter than max_length, fill with 'N/A'
-                    allegato[key] = value + ["N/A"] * (max_length - len(value))
+                    allegato[key] = value + ["-"] * (max_length - len(value))
 
             main_info = dict(main_info)
             
@@ -350,7 +363,7 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
             for key, value in sottostanti.items():
                 if isinstance(value, list):
                     # If the array is shorter than max_length, fill with 'N/A'
-                    sottostanti[key] = value + ["N/A"] * (max_length - len(value))
+                    sottostanti[key] = value + ["-"] * (max_length - len(value))
             
             first_info = dict(first_info)
 
@@ -382,7 +395,7 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
             )
 
             with pd.ExcelWriter(
-                "results\\6febbraio\\resultsmarco_{}.xlsx".format(os.path.basename(self.file_id)),
+                "results\\6febbraio\\bonus cap mini future\\resultsmarco_{}.xlsx".format(os.path.basename(self.file_id)),
                 engine="xlsxwriter",
             ) as excel_writer:
                 # Write the first DataFrame to Sheet1

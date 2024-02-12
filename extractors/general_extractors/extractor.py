@@ -1,7 +1,7 @@
 import pandas as pd
 from ..models import Models
 from .config.cost_config import cost_per_token
-from ..utils import get_document_text
+from ..utils import get_document_text, upload_df_as_excel
 from extractors.general_extractors.config.cost_config import cost_per_token
 from .llm_functions import get_doc_language
 from extractors.azure.document_intelligence import get_tables_from_doc
@@ -112,14 +112,16 @@ class Extractor:
             extraction = dict()
             list_tables=list(self.di_tables_pages)
             tables=[]
+            concatenated_str="i valori sono in una di queste tabelle e solo in una o in nessuna "
             for page in pages:
                 tables+=self.di_tables_pages[list_tables[page]]
-            concatenated_table = pd.concat(tables, ignore_index=False)
-
+                
+            for idx,table in enumerate(tables):
+                concatenated_str=concatenated_str+f"||||||||||||tabella numero {idx}:{table} "
 
             for tag in tags:
                 extraction.update(dict(await general_table_inspection(
-                concatenated_table,
+                concatenated_str,
                 tag,
                 self.file_id,
                 language=self.language,
