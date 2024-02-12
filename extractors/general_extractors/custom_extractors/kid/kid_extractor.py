@@ -6,7 +6,7 @@ from ...extractor import Extractor
 
 from ...llm_functions import (
     llm_extraction_and_tag,
-    )
+)
 from .kid_utils import clean_response_regex, clean_response_strips
 
 
@@ -14,7 +14,6 @@ class KidExtractor(Extractor):
 
     def __init__(self, doc_path, predefined_language=False) -> None:
         super().__init__(doc_path, predefined_language)
-
 
     async def get_tables(self):
         """calc table extractor, it extracts the three tables from the document asynchronously
@@ -28,13 +27,11 @@ class KidExtractor(Extractor):
             costi_gestione_table = self._extract_table("costi_gestione")
         except Exception as error:
             print("calc table error" + repr(error))
-            error_list=[performance_table, costi_ingresso_table,costi_gestione_table]
+            error_list = [performance_table, costi_ingresso_table, costi_gestione_table]
             for i, key in enumerate(error_list):
                 if not key:
-                    error_list[i] = dict(
-                        [("ERROR", "ERROR")]
-                    )
-                    
+                    error_list[i] = dict([("ERROR", "ERROR")])
+
         return dict(
             [
                 ("costi_ingresso", costi_ingresso_table),
@@ -52,45 +49,43 @@ class KidExtractor(Extractor):
         """
         try:
             # extract and clean
-            extraction = llm_extraction_and_tag(
-                self.text, self.language, "general_info", self.file_id
-            )
+            extraction = llm_extraction_and_tag(self.text, self.language, "general_info", self.file_id)
             extraction = clean_response_regex("general_info", self.language, extraction)
             extraction = dict(extraction)
 
-            #REVIEW: ISIN EXTRACTION TO BE MOVED OUTSIDE?
-            isin=self.extract_isin()
+            # REVIEW: ISIN EXTRACTION TO BE MOVED OUTSIDE?
+            isin = self.extract_isin()
             extraction.update({"isin": isin})
             if (
                 "periodo_detenzione_raccomandato" in extraction
                 and extraction["periodo_detenzione_raccomandato"] != "-"
-                and re.search(r'\d+',extraction["periodo_detenzione_raccomandato"])
+                and re.search(r"\d+", extraction["periodo_detenzione_raccomandato"])
             ):
-                
+
                 rhp_temp = extraction["periodo_detenzione_raccomandato"]
-                number=re.search(r'\d+',rhp_temp).group(0)
-                if re.search(r'(?i)mesi', rhp_temp):
-                    extraction["periodo_detenzione_raccomandato"]="1"
+                number = re.search(r"\d+", rhp_temp).group(0)
+                if re.search(r"(?i)mesi", rhp_temp):
+                    extraction["periodo_detenzione_raccomandato"] = "1"
                 else:
-                    extraction["periodo_detenzione_raccomandato"]=str(int(number))
-                
+                    extraction["periodo_detenzione_raccomandato"] = str(int(number))
+
                 self.rhp = extraction["periodo_detenzione_raccomandato"]
             else:
                 self.rhp = "multiple"
 
         except Exception as error:
             print("extract general data error" + repr(error))
-            error_list = ["isin",  "indicatore_sintetico_rishio"]
-            extraction = {key: (extraction[key] if extraction.get(key) is not None else "ERROR") for key in error_list}            
-            self.rhp = extraction["periodo_detenzione_raccomandato"]= "multiple"
+            error_list = ["isin", "indicatore_sintetico_rishio"]
+            extraction = {key: (extraction[key] if extraction.get(key) is not None else "ERROR") for key in error_list}
+            self.rhp = extraction["periodo_detenzione_raccomandato"] = "multiple"
 
         return extraction
 
     def extract_isin(self):
-        to_search=self.text[0].page_content[:1600]
-        isin=re.search(r'[A-Z]{2}[A-Z0-9]{9}\d',to_search)
+        to_search = self.text[0].page_content[:1600]
+        isin = re.search(r"[A-Z]{2}[A-Z0-9]{9}\d", to_search)
         return isin.group(0) if isin else "-"
-    
+
     async def extract_market(self, market_type="market"):
         """extracts market from the document
 
@@ -115,7 +110,7 @@ class KidExtractor(Extractor):
         market = dict([("target_market", market)])
         return market
 
-    #REVIEW: NEED TO UPLOAD TABLE AS DF
+    # REVIEW: NEED TO UPLOAD TABLE AS DF
     async def extract_riy(self, page=1):
         """extracts riy from the document
 
@@ -124,21 +119,19 @@ class KidExtractor(Extractor):
         """
         try:
             # Select page with RIY
-            extraction_riy = tag_only(
-                self.text[page:], "riy", self.language, self.file_id, rhp=self.rhp
-            )
-            extraction_riy = clean_response_regex(
-                "riy", self.language, extraction_riy
-            )
+            extraction_riy = tag_only(self.text[page:], "riy", self.language, self.file_id, rhp=self.rhp)
+            extraction_riy = clean_response_regex("riy", self.language, extraction_riy)
         except Exception as error:
             print("extract riy error" + repr(error))
-            error_list = ["incidenza_costo_1" ,"incidenza_costo_rhp"]
-            
-            extraction_riy = {key: (extraction_riy[key] if extraction_riy.get(key) is not None else "ERROR") for key in error_list}    
+            error_list = ["incidenza_costo_1", "incidenza_costo_rhp"]
+
+            extraction_riy = {
+                key: (extraction_riy[key] if extraction_riy.get(key) is not None else "ERROR") for key in error_list
+            }
 
         return extraction_riy
 
-    #REVIEW: NEED TO UPLOAD TABLE AS DF
+    # REVIEW: NEED TO UPLOAD TABLE AS DF
     async def extract_entryexit_costs(self, table):
 
         try:
@@ -149,21 +142,19 @@ class KidExtractor(Extractor):
                 language=self.language,
                 add_text="estrai il valore % dopo {} anni".format(self.rhp),
             )
-            extraction = clean_response_regex(
-                "costi_ingresso", self.language, extraction
-            )
+            extraction = clean_response_regex("costi_ingresso", self.language, extraction)
         except Exception as error:
             print("extract entry exit costs error" + repr(error))
             error_list = ["costi_ingresso", "costi_uscita"]
-            extraction= {key: (extraction[key] if extraction.get(key) is not None else "ERROR") for key in error_list}  
-        
+            extraction = {key: (extraction[key] if extraction.get(key) is not None else "ERROR") for key in error_list}
+
         return extraction
-    
-    #REVIEW: NEED TO UPLOAD TABLE AS DF
+
+    # REVIEW: NEED TO UPLOAD TABLE AS DF
     async def extract_management_costs(self, table):
 
         try:
-            extraction=dict()
+            extraction = dict()
             extraction = await general_table_inspection(
                 table,
                 "costi_gestione",
@@ -171,9 +162,7 @@ class KidExtractor(Extractor):
                 language=self.language,
                 add_text="estrai il valore % dopo {} anni".format(self.rhp),
             )
-            extraction = clean_response_regex(
-                "costi_gestione", self.language, extraction
-            )
+            extraction = clean_response_regex("costi_gestione", self.language, extraction)
         except Exception as error:
             print("extract management costs error" + repr(error))
             error_list = ["commissione_gestione", "commissione_transazione", "commissione_performance"]
@@ -192,15 +181,16 @@ class KidExtractor(Extractor):
         """
         performance = dict()
         try:
-            performance=dict(await complex_table_inspection(
-                table,
-                self.rhp,
-                "performance",
-                self.file_id,
-                direct_tag=True,
-                language=self.language,
-            ))
-
+            performance = dict(
+                await complex_table_inspection(
+                    table,
+                    self.rhp,
+                    "performance",
+                    self.file_id,
+                    direct_tag=True,
+                    language=self.language,
+                )
+            )
 
             morte = dict(
                 [
@@ -208,14 +198,10 @@ class KidExtractor(Extractor):
                     ("scenario_morte_rhp", performance.get("scenario_morte_rhp")),
                 ]
             )
-            performance = clean_response_regex(
-                "performance", self.language, performance
-            )
-            morte = clean_response_regex(
-                "performance_morte", self.language, morte
-            )
-            performance["scenario_morte_1"]=morte.get("scenario_morte_1")
-            performance["scenario_morte_rhp"]= morte.get("scenario_morte_rhp")
+            performance = clean_response_regex("performance", self.language, performance)
+            morte = clean_response_regex("performance_morte", self.language, morte)
+            performance["scenario_morte_1"] = morte.get("scenario_morte_1")
+            performance["scenario_morte_rhp"] = morte.get("scenario_morte_rhp")
         except Exception as error:
             print("extract performances error" + repr(error))
             error_list = [
@@ -230,7 +216,9 @@ class KidExtractor(Extractor):
                 "moderato_return_rhp",
                 "favorable_return_rhp",
             ]
-            performance = {key: (performance[key] if performance.get(key) is not None else "ERROR") for key in error_list}
+            performance = {
+                key: (performance[key] if performance.get(key) is not None else "ERROR") for key in error_list
+            }
 
         return performance
 
@@ -239,4 +227,3 @@ if __name__ == "__main__":
     # testing
     doc_folder = "data\C\MEDIOLANUM\MYLIFEPIC_FR0011660851.pdf"
     kid_extractor = KidExtractor(doc_folder)
-

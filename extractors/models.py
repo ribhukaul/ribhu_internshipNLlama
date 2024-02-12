@@ -40,17 +40,13 @@ class Models:
         group_id = str(group_id)
         temperature = str(temperature)
         with cls._lock:
-            if (
-                not cls._models.get(group_id, {})
-                .get(model_name, {})
-                .get(temperature, None)
-            ):
-                cls._models.setdefault(group_id, {}).setdefault(model_name, {})[
-                    temperature
-                ] = azure_openai_model(model=model_name, temperature=temperature)
+            if not cls._models.get(group_id, {}).get(model_name, {}).get(temperature, None):
+                cls._models.setdefault(group_id, {}).setdefault(model_name, {})[temperature] = azure_openai_model(
+                    model=model_name, temperature=temperature
+                )
                 # for testing
                 # cls.randomint=random.randint(0, 1000)
-                
+
             return cls._models[group_id][model_name][temperature]
 
     @classmethod
@@ -93,12 +89,8 @@ class Models:
         response = chain.run(context=pages, rhp=rhp)
         if not isinstance(pages, str):
             if isinstance(pages, list):
-                page_content = "".join(
-                    getattr(page, "page_content", "") for page in pages
-                )
-        cls.calc_costs(
-            file_id, model, inputs=[page_content, prompt], outputs=[response]
-        )
+                page_content = "".join(getattr(page, "page_content", "") for page in pages)
+        cls.calc_costs(file_id, model, inputs=[page_content, prompt], outputs=[response])
         return response
 
     @classmethod
@@ -121,16 +113,20 @@ class Models:
             encoding = tiktoken.encoding_for_model(model)
             for i in inputs:
                 with lock:
-                    cls._costs[file_id][model]["tokens"] = cls._costs[file_id].setdefault(model, {}).get("tokens", 0) + (
-                        len(encoding.encode(str(i))) 
+                    cls._costs[file_id][model]["tokens"] = cls._costs[file_id].setdefault(model, {}).get(
+                        "tokens", 0
+                    ) + (len(encoding.encode(str(i))))
+                    cls._costs[file_id][model]["cost"] = (
+                        cls._costs[file_id][model].get("tokens", 0) * cost_per_token["input"][model]
                     )
-                    cls._costs[file_id][model]["cost"] = cls._costs[file_id][model].get("tokens", 0)* cost_per_token["input"][model]
             for o in outputs:
                 with lock:
-                    cls._costs[file_id][model]["tokens"] = cls._costs[file_id].setdefault(model, {}).get("tokens", 0) + (
-                        len(encoding.encode(str(o))) 
+                    cls._costs[file_id][model]["tokens"] = cls._costs[file_id].setdefault(model, {}).get(
+                        "tokens", 0
+                    ) + (len(encoding.encode(str(o))))
+                    cls._costs[file_id][model]["cost"] = (
+                        cls._costs[file_id][model].get("tokens", 0) * cost_per_token["output"][model]
                     )
-                    cls._costs[file_id][model]["cost"] = cls._costs[file_id][model].get("tokens", 0)* cost_per_token["output"][model]
         except Exception as error:
             print("ERROR in costs calc: {}".format(file_id) + repr(error))
 

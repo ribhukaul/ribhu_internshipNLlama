@@ -1,4 +1,3 @@
-
 from extractors.general_extractors.custom_extractors.certificates.certificates_config.cert_tags import (
     InformazioniBaseBNP,
     TabellaAllegatoScadenzaBNP,
@@ -29,7 +28,6 @@ from extractors.general_extractors.custom_extractors.kid.kid_config.kid_tags imp
     PerformanceScenarios,
     TableRiy,
 )
-
 
 
 prompts = {
@@ -121,24 +119,23 @@ prompts = {
 
             DOCUMENTO:
             {context}""",
-            "general_info_certificati":"""Dal documento seguente, estrai 
+        "general_info_certificati": """Dal documento seguente, estrai 
             - ISIN
             - descrizione completa del certificato, appare scritta come certificato ... in VALUTA ... su .... , con valuta che può essere EUR o USD
             - emittente o ideatore del certificato, compare dopo: Ideatore:
             DOCUMENTO:
             {context}""",
-            "cedola_str":"""
+        "cedola_str": """
             Dal documento seguente, estrai esattamente come riportato il pezzo di testo
             mi interessa tutto il denso testo numerato che comprende date e costi e che usa il carattere '▪' come spaziatore.
             potrebbe non esistere, in quel caso ritorna N/A
             DOCUMENTO:
             {context}""",
-             "general_info_bnp":"""Dal documento seguente, estrai 
+        "general_info_bnp": """Dal documento seguente, estrai 
              -il periodo di detenzione raccomandato
              -l'indicatore di rischio su 7 come dato
             DOCUMENTO:
             {context}""",
-            
     },
     "en": {
         "general_info": """From the following document, extract:
@@ -183,48 +180,58 @@ table_schemas = {
         "riy€-gkid": TabellaRiyEurGkid,
         "costi_ingresso_gkid": TabellaCostiIngressoGkid,
         "costi_gestione_gkid": TabellaCostiGestioneGkid,
-        "cedola":TabellaCedola,
-        "sottostanti":TabellaSottostanti,
-        "main_info":TabellaMainInfo,
-        "cedola_str":CedolaStr,
-        "general_info_certificati":InformazioniBaseCertificati,
-        "sottostanti_header":TabellaSottostantiHeader,
-        "general_info_bnp":InformazioniBaseBNP,
-        "main_info_bnp":TabellaMainInfoBNP,
-        "allegato_bnp_premio":TabellaAllegatoPremioBNP,
-        "allegato_bnp_scadenza":TabellaAllegatoScadenzaBNP,
-        "first_info_bnp":TabellaFirstInfoBNP,
-        "sottostante_bnp":TabellaSottostanteBNP,
+        "cedola": TabellaCedola,
+        "sottostanti": TabellaSottostanti,
+        "main_info": TabellaMainInfo,
+        "cedola_str": CedolaStr,
+        "general_info_certificati": InformazioniBaseCertificati,
+        "sottostanti_header": TabellaSottostantiHeader,
+        "general_info_bnp": InformazioniBaseBNP,
+        "main_info_bnp": TabellaMainInfoBNP,
+        "allegato_bnp_premio": TabellaAllegatoPremioBNP,
+        "allegato_bnp_scadenza": TabellaAllegatoScadenzaBNP,
+        "first_info_bnp": TabellaFirstInfoBNP,
+        "sottostante_bnp": TabellaSottostanteBNP,
     },
-    "en": {
-        "performance": PerformanceScenarios, 
-        "riy": TableRiy
-        },
+    "en": {"performance": PerformanceScenarios, "riy": TableRiy},
 }
-
 
 
 word_representation = {
     "it": {
-    "performance": ["moderato", "sfavorevole", "favorevole", "stress", "possibile rimborso al"],
-    "riy": ["costi totali", "riy"],
-    "riy_perc_gkid": ["costi totali", "riy"],
-    "costi_ingresso": ["costi di ingresso", "costi di uscita"],
-    "costi_gestione": ["commissioni di gestione", "costi di transazione", "commissioni di performance", "costi amministrativi"],
-    "costi_ingresso_gkid": ["costi di ingresso", "costi di uscita"],
-    "costi_gestione_gkid": ["commissioni di gestione", "costi di transazione", "commissioni di performance", "costi amministrativi"],
-    "cedola": ["cedola", "cedola", "data di osservazione della cedola", "data di pagamento della cedola condizionale", "importo della cedola condizionale"],
-    "sottostanti": ["bloomberg ticker", "ticker", "sottostante", "isin"],
-    "main_info": ["valuta del prodotto", "performance peggiore", "modalità di pagamento"],
-    "sottostanti_table": ["bloomberg ticker", "ticker", "sottostante", "isin"],
-    "first_info_bnp": ["codice isin", "isin", "autorità competente", "redazione", "produttore"],
-    "main_info_bnp": ["data di strike", "strike", "prezzo di emissione", "emissione", "(rimborso)"],
-    "main_info_bnp2": ["valuta", "valuta del prodotto", "importo nozionale", "nozionale"],
-    "sottostante_bnp": ["bloomberg", "codice bloomberg", "sottostante", "isin"],
-    "allegato_bnp_premio": ["premio/i", "premio", "barriera/e", "condizionato"],
-    "allegato_bnp_scadenza": ["liquidazione", "anticipata", "facoltativa", "scadenza"]
-
-        
+        "performance": ["moderato", "sfavorevole", "favorevole", "stress", "possibile rimborso al"],
+        "riy": ["costi totali", "riy"],
+        "riy_perc_gkid": ["costi totali", "riy"],
+        "costi_ingresso": ["costi di ingresso", "costi di uscita"],
+        "costi_gestione": [
+            "commissioni di gestione",
+            "costi di transazione",
+            "commissioni di performance",
+            "costi amministrativi",
+        ],
+        "costi_ingresso_gkid": ["costi di ingresso", "costi di uscita"],
+        "costi_gestione_gkid": [
+            "commissioni di gestione",
+            "costi di transazione",
+            "commissioni di performance",
+            "costi amministrativi",
+        ],
+        "cedola": [
+            "cedola",
+            "cedola",
+            "data di osservazione della cedola",
+            "data di pagamento della cedola condizionale",
+            "importo della cedola condizionale",
+        ],
+        "sottostanti": ["bloomberg ticker", "ticker", "sottostante", "isin"],
+        "main_info": ["valuta del prodotto", "performance peggiore", "modalità di pagamento"],
+        "sottostanti_table": ["bloomberg ticker", "ticker", "sottostante", "isin"],
+        "first_info_bnp": ["codice isin", "isin", "autorità competente", "redazione", "produttore"],
+        "main_info_bnp": ["data di strike", "strike", "prezzo di emissione", "emissione", "(rimborso)"],
+        "main_info_bnp2": ["valuta", "valuta del prodotto", "importo nozionale", "nozionale"],
+        "sottostante_bnp": ["bloomberg", "codice bloomberg", "sottostante", "isin"],
+        "allegato_bnp_premio": ["premio/i", "premio", "barriera/e", "condizionato"],
+        "allegato_bnp_scadenza": ["liquidazione", "anticipata", "facoltativa", "scadenza"],
     },
     "en": {
         "performance": [

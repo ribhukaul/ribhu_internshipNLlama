@@ -13,6 +13,7 @@ from extractors.general_extractors.config.json_config import (
 from .config.JsonClasses import JSONExtraction
 from .config.prompt_config import word_representation
 
+
 class Extractor:
     """parent class for all extractors"""
 
@@ -27,9 +28,7 @@ class Extractor:
 
         self.di_tables_pages = {}
         self.extraction = {}
-    
-    
-    
+
     def _extract_table(self, type, black_list_pages=[]):
         """General table extractor, given a table type it first finds the page within
         the document where the table is located, it then extracts all the tables from
@@ -46,21 +45,13 @@ class Extractor:
         try:
             # Select page with table
             keywords = word_representation[self.language][type]
-            text = [
-                page if i not in black_list_pages else ""
-                for i, page in enumerate(self.text)
-            ]
+            text = [page if i not in black_list_pages else "" for i, page in enumerate(self.text)]
             page = select_desired_page(text, keywords)
 
             # Get all the tables from the page
-            if (
-                self.di_tables_pages is not None
-                and page not in self.di_tables_pages.keys()
-            ):
+            if self.di_tables_pages is not None and page not in self.di_tables_pages.keys():
                 page_num = int(page) + 1
-                tables = get_tables_from_doc(
-                    self.doc_path, specific_pages=page_num, language=self.language
-                )
+                tables = get_tables_from_doc(self.doc_path, specific_pages=page_num, language=self.language)
                 self.di_tables_pages[page] = tables
             else:
                 tables = self.di_tables_pages[page]
@@ -68,7 +59,7 @@ class Extractor:
             # Select the right table
             table_nr = select_desired_table(tables, keywords)
             return tables[int(table_nr)]
-        
+
         except Exception as error:
             print("extract table error" + repr(error))
             return None
@@ -77,7 +68,6 @@ class Extractor:
             # for table in tables:
             #     exreturn.update(table)
 
-    
     def _process_costs(self):
         """processes the cost of the calls given local config and prepares them for the output
 
@@ -85,9 +75,11 @@ class Extractor:
             _type_: _description_
         """
         api_costs = Models.get_costs(self.file_id)
-        azure_costs = {"azure": {"pages":len(self.di_tables_pages), "cost": len(self.di_tables_pages) * cost_per_token["azure"]}}
+        azure_costs = {
+            "azure": {"pages": len(self.di_tables_pages), "cost": len(self.di_tables_pages) * cost_per_token["azure"]}
+        }
         api_costs.update(azure_costs)
-        
+
         total_tokens = sum(entry.get("tokens", 0) for entry in api_costs.values())
         total_cost = sum(entry.get("cost", 0) for entry in api_costs.values())
 
@@ -97,7 +89,7 @@ class Extractor:
             if "cost" in entry:
                 entry["cost"] = round(entry["cost"], 2)
         return api_costs
-    
+
     async def extract_from_multiple_tables(self, pages, tags):
         """extracts from multiple tables
 
@@ -108,30 +100,33 @@ class Extractor:
             dict(): dict containing the results
         """
         try:
-            
+
             extraction = dict()
-            list_tables=list(self.di_tables_pages)
-            tables=[]
-            concatenated_str="i valori sono in una di queste tabelle e solo in una o in nessuna "
+            list_tables = list(self.di_tables_pages)
+            tables = []
+            concatenated_str = "i valori sono in una di queste tabelle e solo in una o in nessuna "
             for page in pages:
-                tables+=self.di_tables_pages[list_tables[page]]
-                
-            for idx,table in enumerate(tables):
-                concatenated_str=concatenated_str+f"||||||||||||tabella numero {idx}:{table} "
+                tables += self.di_tables_pages[list_tables[page]]
+
+            for idx, table in enumerate(tables):
+                concatenated_str = concatenated_str + f"||||||||||||tabella numero {idx}:{table} "
 
             for tag in tags:
-                extraction.update(dict(await general_table_inspection(
-                concatenated_str,
-                tag,
-                self.file_id,
-                language=self.language,
-                )))
-                
+                extraction.update(
+                    dict(
+                        await general_table_inspection(
+                            concatenated_str,
+                            tag,
+                            self.file_id,
+                            language=self.language,
+                        )
+                    )
+                )
+
         except Exception as error:
             print("extract multiple tables error" + repr(error))
-            
-        return extraction   
-                
+
+        return extraction
 
     def create_json(self, results, type="kid"):
         """creates a json from the results
@@ -142,21 +137,19 @@ class Extractor:
         Returns:
             json: json of the results
         """
-        #dict for filename and costs, replace is for json format
-        
-        #complete={renaming[key]:value for key,value in results.items() if key in renaming.keys()}
-        
-        #return complete
-        
+        # dict for filename and costs, replace is for json format
+
+        # complete={renaming[key]:value for key,value in results.items() if key in renaming.keys()}
+
+        # return complete
+
         extraction = JSONExtraction(doc_type=type, results=results, doc_path=self.doc_path)
-        
+
         json_output = extraction.to_json()
-        
+
         return json_output
 
-
-
-    def raccorda(self, dictionary, type, keep=False):#could tecnically go to utils
+    def raccorda(self, dictionary, type, keep=False):  # could tecnically go to utils
         """renames fiels
 
         Args:
@@ -169,17 +162,7 @@ class Extractor:
         """
         # uncomment for extra fields
         # dictionary=self.create_json(dictionary)
-        new_dict = {
-            renaming[type][key]: value
-            for key, value in dictionary.items()
-            if key in renaming[type].keys()
-        }
+        new_dict = {renaming[type][key]: value for key, value in dictionary.items() if key in renaming[type].keys()}
         if keep:
-            new_dict.update(
-                {
-                    key: value
-                    for key, value in dictionary.items()
-                    if key not in renaming[type].keys()
-                }
-            )
+            new_dict.update({key: value for key, value in dictionary.items() if key not in renaming[type].keys()})
         return new_dict

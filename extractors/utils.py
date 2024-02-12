@@ -1,7 +1,8 @@
 import re
 from langchain_community.document_loaders import PyPDFLoader
 import tiktoken
-#import PyPDF2
+
+# import PyPDF2
 import os
 from langchain_community.document_loaders import UnstructuredExcelLoader
 import uuid
@@ -33,6 +34,7 @@ def upload_df_as_excel(df):
 
     return loaded_table
 
+
 def num_tokens_from_string(string: str, encoding_name: str = "cl100k_base") -> int:
     """
     Returns the number of tokens in a given string using the specified encoding.
@@ -47,6 +49,7 @@ def num_tokens_from_string(string: str, encoding_name: str = "cl100k_base") -> i
     encoding = tiktoken.get_encoding(encoding_name)
     num_tokens = len(encoding.encode(string))
     return num_tokens
+
 
 def is_more_number(text):
     """Check if a text in the page is composed  more than 30% of numbers
@@ -66,6 +69,7 @@ def is_more_number(text):
     else:
         return False
 
+
 def _decode_first_condtition(text):
     """Decode the first condition
 
@@ -78,10 +82,9 @@ def _decode_first_condtition(text):
     return "".join(
         char
         for char in text
-        if char.isalnum()
-        or char.isspace()
-        or char in [",", ".", "€", "%", ":", ";", "(", ")", "-", "/"]
+        if char.isalnum() or char.isspace() or char in [",", ".", "€", "%", ":", ";", "(", ")", "-", "/"]
     )
+
 
 def _decode_second_condition(text):
     """Decode the second condition
@@ -93,13 +96,8 @@ def _decode_second_condition(text):
         str: decoded text
     """
     content = text.split("/")
-    return "".join(
-        [
-            chr(int(code))
-            for code in content
-            if code and 32 <= int(code) <= 110000000
-        ]
-    )
+    return "".join([chr(int(code)) for code in content if code and 32 <= int(code) <= 110000000])
+
 
 def get_document_text(file_path):
     """Uploads a file to the server and returns the pages.
@@ -127,33 +125,35 @@ def get_document_text(file_path):
             elif second_encoded_condition:
                 page.page_content = _decode_second_condition(content)
         return pages
-    
+
     except Exception as error:
         print("get document text error" + repr(error))
         raise error
 
-def is_in_text(pattern, text)->bool:
-    
+
+def is_in_text(pattern, text) -> bool:
+
     pattern = re.compile(pattern, re.IGNORECASE)
-    ret = bool(
-        pattern.search(text)
-    )
+    ret = bool(pattern.search(text))
     return ret
-    
+
+
 def search_in_pattern_in_text(pattern, text, pattern_inside):
-    match= re.search(pattern, text, re.IGNORECASE)
+    match = re.search(pattern, text, re.IGNORECASE)
     if not match:
         return
-    match= re.search(pattern_inside, match.group(0), re.IGNORECASE)
+    match = re.search(pattern_inside, match.group(0), re.IGNORECASE)
     if not match:
-        return 
+        return
     return match.group(0)
+
 
 def extract_between(text, start, end):
     pattern = f"(\\n)?\s*{re.escape(start)}\s*(\\n)?\s*(\S.*?)\s*(?={re.escape(end)})"
     matches = re.findall(pattern, text, re.IGNORECASE)
-    return matches[0][-1] if matches and matches[0] else None 
-        
+    return matches[0][-1] if matches and matches[0] else None
+
+
 def format_pages_num(arr):
     if not arr:
         return None
@@ -161,15 +161,14 @@ def format_pages_num(arr):
         return arr
     if isinstance(arr, int):
         return str(arr)
-    
-    
+
     arr = sorted(set(arr))  # Sort the array and remove duplicates
     ranges = []
     start = arr[0]
     end = arr[0]
 
     for i in range(1, len(arr)):
-        if arr[i] - arr[i-1] == 1:
+        if arr[i] - arr[i - 1] == 1:
             end = arr[i]
         else:
             if start == end:
@@ -186,6 +185,8 @@ def format_pages_num(arr):
         ranges.append(f"{start}-{end}")
 
     return ",".join(ranges)
+
+
 ###############
 # LEGACY CODE #
 ###############
@@ -199,4 +200,3 @@ def format_pages_num(arr):
 #             page = pdf_reader.pages[page_number]
 #             text += page.extract_text()
 #     return text
-

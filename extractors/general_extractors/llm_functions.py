@@ -61,9 +61,7 @@ def llm_extraction(page, type, file_id, language="it", model="gpt-4-turbo", rhp=
     return response
 
 
-async def general_table_inspection(
-    table, table_type, file_id, language="it", add_text=""
-):
+async def general_table_inspection(table, table_type, file_id, language="it", add_text=""):
     """tags data in a table
 
     Args:
@@ -92,9 +90,7 @@ async def general_table_inspection(
     return extraction_adapted
 
 
-async def complex_table_inspection(
-    table, rhp, type, file_id, direct_tag=True, language="it"
-):
+async def complex_table_inspection(table, rhp, type, file_id, direct_tag=True, language="it"):
     """
     searches table for information
     saves excel file with table in tmp to get around llm bug with incomplete stringified dataframe
@@ -118,17 +114,13 @@ async def complex_table_inspection(
         # First normal extraction, then tagging
         tag_model = "gpt-4-turbo"
         if not direct_tag:
-            table = llm_extraction(
-                table, type, file_id, language=language, model=tag_model, rhp=rhp
-            )
+            table = llm_extraction(table, type, file_id, language=language, model=tag_model, rhp=rhp)
 
         if rhp is None:
             adapt_extraction = "CONSIDERA 1 ANNO , EXTRACTION={}".format(table)
         else:
             adapt_extraction = "RHP={} EXTRACTION={}".format(rhp, table)
-        extraction_adapted = Models.tag(
-            adapt_extraction, schema, file_id, model=tag_model
-        )
+        extraction_adapted = Models.tag(adapt_extraction, schema, file_id, model=tag_model)
     except Exception as error:
         print("table extraction error" + repr(error))
     return extraction_adapted
@@ -193,6 +185,3 @@ def llm_extraction_and_tag(pages, language, type, file_id):
     extraction = Models.tag(extraction, pydantic_class, file_id)
 
     return extraction
-
-
-

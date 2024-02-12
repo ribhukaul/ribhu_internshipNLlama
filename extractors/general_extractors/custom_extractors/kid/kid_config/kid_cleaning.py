@@ -50,7 +50,7 @@ strips_cleaning = {
 REGEX_NUMBERS_COMMA = "[+-]?(\s)?\d+((\s)?[,\.](\s)?\d+)*"
 REGEX_NUMBER = "[+-]?(\s)?\d+((\s)?\d+)*"
 REGEX_DATE = "\d{1,2}\/\d{1,2}\/\d{2,4}|\d+\s[A-Za-z]+\s\d+"
-REGEX_ISIN= "[A-Z]{2}[A-Z0-9]{9}[0-9]"
+REGEX_ISIN = "[A-Z]{2}[A-Z0-9]{9}[0-9]"
 ANY = ".+"
 regex_cleaning = {
     "it": {
@@ -134,12 +134,11 @@ regex_cleaning = {
             "commissione_performance_min": REGEX_NUMBERS_COMMA,
             "commissione_performance_max": REGEX_NUMBERS_COMMA,
         },
-        "general_info_certificati":{
-            "isin":REGEX_ISIN,
-            "descrizione":ANY,
-            "emittente":ANY,
-        }
-        
+        "general_info_certificati": {
+            "isin": REGEX_ISIN,
+            "descrizione": ANY,
+            "emittente": ANY,
+        },
     },
     "en": {
         "performance": [],
@@ -169,9 +168,3 @@ regex_search = {
         "riy": [],
     },
 }
-
-
-
-
-
-

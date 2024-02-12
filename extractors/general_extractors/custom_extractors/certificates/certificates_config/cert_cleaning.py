@@ -1,5 +1,4 @@
-
-header_mappings={
+header_mappings = {
     "Data.+realizzazion": "data_realizzazione_cedola",
     "Data.+osservazion.+cedol.+": "data_osservazione_cedola",
     "Data.+osservazion.+autocal.+": "data_osservazione_autocall",
@@ -11,13 +10,12 @@ header_mappings={
 }
 
 
-
-regex_callable ={
-    "leonteq":{
-    "autocallable":"autocallable|rimbors.{1,5}anticipat",
-    "softcallable":"softcallable|diritt.{1,4}non.{0,3}obblig",
-    "effetto_memoria":"effett.{1,5}memori",
-    "putable":"putable",
+regex_callable = {
+    "leonteq": {
+        "autocallable": "autocallable|rimbors.{1,5}anticipat",
+        "softcallable": "softcallable|diritt.{1,4}non.{0,3}obblig",
+        "effetto_memoria": "effett.{1,5}memori",
+        "putable": "putable",
     },
     "bnp": {
         "callable": r"Scadenza\s*Anticipata\s*Opzionale",
@@ -33,14 +31,13 @@ regex_callable ={
 }
 
 
- 
 REGEX_PERC = r"\d{0,3}[,\.]?\d{1,2}\s?%"
-check_for={
-    "leonteq":{},
-    "bnp":{
+check_for = {
+    "leonteq": {},
+    "bnp": {
         "importo_minimo": REGEX_PERC,
-        "leva_cedolare":  REGEX_PERC,
-        "cap":  REGEX_PERC,
-        "leva_airbag":  REGEX_PERC,
-        },
+        "leva_cedolare": REGEX_PERC,
+        "cap": REGEX_PERC,
+        "leva_airbag": REGEX_PERC,
+    },
 }
