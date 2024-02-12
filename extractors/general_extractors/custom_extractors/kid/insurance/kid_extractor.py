@@ -2,16 +2,15 @@ from extractors.general_extractors.custom_extractors.kid.kid_extractor import Ki
 import asyncio
 import os
 
-from extractors.models import Models    
+from extractors.models import Models
+
 
 class InsuranceKidExtractor(KidExtractor):
-
 
     def __init__(self, doc_path) -> None:
         self.doc_path = doc_path
         super().__init__(doc_path, "it")
 
-        
     async def process(self):
         """main processor in different phases, first phases extracts the tables and general information,
         and target market, second phase extracts the rest of the fields.
@@ -28,12 +27,12 @@ class InsuranceKidExtractor(KidExtractor):
 
             await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
 
-            tables = tasks[0].result()
-            basic_information = tasks[1].result()
-            market = tasks[2].result()
+            
+            tables, basic_information, market = [task.result() for task in tasks]
+            
         except Exception as error:
             print("first stage error" + repr(error))
-        
+
         # SECOND STAGE: extract RIY, costs, commissions and performances
         try:
             tasks = []
@@ -44,20 +43,14 @@ class InsuranceKidExtractor(KidExtractor):
 
             await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
 
-            riy = tasks[0].result()
-            exit_entry_costs = tasks[1].result()
-            management_costs = tasks[2].result()
-            performance = tasks[3].result()
+            
+            riy, exit_entry_costs, management_costs, performance = [task.result() for task in tasks]
+            
 
         except Exception as error:
             print("second stage error" + repr(error))
 
         try:
-            # Format results
-            riy = dict(riy)
-            performance = dict(performance)
-            exit_entry_costs = dict(exit_entry_costs)
-            management_costs = dict(management_costs)
 
             # REVIEW: what name do they need?
             filename = os.path.splitext(os.path.basename(self.doc_path))[0]
@@ -68,29 +61,29 @@ class InsuranceKidExtractor(KidExtractor):
             complete = self.raccorda(
                 {
                     "file_name": filename,
-                    **basic_information,
-                    **performance,
-                    **riy,
-                    **exit_entry_costs,
-                    **management_costs,
-                    **market,
-                    **api_costs,
+                    **dict(basic_information),
+                    **dict(performance),
+                    **dict(riy),
+                    **dict(exit_entry_costs),
+                    **dict(management_costs),
+                    **dict(market),
+                    **dict(api_costs),
                 },
-                "kid"
+                "kid",
             )
 
             complete = self.create_json(
                 {
                     "file_name": filename,
-                    **basic_information,
-                    **performance,
-                    **riy,
-                    **exit_entry_costs,
-                    **management_costs,
-                    **market,
-                    **api_costs
+                    **dict(basic_information),
+                    **dict(performance),
+                    **dict(riy),
+                    **dict(exit_entry_costs),
+                    **dict(management_costs),
+                    **dict(market),
+                    **dict(api_costs),
                 },
-                "kid"
+                "kid",
             )
 
         except Exception as error:
@@ -98,14 +91,7 @@ class InsuranceKidExtractor(KidExtractor):
             filename = os.path.splitext(os.path.basename(self.doc_path))[0]
             complete = dict([(filename), dict()])
 
-        
         print(complete)
         Models.clear_resources_file(filename)
 
         return complete
-
-
-
-
-
-    

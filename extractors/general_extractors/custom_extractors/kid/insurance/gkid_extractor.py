@@ -5,12 +5,10 @@ import os
 
 class InsuranceGKidExtractor(GKidExtractor):
 
-
     def __init__(self, doc_path) -> None:
         self.doc_path = doc_path
         super().__init__(doc_path, "it")
 
-        
     async def process(self):
         """main processor in different phases
 
@@ -29,9 +27,9 @@ class InsuranceGKidExtractor(GKidExtractor):
 
             await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
 
-            tables = tasks[0].result()
-            basic_information = tasks[1].result()
-            market = tasks[2].result()
+            
+            tables,basic_information,market = [task.result() for task in tasks]
+
         except Exception as error:
             print("first stage error" + repr(error))
         # second phase for all the rest
@@ -41,17 +39,13 @@ class InsuranceGKidExtractor(GKidExtractor):
             tasks.append(asyncio.create_task(self.extract_riy(tables["riy_table"])))
             # extraction of costs and commissions
             tasks.append(
-                asyncio.create_task(
-                    self.extract_cost_commissions(
-                        tables["costi_ingresso"], tables["costi_gestione"]
-                    )
-                )
+                asyncio.create_task(self.extract_cost_commissions(tables["costi_ingresso"], tables["costi_gestione"]))
             )
 
             await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
 
-            riy = tasks[0].result()
-            costs = tasks[1].result()
+            
+            riy, costs = [task.result() for task in tasks]
 
         except Exception as error:
             print("second stage error" + repr(error))
@@ -59,7 +53,6 @@ class InsuranceGKidExtractor(GKidExtractor):
         try:
             # Merge and orders all the results
 
-            riy = dict(riy)
 
             filename = os.path.splitext(os.path.basename(self.doc_path))[0]
 
@@ -69,13 +62,13 @@ class InsuranceGKidExtractor(GKidExtractor):
             complete = self.create_json(
                 {
                     "file_name": filename,
-                    **basic_information,
-                    **riy,
-                    **costs,
-                    **market,
-                    **api_costs,
+                    **dict(basic_information),
+                    **dict(riy),
+                    **dict(costs),
+                    **dict(market),
+                    **dict(api_costs),
                 },
-                "gkid"
+                "gkid",
             )
 
         except Exception as error:
