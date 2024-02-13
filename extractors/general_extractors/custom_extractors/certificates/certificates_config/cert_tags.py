@@ -80,7 +80,7 @@ class InformazioniBaseBNP(BaseModel):
 class TabellaSottostanteBNP(BaseModel):
     instrument_description: List[str] = Field([NF], description="Sottostante")
     instrument_bloombergcode: List[str] = Field([NF], description="codice Bloomberg")
-    instrument_isin: List[str] = Field([NA], description="ISIN del sottostante")
+    instrument_isin: List[str] = Field([NF], description="ISIN del sottostante")
 
 
 class TabellaFirstInfoBNP(BaseModel):
@@ -91,7 +91,7 @@ class TabellaFirstInfoBNP(BaseModel):
 class TabellaAllegatoPremioBNP(BaseModel):
     observation_coupon_date: List[str] = Field([NF], description="Data/e di Valutazione del/i Premio/i Condizionato/i")
     payment_coupon_date: List[str] = Field([NF], description="Data/e di Pagamento del/i Premio/i")
-    barrier_coupon: List[str] = Field([NF], description="Barriera/e per il Versamento del Premio/i Condizionato/i")
+    conditional_coupon_barrier: List[str] = Field([NF], description="Barriera/e per il Versamento del Premio/i Condizionato/i")
     unconditional_coupon: List[str] = Field([NF], description="Premio/i")
     conditional_coupon: List[str] = Field([NF], description="Premio/i Condizionato/i")
 
@@ -103,8 +103,7 @@ class TabellaAllegatoScadenzaBNP(BaseModel):
     )
     barrier_autocall: List[str] = Field([NF], description="Barriera/e per la Scadenza Anticipata")
     payment_autocall_date: List[str] = Field([NF], description="Data di Scadenza Anticipata")
-    value_autocall: List[str] = Field([NF], description="Pemio/I di Uscita")
-
+    value_autocall: List[str] = Field([NF], description="Premio/I di Uscita")
 
 class TabellaMainInfoBNP(BaseModel):
     currency: str = Field(NF, description="Valuta del prezzo di emissione / Valuta del prodotto")
@@ -114,13 +113,17 @@ class TabellaMainInfoBNP(BaseModel):
     final_valuation_date: str = Field(NF, description="Data di Valutazione dell'Importo di Liquidazione (rimborso)")
     nominal: str = Field(NF, description="Valore Nominale o Importo Nozionale")
     market: str = Field(NA, description="Mercato di Quotazione")
-    barrier: str = Field(NF, description="Barriera")
-    unconditional_coupon_min: str = Field(NA, description="Premio/i")
-    conditional_coupon_min: str = Field(NA, description="Premio/i Condizionato/i")
-    autocall: str = Field(
-        NA,
-        description="Indicato dala presenza di Data/e di Valutazione dell’Importo di Liquidazione (rimborso) Anticipato",
-    )
-    autocall_barrier: str = Field(NA, description="Barriera/e per la Scadenza Anticipata")
+    barrier: str = Field(NF, description="Barriera (senza niente aggiunto)")
     conditional_coupon_barrier: str = Field(NA, description="Barriera/e per il Versamento del Premio/i Condizionato/i")
     issue_price_perc: str = Field(NF, description="Prezzo di Emissione")
+    observation_coupon_date: str = Field(NF, description="Data/e di Valutazione del/i Premio/i Condizionato/i")
+    payment_coupon_date: str = Field(NF, description="Data/e di Pagamento del/i Premio/i")
+    unconditional_coupon: str = Field(NF, description="Premio/i")
+    conditional_coupon: str = Field(NF, description="Premio/i Condizionato/i")
+    payment_callable_date: str = Field(NF, description="Data di Liquidazione Anticipata Facoltativa")
+    observation_autocall_date: str = Field(
+        NF, description="Data/e di Valutazione dell' Importo di Liquidazione (rimborso) Anticipato"
+    )
+    barrier_autocall: str = Field(NF, description="Barriera/e per la Scadenza Anticipata")
+    payment_autocall_date: str = Field(NF, description="Data di Scadenza Anticipata")
+    value_autocall: str = Field(NF, description="Premio/I di Uscita")

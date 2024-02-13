@@ -1,8 +1,11 @@
+from extractors.azure.document_intelligence import get_tables_from_doc
 from extractors.general_extractors.custom_extractors.kid.kid_extractor import KidExtractor
 from extractors.general_extractors.extractor import Extractor
+from extractors.general_extractors.utils import select_desired_table_only_header
 from extractors.utils import is_in_text, search_in_pattern_in_text
 from .certificates_config.cert_cleaning import header_mappings, regex_callable, check_for
 
+from extractors.general_extractors.config.prompt_config import word_representation
 
 class DerivatiKidExtractor(KidExtractor):
 
@@ -35,3 +38,51 @@ class DerivatiKidExtractor(KidExtractor):
             }
 
         return {**boolean_to_check, **str_to_check}
+
+
+    def _extract_table_only_header(
+        self, type, pages_to_check=[0, 1], api_version="2023-10-31-preview"
+    ):  # change from normal is select_desired_table_only_header
+        """General table extractor, given a table type it first finds the page within
+        the document where the table is located, it then extracts all the tables from
+        that page and returns the one with the most occurrences of the words of the table
+        type.
+
+        Args:
+           type (str): type of table to extract, used to get configuration.
+           black_list_pages (int[], optional): Pages to ignore. Defaults to [].
+
+        Returns:
+            pandas.DataFrame: dataframe containing the table.
+        """
+        try:
+            # Select page with table
+            keywords = word_representation[self.language][type]
+            tables = []
+            # Get all the tables from the page
+            if self.di_tables_pages is not None and not all(str(page) in self.di_tables_pages for page in pages_to_check):
+                for page in [page for page in pages_to_check if str(page) not in self.di_tables_pages.keys()]:
+                    page_num = int(page) + 1
+                    new_tables = get_tables_from_doc(
+                        self.doc_path,
+                        specific_pages=page_num,
+                        language=self.language,
+                        api_version=api_version,
+                    )
+                    self.di_tables_pages[str(page)] = new_tables
+                    tables.extend(table for table in new_tables)
+            else:
+                for page in pages_to_check:
+                    tables.extend(table for table in self.di_tables_pages[str(page)])
+
+            # Select the right table
+            table_nr = select_desired_table_only_header(tables, keywords)
+            return tables[int(table_nr)]
+        except Exception as error:
+            print("extract table error" + repr(error))
+            return None
+            # @ELIA?
+            # exreturn = dict()
+            # for table in tables:
+            #     exreturn.update(table)
+            

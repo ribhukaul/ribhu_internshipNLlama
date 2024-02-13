@@ -19,18 +19,16 @@ regex_callable = {
     },
     "bnp": {
         "callable": r"Scadenza\s*Anticipata\s*Opzionale",
-        "putable": r"Scadenza\s*Anticipata\s*Automatica",
-        "unconditional_protection": r"questo\s*prodotto\s*offre\s*una\s*protezione\s*totale\s*dell'Importo\s*Nozionale\s*a\s*scadenza",
-        "memory": r"Tutti\s*i\s*Premi\s*Condizionati\s*non\s*versati\s*si\s*accumuleranno\s*e\s*saranno\s*versati\s*solo\s*se\s*la\s*Condizione\s*del\s*Premio\s*Condizionato\s*verrà\s*soddisfatta\s*successivamente",
-        "barrier_type": r"se\s*,\s*in\s*corrspondenza\s*della\s*data\s*di\s*Valutazione\s*dell'importo\s*di\s*Liqidazione,\s*il\s*prezzo\s*di\s*Riferimento\s*Finale\s*è\s*inferiroe\s*alla\s*barriera",
-        "importo_minimo": r"tuttavia\s*l'importo\s*minimo\s*sarà\s*pari\s*al\s*\d{0,3}[,\.]?\d{1,2}\s?%\s*dell'Importo\s*Nozionale",
-        "leva_cedolare": r"(aumentato\s*del\\s*\d{0,3}[,\.]?\d{1,2}\s?%\sdella\s*performance\s*del\s*Sottostante\s*)|(\s*più\s*un\s*importo\s*commisurato\s*al\s*\d{0,3}[,\.]?\d{1,2}\s?%\sdella\s*Performance)",
-        "cap": r"1\.\s*Se\s*il\s*Prezzo\s*di\s*Riferimento\s*Finale\s*è\s*pari\s*o\s*superiore\s*al\s*\d{0,3}[,\.]?\d{1,2}\s?%\s*Prezzo\s*di\s*Riferimento\s*Iniziale",
-        "leva_airbag": r"meno\s*un\s*importo\s*commisurato\s*al166,67%\s*della\s*Performance\s*del\s*Sottostante",
+        "autocallable": r"Scadenza\s*Anticipata\s*Automatica",
+        "unconditional_protection": r"quest.\s*prodott.\s*offre\s*.{0,5}\s*protezione\s*totale\s*.{0,10}Importo\s*Nozionale\s*.{0,5}\s*scadenza",
+        "memory": r"Tutt.\s*.{0,5}\s*Premi\s*Condizionat.\s*.{0,5}\s*versat.\s*.{0,5}\s*accumuleranno\s*.{0,5}\s*saranno\s*versat.\s*solo\s*.{0,5}\s*.{0,5}\s*Condizion.\s*del\s*Premio\s*Condizionato\s*verrà\s*soddisfatta\s*successivamente",
+        "barrier_type": r"corrspondenz.\s*.{0,5}\s*data\s*.{0,5}\s*Valutazione\s*.{0,10}importo\s*.{0,5}\s*Liqidazione,\s*.{0,5}\s*prezzo\s*.{0,5}\s*Riferimento\s*Finale\s*.{0,5}\s*inferiroe\s*.{0,5}\s*barriera",
+        "importo_minimo": r"tuttavia\s*.{0,5}importo\s*minimo\s*.{0,5}\s*pari\s*.{0,5}\s*\d{0,3}[,\.]?\d{1,2}\s?%\s*.{0,10}Importo\s*Nozionale",
+        "leva_cedolare": r"(aumentato\s*.{0,5}\s*\d{0,3}[,\.]?\d{1,2}\s?%\s*.{0,5}\s*performance\s*.{0,5}\s*Sottostante\s*)|(più\s*.{0,5}\s*importo\s*commisurato\s*.{0,5}\s*\d{0,3}[,\.]?\d{1,2}\s?%\s*.{0,5}\s*Performance)",
+        "cap": r"\s*Riferimento\s*Finale\s*.{0,25}\s*pari\s*.{0,5}\s*superiore\s*.{0,5}\s*.{5,20}\s*Prezzo\s*.{0,5}\s*Riferimento\s*Iniziale\s*.{0,20}\s*contant.{0,10}\d{0,3}[,\.]?\d{1,2}\s?%.{0,10}importo\s*nozional",
+        "leva_airbag": r"meno\s*.{0,5}\s*importo\s*commisurato\s*.{0,10}\s*.{0,5}\s*Performance\s*.{0,5}\s*Sottostante",
     },
 }
-
-
 REGEX_PERC = r"\d{0,3}[,\.]?\d{1,2}\s?%"
 check_for = {
     "leonteq": {},

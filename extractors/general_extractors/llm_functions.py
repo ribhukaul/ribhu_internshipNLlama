@@ -90,7 +90,7 @@ async def general_table_inspection(table, table_type, file_id, language="it", ad
     return extraction_adapted
 
 
-async def complex_table_inspection(table, rhp, type, file_id, direct_tag=True, language="it"):
+def complex_table_inspection(table, rhp, type, file_id, direct_tag=True, language="it"):
     """
     searches table for information
     saves excel file with table in tmp to get around llm bug with incomplete stringified dataframe

@@ -87,9 +87,8 @@ class Models:
         llm = Models(model)
         chain = LLMChain(llm=llm, prompt=prompt)
         response = chain.run(context=pages, rhp=rhp)
-        if not isinstance(pages, str):
-            if isinstance(pages, list):
-                page_content = "".join(getattr(page, "page_content", "") for page in pages)
+        if not isinstance(pages, str) and isinstance(pages, list):
+            page_content = "".join(getattr(page, "page_content", "") for page in pages)
         cls.calc_costs(file_id, model, inputs=[page_content, prompt], outputs=[response])
         return response
 

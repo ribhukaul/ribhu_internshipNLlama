@@ -214,7 +214,7 @@ renaming = {
         "barrier": "Barriera",
         "barrier_type": "Tipo barriera",
         "callable": "Liquidazione Anticipata Facoltativa",
-        "putable": "Putability",
+        "autocallable": "Autocallability",
         "unconditional_coupon_min": "Premio/i",
         "conditional_coupon_min": "Premio/i Condizionato/i",
         "memory": "Effetto memoria",

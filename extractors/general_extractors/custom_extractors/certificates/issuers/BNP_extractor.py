@@ -45,19 +45,17 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
             
             
 
-            first_info_table = self._extract_table("first_info_bnp")
             performance_table = self._extract_table("performance", black_list_pages=[0])
 
         except Exception as error:
             print("get_tables error" + repr(error))
-            tables = [first_info_table, performance_table]
+            tables = [ performance_table]
             for i, table in enumerate(tables):
                 if not table:
                     tables[i] = None
 
         return dict(
             [
-                ("first_info", first_info_table),
                 ("performance", performance_table),
             ]
         )
@@ -102,7 +100,7 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
         try:
             booleans_to_check = {
                 "callable": 0,
-                "putable": 0,
+                "autocallable": 0,
                 "unconditional_protection": 0,
                 "memory": 0,
                 "barrier_type": 0,
@@ -143,10 +141,11 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
         # extraction = clean_response_regex( "main_info", self.language, extraction)
 
         error_list = [
-            "currency","strike_date","issue_date","expiry_date","final_valuation_date","nominal",
-            "market","barrier","unconditional_coupon_min","conditional_coupon_min","autocall",
-            "autocall_barrier","conditional_coupon_barrier","issue_price_perc",
-        ]
+    "currency","strike_date","issue_date","expiry_date","final_valuation_date","nominal",
+    "market","barrier","conditional_coupon_barrier","issue_price_perc","observation_coupon_date",
+    "payment_coupon_date","unconditional_coupon","conditional_coupon","payment_callable_date",
+    "observation_autocall_date","barrier_autocall","payment_autocall_date","value_autocall"]
+
         extraction = {key: (extraction[key] if extraction.get(key) is not None else "ERROR") for key in error_list}
 
         return extraction
@@ -172,8 +171,8 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
         try:
             if len(self.di_tables_pages) > 3:
                 # Extract tables with specified black list pages
-                allegato_scadenza = self._extract_table("allegato_bnp_scadenza", black_list_pages=[0, 2])
-                allegato_premio = self._extract_table("allegato_bnp_premio", black_list_pages=[0, 2])
+                allegato_scadenza = self._extract_table("allegato_bnp_scadenza", black_list_pages=[0,1])
+                allegato_premio = self._extract_table("allegato_bnp_premio", black_list_pages=[0,1])
 
                 # Inspect general tables and update extraction dictionary
                 extraction.update(
@@ -208,16 +207,22 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
         Returns:
             dict(): dictionary containing the main info
         """
+        #TODO: make better
         sottostante = None
-        if len(self.di_tables_pages) > 3:
-            sottostante = self._extract_table("allegato_bnp_premio", black_list_pages=[0,1,2])
-        else:
-            sottostante = self._extract_table("allegato_bnp_premio", black_list_pages=[2])
+        
+        sottostante = self._extract_table_only_header("sottostante_bnp", pages_to_check=[0,1])
 
-        extraction = await general_table_inspection(sottostante, "sottostanti_bnp", self.file_id, language=self.language)
+        extraction = await general_table_inspection(sottostante, "sottostante_bnp", self.file_id, language=self.language)
+        
+        extraction= dict(extraction)
+        if len(self.di_tables_pages) > 3 and (extraction.get("instrument_bloombergcode") == ['not found'] or re.search("allegat",extraction.get("instrument_isin")[0], re.IGNORECASE) ):
+            sottostante = self._extract_table_only_header("sottostante_bnp", list(range(3, len(self.di_tables_pages))))
+
+            extraction = await general_table_inspection(sottostante, "sottostante_bnp", self.file_id, language=self.language)
         # extraction = clean_response_regex( "main_info", self.language, extraction)
 
         error_list = ["instrument_description", "instrument_bloombergcode", "instrument_isin"]
+        extraction=dict(extraction)
         extraction = {key: (extraction[key] if extraction.get(key) is not None else "ERROR") for key in error_list}
 
         return extraction
@@ -238,7 +243,7 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
 
         return extraction
 
-    async def extract_first_info(self, table):
+    async def extract_first_info(self):
         """extracts the main info from the table
 
         Args:
@@ -249,12 +254,8 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
         """
         extraction = dict()
         try:
-            extraction = await general_table_inspection(
-                table,
-                "first_info_bnp",
-                self.file_id,
-                language=self.language,
-            )
+            extraction=llm_extraction_and_tag([self.text[0]], self.language, "first_info_bnp", self.file_id)
+
             # extraction = clean_response_regex( "first_info_bnp", self.language, extraction)
         except Exception as error:
             print("extract_first_info error" + repr(error))
@@ -278,16 +279,16 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
     def _write_to_excel(self, complete, complete2, allegato, sottostanti, api_costs, filename):
         
         with pd.ExcelWriter(
-            "results\\6febbraio\\bonus cap mini future\\resultsmarco_{}.xlsx".format(
+            "results\\13febbraio\\resultsmarco_{}.xlsx".format(
                 os.path.basename(self.file_id)
             ),
             engine="xlsxwriter",
         ) as excel_writer:
             # Write the first DataFrame to Sheet1
-            results1 = pd.DataFrame(complete, index=[filename])
+            results1 = pd.DataFrame(complete, index=[filename]).T
             results1.to_excel(excel_writer, sheet_name="info_anagrafiche", header=True)
 
-            results2 = pd.DataFrame(complete2, index=[filename])
+            results2 = pd.DataFrame(complete2, index=[filename]).T
             results2.to_excel(excel_writer, sheet_name="performance", header=True)
 
             results3 = pd.DataFrame(self.raccorda(dict(sottostanti), "bnp", keep=True)).T
@@ -340,7 +341,7 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
             tasks.append(asyncio.create_task(self.extract_allegato()))
             tasks.append(asyncio.create_task(self.extract_sottostanti()))
             tasks.append(asyncio.create_task(self.extract_main_info()))
-            tasks.append(asyncio.create_task(self.extract_first_info(tables["first_info"])))
+            tasks.append(asyncio.create_task(self.extract_first_info()))
 
             tasks.append(asyncio.create_task(self.extract_riy(2)))
             tasks.append(asyncio.create_task(self.extract_entryexit_management_costs()))

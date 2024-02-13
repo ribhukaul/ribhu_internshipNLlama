@@ -182,7 +182,7 @@ class KidExtractor(Extractor):
         performance = dict()
         try:
             performance = dict(
-                await complex_table_inspection(
+                complex_table_inspection(
                     table,
                     self.rhp,
                     "performance",

@@ -146,7 +146,7 @@ def search_in_pattern_in_text(pattern, text, pattern_inside):
     match = re.search(pattern_inside, match.group(0), re.IGNORECASE)
     if not match:
         return
-    return match.group(0)
+    return match.group(len(match.groups()))
 
 
 def extract_between(text, start, end):

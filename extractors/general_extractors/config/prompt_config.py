@@ -136,6 +136,11 @@ prompts = {
              -l'indicatore di rischio su 7 come dato
             DOCUMENTO:
             {context}""",
+        "first_info_bnp": """Dal documento seguente, estrai
+            -ISIN
+            - solamente l'emittente
+            DOCUMENTO:
+            {context}""",
     },
     "en": {
         "general_info": """From the following document, extract:
@@ -229,7 +234,7 @@ word_representation = {
         "first_info_bnp": ["codice isin", "isin", "autorità competente", "redazione", "produttore"],
         "main_info_bnp": ["data di strike", "strike", "prezzo di emissione", "emissione", "(rimborso)"],
         "main_info_bnp2": ["valuta", "valuta del prodotto", "importo nozionale", "nozionale"],
-        "sottostante_bnp": ["bloomberg", "codice bloomberg", "sottostante", "isin"],
+        "sottostante_bnp": ["bloomberg", "codice bloomberg", "sottostante"],
         "allegato_bnp_premio": ["premio/i", "premio", "barriera/e", "condizionato"],
         "allegato_bnp_scadenza": ["liquidazione", "anticipata", "facoltativa", "scadenza"],
     },
