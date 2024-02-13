@@ -78,9 +78,9 @@ class InformazioniBaseBNP(BaseModel):
 
 
 class TabellaSottostanteBNP(BaseModel):
-    instrument_description: List[str] = Field([NF], description="Sottostante, allegato se si riferisce ad un allegato")
+    instrument_description: List[str] = Field([NF], description="Sottostante")
     instrument_bloombergcode: List[str] = Field([NF], description="codice Bloomberg")
-    instrument_isin: List[str] = Field([NA], description="ISIN")
+    instrument_isin: List[str] = Field([NA], description="ISIN del sottostante")
 
 
 class TabellaFirstInfoBNP(BaseModel):
@@ -112,11 +112,11 @@ class TabellaMainInfoBNP(BaseModel):
     issue_date: str = Field(NF, description="Data di Emissione")
     expiry_date: str = Field(NF, description="Data di Liquidazione (rimborso)")
     final_valuation_date: str = Field(NF, description="Data di Valutazione dell'Importo di Liquidazione (rimborso)")
-    nominal: str = Field(NF, description="Valore Nominale")
-    market: str = Field(NF, description="Mercato di Quotazione")
+    nominal: str = Field(NF, description="Valore Nominale o Importo Nozionale")
+    market: str = Field(NA, description="Mercato di Quotazione")
     barrier: str = Field(NF, description="Barriera")
     unconditional_coupon_min: str = Field(NA, description="Premio/i")
-    conditional_coupon_min: str = Field(NF, description="Premio/i Condizionato/i")
+    conditional_coupon_min: str = Field(NA, description="Premio/i Condizionato/i")
     autocall: str = Field(
         NA,
         description="Indicato dala presenza di Data/e di Valutazione dell’Importo di Liquidazione (rimborso) Anticipato",

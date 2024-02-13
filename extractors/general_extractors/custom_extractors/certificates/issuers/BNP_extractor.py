@@ -208,12 +208,13 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
         Returns:
             dict(): dictionary containing the main info
         """
-
-        pages_for_sottostanti = [0, 1]
+        sottostante = None
         if len(self.di_tables_pages) > 3:
-            pages_for_sottostanti.extend([-1, -2])
+            sottostante = self._extract_table("allegato_bnp_premio", black_list_pages=[0,1,2])
+        else:
+            sottostante = self._extract_table("allegato_bnp_premio", black_list_pages=[2])
 
-        extraction = await self.extract_from_multiple_tables(pages_for_sottostanti, ["sottostante_bnp"])
+        extraction = await general_table_inspection(sottostante, "sottostanti_bnp", self.file_id, language=self.language)
         # extraction = clean_response_regex( "main_info", self.language, extraction)
 
         error_list = ["instrument_description", "instrument_bloombergcode", "instrument_isin"]
