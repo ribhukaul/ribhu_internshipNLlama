@@ -1,3 +1,7 @@
+# AZURE OPENAI COSTS
+# https://azure.microsoft.com/en-us/pricing/details/cognitive-services/openai-service/
+
+
 cost_per_token = {
     "input": {
         "gpt-4-turbo": -100,

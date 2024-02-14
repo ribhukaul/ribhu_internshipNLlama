@@ -1,8 +1,7 @@
-import asyncio
 import os
 import time
-from functools import partial
-from concurrent.futures import ProcessPoolExecutor
+from multiprocessing import Process, Pipe
+import asyncio
 
 from AWSInteraction.S3Handler import S3ExtractionHandler
 from extractors.general_extractors.custom_extractors.kid.insurance.kid_extractor import InsuranceKidExtractor
@@ -35,7 +34,7 @@ class ExtractionHandler:
         self.local_saved_files = {} # filekey: local_path
 
 
-    async def runallfiles(self, parallel=True):
+    def runallfiles(self, parallel=True):
 
         files_list = self.requestContext.payload['files']
         print("working_files:", files_list)
@@ -54,29 +53,52 @@ class ExtractionHandler:
             else:
                 self.extractions[file_path]= {'error': 'file not found'}
         if parallel:
-            # async processing of the files
-            #partial_run_async_func = partial(self.run_async_function, function=self.extactor)
-            task = []
-            for _, file_local in self.local_saved_files.items():
-                print("file items:", self.local_saved_files.items())
-                task.append(asyncio.create_task(self.run_async_function(file_local, self.extactor)))
-            
-            await asyncio.wait(task, return_when=asyncio.ALL_COMPLETED)
+            processes = []
+            parent_connections = []
 
+            for _, file_local in self.local_saved_files.items():
+                # Create pipe for communication
+                parent_conn, child_conn = Pipe()
+                parent_connections.append(parent_conn)
+
+                process = Process(target=self.run_piped_function, args=(child_conn, file_local, self.extactor,))
+                processes.append(process)
+
+
+            for process in processes:
+                process.start()
+            
+            for process in processes:
+                process.join()
+            # # async processing of the file
+            # #partial_run_async_func = partial(self.run_async_function, function=self.extactor)
+            # task = []
+            # for _, file_local in self.local_saved_files.items():
+            #     print("file items:", self.local_saved_files.items())
+            #     task.append(asyncio.create_task(self.run_async_function(file_local, self.extactor)))
+            
+            # await asyncio.wait(task, return_when=asyncio.ALL_COMPLETED)
+            instances_total = 0
+            for parent_connection in parent_connections:
+                instances_total += parent_connection.recv()[0]
             for i, it in enumerate(self.local_saved_files.items()):
                 file_key, _ = it
-                self.extractions[file_key] = task[i].result()
+                print(processes[i])
+                self.extractions[file_key] = processes[i]
         
         self.delete_local_files()
         
         return self.extractions
                 
-    async def run_async_function(self, file, function, *args):
+    def run_piped_function(self, conn, file, function, *args):
         doc_extractor = function(file, *args)
-        return await doc_extractor.process()
+        conn.send(doc_extractor.process())
+        conn.close()
+
+        #return await doc_extractor.process()
     
     def delete_local_files(self):
-        """
+        """ 
         Delete all the files that have been downloaded locally. The files are
         deleter after 30 minutes from the download or if they have been already
         processed in the current run.

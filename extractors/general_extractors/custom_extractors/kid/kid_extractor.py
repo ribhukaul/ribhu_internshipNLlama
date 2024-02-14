@@ -16,7 +16,7 @@ class KidExtractor(Extractor):
         super().__init__(doc_path, predefined_language)
 
 
-    async def get_tables(self):
+    def get_tables(self):
         """calc table extractor, it extracts the three tables from the document asynchronously
 
         Returns:
@@ -43,7 +43,7 @@ class KidExtractor(Extractor):
             ]
         )
 
-    async def extract_general_data(self):
+    def extract_general_data(self):
         """
         Extract general data from the document. Namely RHP and SRI.
 
@@ -90,7 +90,7 @@ class KidExtractor(Extractor):
         isin=re.search(r'[A-Z]{2}[A-Z0-9]{9}\d',to_search)
         return isin.group(0) if isin else "-"
     
-    async def extract_market(self, market_type="market"):
+    def extract_market(self, market_type="market"):
         """extracts market from the document
 
         Args:
@@ -115,7 +115,7 @@ class KidExtractor(Extractor):
         return market
 
     #REVIEW: NEED TO UPLOAD TABLE AS DF
-    async def extract_riy(self):
+    def extract_riy(self):
         """extracts riy from the document
 
         Returns:
@@ -141,10 +141,10 @@ class KidExtractor(Extractor):
         return extraction_riy
 
     #REVIEW: NEED TO UPLOAD TABLE AS DF
-    async def extract_entryexit_costs(self, table):
+    def extract_entryexit_costs(self, table):
 
         try:
-            extraction = await general_table_inspection(
+            extraction = general_table_inspection(
                 table,
                 "costi_ingresso",
                 self.file_id,
@@ -162,10 +162,10 @@ class KidExtractor(Extractor):
         return extraction
     
     #REVIEW: NEED TO UPLOAD TABLE AS DF
-    async def extract_management_costs(self, table):
+    def extract_management_costs(self, table):
 
         try:
-            extraction = await general_table_inspection(
+            extraction = general_table_inspection(
                 table,
                 "costi_gestione",
                 self.file_id,
@@ -182,7 +182,7 @@ class KidExtractor(Extractor):
 
         return extraction
 
-    async def extract_performances(self, table):
+    def extract_performances(self, table):
         """extracts performances from scenarios in the document
 
         Args:
@@ -195,9 +195,7 @@ class KidExtractor(Extractor):
         try:
             tasks = []
             if table is not None:
-                tasks.append(
-                    asyncio.create_task(
-                        complex_table_inspection(
+                performance = complex_table_inspection(
                             table,
                             self.rhp,
                             "performance",
@@ -205,12 +203,23 @@ class KidExtractor(Extractor):
                             direct_tag=True,
                             language=self.language,
                         )
-                    )
-                )
 
-                await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
+                # tasks.append(
+                #     asyncio.create_task(
+                #         complex_table_inspection(
+                #             table,
+                #             self.rhp,
+                #             "performance",
+                #             self.file_id,
+                #             direct_tag=True,
+                #             language=self.language,
+                #         )
+                #     )
+                # )
 
-                performance = tasks[0].result()
+                # await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
+
+                #performance = tasks[0].result()
                 morte = dict(
                     [
                         ("scenario_morte_1", performance.scenario_morte_1),
