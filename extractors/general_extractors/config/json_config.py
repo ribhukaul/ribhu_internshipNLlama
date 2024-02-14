@@ -239,6 +239,8 @@ renaming = {
         "value_autocall": "Premio/I di Uscita",
         "periodo_detenzione_raccomandato": "Periodo di detenzione raccomandato",
         "indicatore_sintetico_rischio": "Indicatore sintetico di rischio",
+        "importo_minimo": "Importo Minimo",
+        "leva_airbag": "Leva Airbag",
     },
     "transform": {
         "costi_totali_min": "incidenza_costo_eur_rhp_min",

@@ -137,7 +137,7 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
 
         pages_for_main = [0, 1]
 
-        extraction = await self.extract_from_multiple_tables(pages_for_main, ["main_info_bnp"])
+        extraction = await self.extract_from_multiple_tables(pages_for_main, ["main_info_bnp"], complex=True)
         # extraction = clean_response_regex( "main_info", self.language, extraction)
 
         error_list = [
@@ -173,6 +173,7 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
                 # Extract tables with specified black list pages
                 allegato_scadenza = self._extract_table("allegato_bnp_scadenza", black_list_pages=[0,1])
                 allegato_premio = self._extract_table("allegato_bnp_premio", black_list_pages=[0,1])
+                self.di_tables_pages
 
                 # Inspect general tables and update extraction dictionary
                 extraction.update(

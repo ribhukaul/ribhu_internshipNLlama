@@ -141,6 +141,30 @@ prompts = {
             - solamente l'emittente
             DOCUMENTO:
             {context}""",
+            "main_info_bnp":"""
+            dal documento seguente, estrai
+            -valuta del prezzo di emissione/valuta del prodotto
+            -data di strike
+            -data di emissione
+            -data di liquidazione (rimborso)
+            -data di valutazione dell'importo di liquidazione (rimborso)
+            -valore nominale o importo nozionale
+            -mercato di quotazione
+            -barriera
+            -barriera/e per il versamento del premio/i condizionato/i
+            -prezzo di emissione
+            -data/e di valutazione del/i premio/i condizionato/i
+            -data/e di pagamento del/i premio/i
+            -premio/i
+            -premio/i condizionato/i
+            -data di liquidazione anticipata facoltativa
+            -data di valutazione dell' importo di liquidazione (rimborso) anticipato
+            -barriera/e per la scadenza anticipata
+            -data di scadenza anticipata
+            -premio/i di uscita
+            DOCUMENTO:
+            {context}
+            """,
     },
     "en": {
         "general_info": """From the following document, extract:
@@ -236,7 +260,7 @@ word_representation = {
         "main_info_bnp2": ["valuta", "valuta del prodotto", "importo nozionale", "nozionale"],
         "sottostante_bnp": ["bloomberg", "codice bloomberg", "sottostante"],
         "allegato_bnp_premio": ["premio/i", "premio", "barriera/e", "condizionato"],
-        "allegato_bnp_scadenza": ["liquidazione", "anticipata", "facoltativa", "scadenza"],
+        "allegato_bnp_scadenza": ["liquidazione", "anticipata", "facoltativa", "scadenza, rimborso"],
     },
     "en": {
         "performance": [

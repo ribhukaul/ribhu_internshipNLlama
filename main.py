@@ -62,7 +62,7 @@ def main(doc_folder):
         env_setter = EnvVarSetter(tenant="insurance")
         env_setter.set_locally_saved_env_vars()
         # testing
-        file_type = "bnp"
+        file_type = "kid"
         all_files = []
         # list all the pdf files in the folder
         print("START")
@@ -71,7 +71,7 @@ def main(doc_folder):
 
         partial_process_file = partial(process_file, file_type=file_type)
         # async processing of the files
-        with ProcessPoolExecutor(max_workers=5) as executor:
+        with ProcessPoolExecutor(max_workers=4) as executor:
             results = executor.map(partial_process_file, all_files)
 
         # give request id

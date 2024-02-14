@@ -3,7 +3,7 @@ from ..models import Models
 from .config.cost_config import cost_per_token
 from ..utils import get_document_text, upload_df_as_excel
 from extractors.general_extractors.config.cost_config import cost_per_token
-from .llm_functions import get_doc_language
+from .llm_functions import get_doc_language, llm_extraction
 from extractors.azure.document_intelligence import get_tables_from_doc
 from .utils import select_desired_page, select_desired_table
 from extractors.general_extractors.llm_functions import general_table_inspection, llm_extraction_and_tag
@@ -90,7 +90,7 @@ class Extractor:
                 entry["cost"] = round(entry["cost"], 2)
         return api_costs
 
-    async def extract_from_multiple_tables(self, pages, tags):
+    async def extract_from_multiple_tables(self, pages, tags, complex=False):
         """extracts from multiple tables
 
         Args:
@@ -104,14 +104,17 @@ class Extractor:
             extraction = dict()
             list_tables = list(self.di_tables_pages)
             tables = []
-            concatenated_str = "i valori sono in una di queste tabelle e solo in una o in nessuna "
+            concatenated_str = "i valori sono in una di queste tabelle e solo in una o in nessuna, se si riferisce all'allegato ignoralo "
             for page in pages:
                 tables += self.di_tables_pages[list_tables[page]]
 
             for idx, table in enumerate(tables):
                 concatenated_str = concatenated_str + f"||||||||||||tabella numero {idx}:{table} "
+                
 
             for tag in tags:
+                if complex:
+                    concatenated_str = llm_extraction(concatenated_str, tag, self.file_id, language=self.language)
                 extraction.update(
                     dict(
                         await general_table_inspection(

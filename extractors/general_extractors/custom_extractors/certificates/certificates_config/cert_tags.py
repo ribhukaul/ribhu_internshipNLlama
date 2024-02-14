@@ -91,7 +91,7 @@ class TabellaFirstInfoBNP(BaseModel):
 class TabellaAllegatoPremioBNP(BaseModel):
     observation_coupon_date: List[str] = Field([NF], description="Data/e di Valutazione del/i Premio/i Condizionato/i")
     payment_coupon_date: List[str] = Field([NF], description="Data/e di Pagamento del/i Premio/i")
-    conditional_coupon_barrier: List[str] = Field([NF], description="Barriera/e per il Versamento del Premio/i Condizionato/i")
+    conditional_coupon_barrier: List[str] = Field([NF], description="Barriera/e per il Versamento")
     unconditional_coupon: List[str] = Field([NF], description="Premio/i")
     conditional_coupon: List[str] = Field([NF], description="Premio/i Condizionato/i")
 
@@ -113,7 +113,7 @@ class TabellaMainInfoBNP(BaseModel):
     final_valuation_date: str = Field(NF, description="Data di Valutazione dell'Importo di Liquidazione (rimborso)")
     nominal: str = Field(NF, description="Valore Nominale o Importo Nozionale")
     market: str = Field(NA, description="Mercato di Quotazione")
-    barrier: str = Field(NF, description="Barriera (senza niente aggiunto)")
+    barrier: str = Field(NF, description="Barriera")
     conditional_coupon_barrier: str = Field(NA, description="Barriera/e per il Versamento del Premio/i Condizionato/i")
     issue_price_perc: str = Field(NF, description="Prezzo di Emissione")
     observation_coupon_date: str = Field(NF, description="Data/e di Valutazione del/i Premio/i Condizionato/i")
@@ -124,6 +124,11 @@ class TabellaMainInfoBNP(BaseModel):
     observation_autocall_date: str = Field(
         NF, description="Data/e di Valutazione dell' Importo di Liquidazione (rimborso) Anticipato"
     )
+    """observation_autocall_date: List[str] = Field(
+        [NF], description="Data/e di Valutazione dell' Importo di Liquidazione (rimborso) Anticipato"
+    )"""
+    #barrier_autocall: List[str] = Field([NF], description="Barriera/e per la Scadenza Anticipata")
     barrier_autocall: str = Field(NF, description="Barriera/e per la Scadenza Anticipata")
+    #payment_autocall_date: List[str] = Field([NF], description="Data di Scadenza Anticipata")
     payment_autocall_date: str = Field(NF, description="Data di Scadenza Anticipata")
     value_autocall: str = Field(NF, description="Premio/I di Uscita")
