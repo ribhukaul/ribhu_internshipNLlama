@@ -55,7 +55,7 @@ class Models:
             return cls._models[group_id][model_name][temperature]
 
     @classmethod
-    def tag(cls, text, schema, file_id, model="gpt-3.5-turbo"):
+    def tag(cls, text, schema, file_id, model="gpt-4-turbo"):
         """Extract tags from text using a schema and a language model.
         It uses the function create_tagging_chain_pydantic from langchain.
 

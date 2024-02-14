@@ -126,6 +126,9 @@ class KidExtractor(Extractor):
             extraction_riy = tag_only(
                 self.text[1:], "riy", self.language, self.file_id, rhp=self.rhp
             )
+            print("RIY")
+            print(self.text[1:])
+            print(extraction_riy)
             extraction_riy = clean_response_regex(
                 "riy", self.language, extraction_riy, to_add="%"
             )

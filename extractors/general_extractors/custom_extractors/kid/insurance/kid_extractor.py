@@ -45,6 +45,7 @@ class InsuranceKidExtractor(KidExtractor):
             await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
 
             riy = tasks[0].result()
+            print(riy)
             exit_entry_costs = tasks[1].result()
             management_costs = tasks[2].result()
             performance = tasks[3].result()
@@ -55,6 +56,7 @@ class InsuranceKidExtractor(KidExtractor):
         try:
             # Format results
             riy = dict(riy)
+            print("This is the RIY: ", riy)
             performance = dict(performance)
             exit_entry_costs = dict(exit_entry_costs)
             management_costs = dict(management_costs)
