@@ -10,6 +10,21 @@ from extractors.general_extractors.config.json_config import (
 )
 from .config.JsonClasses import JSONExtraction
 from .config.prompt_config import word_representation
+import threading
+
+class ThreadFunction(threading.Thread):
+    def __init__(self, function, *args):
+        threading.Thread.__init__(self)
+        self.function = function
+        self.args = args
+    def run(self):
+        if self.args is None:
+            self.result = self.function()
+        else:
+            self.result = self.function(*self.args)
+    def get_result(self):
+        return self.result
+
 
 class Extractor:
     """parent class for all extractors"""
@@ -25,7 +40,26 @@ class Extractor:
 
         self.di_tables_pages = {}
         self.extraction = {}
-    
+    # DOCSTRING MISSING
+    def threader(self, functions_parameters):
+
+        threads = {}
+        results = {}
+        for function_name, parameters in functions_parameters.items():
+            func, args = parameters['function'], parameters.get('args')
+            print(func, args)
+            if args is None:
+                thread = ThreadFunction(func)
+            else:
+                thread = ThreadFunction(func, *args)
+            threads[function_name] = thread
+            thread.start()
+        for _, thread in threads.items():
+            thread.join()
+        for function_name, thread in threads.items():
+            results[function_name] = thread.get_result()
+        return results
+
     
     
     def _extract_table(self, type, black_list_pages=[]):
@@ -116,7 +150,6 @@ class Extractor:
         json_output = extraction.to_json()
         
         return json_output
-
 
 
     def raccorda(self, dictionary, type, keep=False):#could tecnically go to utils

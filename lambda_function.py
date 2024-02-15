@@ -1,5 +1,4 @@
 import json
-import asyncio
 from RequestContext import RequestContext
 from ExtractionHandler import ExtractionHandler
 from AWSInteraction.EnvVarSetter import EnvVarSetter
@@ -19,6 +18,7 @@ at AWSInteraction\config.json:
 For parallel execution:
 https://aws.amazon.com/blogs/compute/parallel-processing-in-python-with-aws-lambda/
 """
+
 # TODO: CODE TO ELIMINATE OLDER FILE FROM /TMP
 def lambda_handler(event, context):
     print("RICEVUTO RICHIESTA: ", event)
@@ -29,10 +29,6 @@ def lambda_handler(event, context):
 
     try:
         extraction_handler = ExtractionHandler(requestContext)
-        # loop = asyncio.get_event_loop()  
-        # loop.run_until_complete(extraction_handler.runallfiles())
-
-        # asyncio.run(extraction_handler.runallfiles())#parallel=True, max_workers=8)
         extraction_handler.runallfiles()
         extracted_data = extraction_handler.extractions
         extracted_data_json = json.dumps(extracted_data)
@@ -51,10 +47,12 @@ def lambda_handler(event, context):
                 'extraction': json.dumps({'error': repr(error)})
             }
 
+
 # if __name__ == '__main__':
 #    import os
 #    os.environ['ENV'] = 'local'
-#    event = {"body": "{\r\n  \"files\": [\"basepfts/workspaces/test severini/BlackRock Global Funds - World Healthscience Fund (LU1960219571).pdf\", \"basepfts/workspaces/test severini/AXA WF Framlington Sustainable Europe (LU0389656389).pdf\" ], \"TENANT\": \"insurance\", \"extractor_type\": \"kid\"\r\n}"}
+#    event = {
+#        "body": "{\r\n  \"files\": [\"basepfts/workspaces/test severini/AXA WF Global Factors - Sustainable Equity (LU0943665348).pdf\" ], \"TENANT\": \"insurance\", \"extractor_type\": \"kid\"\r\n}"}
 #    x = lambda_handler(event, None)
 #    print(x)
 

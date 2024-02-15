@@ -21,44 +21,49 @@ class InsuranceKidExtractor(KidExtractor):
         """
         # FIRST STAGE: get tables and general information
         try:
-            #tasks = []
-            tables = self.get_tables()
-            basic_information = self.extract_general_data()
-            market = self.extract_market()
-            # tasks.append(asyncio.create_task()
-            # tasks.append(asyncio.create_task())
-            # tasks.append(asyncio.create_task(self.extract_market()))
+      
+            functions_parameters = {
+                "tables": {"function":self.get_tables}, 
+                "basic_information": {"function":self.extract_general_data},
+                "market": {"function":self.extract_market}
+                }
+            results = self.threader(functions_parameters)
 
-            # await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
+            tables = results["tables"]
+            basic_information = results["basic_information"]
+            market = results["market"]
+            print("Tables and basic information:")
+            print(type(tables))
+            print(tables.keys())
+            print(basic_information)
+            print(basic_information['isin'])
 
-            # tables = tasks[0].result()
-            # basic_information = tasks[1].result()
-            # market = tasks[2].result()
+
         except Exception as error:
             print("first stage error" + repr(error))
         
         # SECOND STAGE: extract RIY, costs, commissions and performances
-        try:
-            #tasks = []
-            riy = self.extract_riy()
-            exit_entry_costs = self.extract_entryexit_costs(tables["costi_ingresso"])
-            management_costs = self.extract_management_costs(tables["costi_gestione"])
-            performance = self.extract_performances(tables["performance"])
-            # tasks.append(asyncio.create_task(self.extract_riy()))
-            # tasks.append(asyncio.create_task(self.extract_entryexit_costs(tables["costi_ingresso"])))
-            # tasks.append(asyncio.create_task(self.extract_management_costs(tables["costi_gestione"])))
-            # tasks.append(asyncio.create_task(self.extract_performances(tables["performance"])))
+        #try:
+        functions_parameters = {
+            "riy": {"function":self.extract_riy}, 
+            "costs": {"function":self.extract_entryexit_costs, "args":{"table":tables["costi_ingresso"]}},
+            "management_costs": {"function":self.extract_management_costs, "args": {"table":tables["costi_gestione"]}},
+            "performance": {"function":self.extract_performances, "args":{"table":tables["performance"]}}
+            }
+        results = self.threader(functions_parameters)
+        riy = results["riy"]
+        exit_entry_costs = results["costs"]
+        management_costs = results["management_costs"]
+        performance = results["performance"]
 
-            # await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
+            # riy = self.extract_riy()
+            # exit_entry_costs = self.extract_entryexit_costs(tables["costi_ingresso"])
+            # management_costs = self.extract_management_costs(tables["costi_gestione"])
+            # performance = self.extract_performances(tables["performance"])
+        
 
-            # riy = tasks[0].result()
-            # print(riy)
-            # exit_entry_costs = tasks[1].result()
-            # management_costs = tasks[2].result()
-            # performance = tasks[3].result()
-
-        except Exception as error:
-            print("second stage error" + repr(error))
+        # except Exception as error:
+        #     print("second stage error" + repr(error))
 
         try:
             # Format results
@@ -113,4 +118,4 @@ class InsuranceKidExtractor(KidExtractor):
 
         return complete
 
-    
+
