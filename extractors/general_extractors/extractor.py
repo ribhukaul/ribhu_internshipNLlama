@@ -13,7 +13,7 @@ from .config.prompt_config import word_representation
 import threading
 
 class ThreadFunction(threading.Thread):
-    def __init__(self, function, *args):
+    def __init__(self, function, args):
         threading.Thread.__init__(self)
         self.function = function
         self.args = args
@@ -21,7 +21,7 @@ class ThreadFunction(threading.Thread):
         if self.args is None:
             self.result = self.function()
         else:
-            self.result = self.function(*self.args)
+            self.result = self.function(**self.args)
     def get_result(self):
         return self.result
 
@@ -48,10 +48,8 @@ class Extractor:
         for function_name, parameters in functions_parameters.items():
             func, args = parameters['function'], parameters.get('args')
             print(func, args)
-            if args is None:
-                thread = ThreadFunction(func)
-            else:
-                thread = ThreadFunction(func, *args)
+          
+            thread = ThreadFunction(func, args)
             threads[function_name] = thread
             thread.start()
         for _, thread in threads.items():
