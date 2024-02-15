@@ -2,12 +2,25 @@ import os
 import time
 from multiprocessing import Process, Pipe
 import asyncio
+import threading
 
 from AWSInteraction.S3Handler import S3ExtractionHandler
 from extractors.general_extractors.custom_extractors.kid.insurance.kid_extractor import InsuranceKidExtractor
 from extractors.general_extractors.custom_extractors.kid.insurance.gkid_extractor import InsuranceGKidExtractor
 # TODO: 
 # - multiple files in one folder
+
+class ThreadedFunction(threading.Thread):
+    def __init__(self, function, *args):
+        threading.Thread.__init__(self)
+        self.function = function
+        self.args = args
+        self.result = None
+
+    def run(self):
+        extractor = self.function(*self.args)
+        self.result = extractor.process()
+
 
 class ExtractionHandler:
 
@@ -53,38 +66,52 @@ class ExtractionHandler:
             else:
                 self.extractions[file_path]= {'error': 'file not found'}
         if parallel:
-            processes = []
-            parent_connections = []
-
-            for _, file_local in self.local_saved_files.items():
-                # Create pipe for communication
-                parent_conn, child_conn = Pipe()
-                parent_connections.append(parent_conn)
-
-                process = Process(target=self.run_piped_function, args=(child_conn, file_local, self.extactor,))
-                processes.append(process)
 
 
-            for process in processes:
-                process.start()
+            threads = {}
+            for file_key, file_path in self.local_saved_files.items():
+                thread = ThreadedFunction(self.extactor, file_path)
+                threads[file_key] = thread
+                thread.start()
             
-            for process in processes:
-                process.join()
-            # # async processing of the file
-            # #partial_run_async_func = partial(self.run_async_function, function=self.extactor)
-            # task = []
+            for _, thread in threads.items():
+                thread.join()
+            
+            for file_key, thread in threads.items():
+                self.extractions[file_key] = thread.result
+            
+            # processes = []
+            # parent_connections = []
+
             # for _, file_local in self.local_saved_files.items():
-            #     print("file items:", self.local_saved_files.items())
-            #     task.append(asyncio.create_task(self.run_async_function(file_local, self.extactor)))
+            #     # Create pipe for communication
+            #     parent_conn, child_conn = Pipe()
+            #     parent_connections.append(parent_conn)
+
+            #     process = Process(target=self.run_piped_function, args=(child_conn, file_local, self.extactor,))
+            #     processes.append(process)
+
+
+            # for process in processes:
+            #     process.start()
             
-            # await asyncio.wait(task, return_when=asyncio.ALL_COMPLETED)
-            instances_total = 0
-            for parent_connection in parent_connections:
-                instances_total += parent_connection.recv()[0]
-            for i, it in enumerate(self.local_saved_files.items()):
-                file_key, _ = it
-                print(processes[i])
-                self.extractions[file_key] = processes[i]
+            # for process in processes:
+            #     process.join()
+            # # # async processing of the file
+            # # #partial_run_async_func = partial(self.run_async_function, function=self.extactor)
+            # # task = []
+            # # for _, file_local in self.local_saved_files.items():
+            # #     print("file items:", self.local_saved_files.items())
+            # #     task.append(asyncio.create_task(self.run_async_function(file_local, self.extactor)))
+            
+            # # await asyncio.wait(task, return_when=asyncio.ALL_COMPLETED)
+            # instances_total = 0
+            # for parent_connection in parent_connections:
+            #     instances_total += parent_connection.recv()[0]
+            # for i, it in enumerate(self.local_saved_files.items()):
+            #     file_key, _ = it
+            #     print(processes[i])
+            #     self.extractions[file_key] = processes[i]
         
         self.delete_local_files()
         
