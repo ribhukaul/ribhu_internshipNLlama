@@ -1,5 +1,6 @@
 from extractors.general_extractors.custom_extractors.certificates.certificates_config.cert_tags import (
     InformazioniBaseBNP,
+    TabellaAllegatiBNP,
     TabellaAllegatoScadenzaBNP,
     TabellaCedola,
     TabellaSottostanti,
@@ -158,10 +159,46 @@ prompts = {
             -premio/i
             -premio/i condizionato/i
             -data di liquidazione anticipata facoltativa
-            -data di valutazione dell' importo di liquidazione (rimborso) anticipato
+            -tutte le date di valutazione dell' importo di liquidazione (rimborso) anticipato
             -barriera/e per la scadenza anticipata
-            -data di scadenza anticipata
+            -tutte le date di scadenza anticipata
             -premio/i di uscita
+            DOCUMENTO:
+            {context}
+            """,
+            "allegato_bnp_premio":"""
+            dal documento seguente, estrai
+            tutte le data/e di valutazione del/i premio/i condizionato/i
+            tutte le data/e di pagamento del/i premio/i
+            barriera/e o barrierale per il versamento del Premio/i Condizionato/i
+            premio/i
+            Premio/i condizionato/i
+            DOCUMENTO:
+            {context}
+            
+            """,
+            "allegato_bnp_scadenza":"""
+            dal documento seguente, estrai
+            Data di Liquidazione Anticipata Facoltativa
+            tutte le Data/e di Valutazione dell'Importo di Liquidazione (rimborso) Anticipato
+            Barriera/e o barrierale per la Scadenza Anticipata
+            Data di Scadenza Anticipata
+            Premio/I di Uscita
+            DOCUMENTO:
+            {context}
+            """,
+            "allegati_bnp":"""
+            dal documento seguente, estrai
+            tutte le data/e di valutazione del/i premio/i condizionato/i
+            tutte le data/e di pagamento del/i premio/i
+            barriera/e o barrierale per il versamento del Premio/i Condizionato/i
+            Premio/i
+            Premio/i condizionato/i
+            Data di Liquidazione Anticipata Facoltativa
+            tutte le Data/e di Valutazione dell'Importo di Liquidazione (rimborso) Anticipato
+            Barriera/e o barrierale per la Scadenza Anticipata
+            Data di Scadenza Anticipata
+            Premio/I di Uscita
             DOCUMENTO:
             {context}
             """,
@@ -219,6 +256,7 @@ table_schemas = {
         "main_info_bnp": TabellaMainInfoBNP,
         "allegato_bnp_premio": TabellaAllegatoPremioBNP,
         "allegato_bnp_scadenza": TabellaAllegatoScadenzaBNP,
+        "allegati_bnp": TabellaAllegatiBNP,
         "first_info_bnp": TabellaFirstInfoBNP,
         "sottostante_bnp": TabellaSottostanteBNP,
     },

@@ -32,23 +32,23 @@ def process_file(file_path, file_type):
     try:
         match file_type:
             case "kid":
-                kid_extractor = InsuranceKidExtractor(file_path)
-                return asyncio.run(kid_extractor.process())
+                extractor = InsuranceKidExtractor(file_path)
             case "g-kid":
-                gkid_extractor = InsuranceGKidExtractor(file_path)
-                return asyncio.run(gkid_extractor.process())
+                extractor = InsuranceGKidExtractor(file_path)
             case "leonteq":
-                derivati_extraction = LeonteqDerivatiKidExtractor(file_path)
-                return asyncio.run(derivati_extraction.process())
+                extractor = LeonteqDerivatiKidExtractor(file_path)
             case "bnp":
-                derivati_extraction = BNPDerivatiKidExtractor(file_path)
-                return asyncio.run(derivati_extraction.process())
+                extractor = BNPDerivatiKidExtractor(file_path)
             case _:
                 raise ValueError("type not supported")
+            
+        return asyncio.run(extractor.process())
+    
+    
     except Exception as error:
         print("ERROR: {}".format(file_path) + repr(error))
         filename = os.path.splitext(os.path.basename(file_path))[0]
-        return [dict((filename, dict()))]
+        return dict((filename, dict()))
 
 
 def main(doc_folder):
@@ -62,7 +62,7 @@ def main(doc_folder):
         env_setter = EnvVarSetter(tenant="insurance")
         env_setter.set_locally_saved_env_vars()
         # testing
-        file_type = "kid"
+        file_type = "bnp"
         all_files = []
         # list all the pdf files in the folder
         print("START")
@@ -71,18 +71,18 @@ def main(doc_folder):
 
         partial_process_file = partial(process_file, file_type=file_type)
         # async processing of the files
-        with ProcessPoolExecutor(max_workers=4) as executor:
+        with ProcessPoolExecutor(max_workers=5) as executor:
             results = executor.map(partial_process_file, all_files)
 
         # give request id
         Models.clear_resources_group(str(-1))
         # orders results
-        # results = pd.DataFrame(results)
-        # ordered = [col for col in column_order[file_type] if col in results.columns]
-        # results = results[ordered]
-        # excel_path = os.path.join(doc_folder + '.xlsx')
+        results = pd.DataFrame(results)
+        #ordered = [col for col in column_order[file_type] if col in results.columns]
+        #results = results[ordered]
+        excel_path = os.path.join(doc_folder + '.xlsx')
         # saves results
-        # results.to_excel(excel_path, header=True, index=False)
+        results.to_excel(excel_path, header=True, index=False)
         print(results)
 
     except Exception as error:
@@ -90,12 +90,12 @@ def main(doc_folder):
 
 
 if __name__ == "__main__":
-    folder = "kid\\documents\\testdoc\\temptemptemptemp\\temp"
-
-    for root, dirs, files in os.walk(folder):
+    folder = "kid\\documents\\testdoc\\temptemptemptemp\\dbg\\a"
+    
+    #for root, dirs, files in os.walk(folder):
         # Check if there are PDF files in the current directory
-        if any(file.endswith(".pdf") for file in files):
+        #if any(file.endswith(".pdf") for file in files):
             # Call your existing function to process PDFs in the folder
-            main(root)
+    main(folder)
 
     # main(folder)

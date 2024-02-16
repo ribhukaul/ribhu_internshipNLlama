@@ -29,7 +29,7 @@ regex_callable = {
         "leva_airbag": r"meno\s*.{0,5}\s*importo\s*commisurato\s*.{0,10}\s*.{0,5}\s*Performance\s*.{0,5}\s*Sottostante",
     },
 }
-REGEX_PERC = r"\d{0,3}[,\.]?\d{1,2}\s?%"
+REGEX_PERC = r"\d{0,3}[,\.]?\d{1,3}\s?%"
 check_for = {
     "leonteq": {},
     "bnp": {

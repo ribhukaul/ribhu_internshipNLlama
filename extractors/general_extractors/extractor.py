@@ -1,3 +1,4 @@
+from abc import abstractmethod
 import pandas as pd
 from ..models import Models
 from .config.cost_config import cost_per_token
@@ -109,16 +110,17 @@ class Extractor:
                 tables += self.di_tables_pages[list_tables[page]]
 
             for idx, table in enumerate(tables):
-                concatenated_str = concatenated_str + f"||||||||||||tabella numero {idx}:{table} "
+                concatenated_str = concatenated_str + f"||||||||||||tabella numero {idx}:{table.to_string( na_rep='N/A')} "
                 
 
             for tag in tags:
+                llm_extract=concatenated_str
                 if complex:
-                    concatenated_str = llm_extraction(concatenated_str, tag, self.file_id, language=self.language)
+                    llm_extract = llm_extraction(concatenated_str, tag, self.file_id, language=self.language)
                 extraction.update(
                     dict(
                         await general_table_inspection(
-                            concatenated_str,
+                            llm_extract,
                             tag,
                             self.file_id,
                             language=self.language,
@@ -169,3 +171,9 @@ class Extractor:
         if keep:
             new_dict.update({key: value for key, value in dictionary.items() if key not in renaming[type].keys()})
         return new_dict
+
+
+
+    @abstractmethod
+    def process(self):
+        ...

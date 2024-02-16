@@ -47,7 +47,7 @@ strips_cleaning = {
     },
 }
 # regex for cleaning, matches things to keep
-REGEX_NUMBERS_COMMA = "[+-]?(\s)?\d+((\s)?[,\.](\s)?\d+)*"
+REGEX_NUMBERS_COMMA = "[+-]?(\s)?\d+((\s)?[,\.]?(\s)?\d+)*"
 REGEX_NUMBER = "[+-]?(\s)?\d+((\s)?\d+)*"
 REGEX_DATE = "\d{1,2}\/\d{1,2}\/\d{2,4}|\d+\s[A-Za-z]+\s\d+"
 REGEX_ISIN = "[A-Z]{2}[A-Z0-9]{9}[0-9]"

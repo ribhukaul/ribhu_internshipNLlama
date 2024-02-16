@@ -161,7 +161,7 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
 
         """                
         error_list = [
-            "observation_coupon_date", "payment_coupon_date", "barrier_coupon", "unconditional_coupon",
+            "observation_coupon_date", "payment_coupon_date", "conditional_coupon_barrier", "unconditional_coupon",
             "conditional_coupon", "payment_callable_date", "observation_autocall_date", "barrier_autocall",
             "payment_autocall_date", "value_autocall"
         ]
@@ -170,19 +170,9 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
 
         try:
             if len(self.di_tables_pages) > 3:
+                
                 # Extract tables with specified black list pages
-                allegato_scadenza = self._extract_table("allegato_bnp_scadenza", black_list_pages=[0,1])
-                allegato_premio = self._extract_table("allegato_bnp_premio", black_list_pages=[0,1])
-                self.di_tables_pages
-
-                # Inspect general tables and update extraction dictionary
-                extraction.update(
-                    await general_table_inspection(allegato_scadenza, "allegato_bnp_scadenza", self.file_id, language=self.language)
-                )
-                extraction.update(
-                    await general_table_inspection(allegato_premio, "allegato_bnp_premio", self.file_id, language=self.language)
-                )
-
+                extraction= await self.extract_from_multiple_tables(list(range(3, len(self.di_tables_pages))), ["allegati_bnp"], complex=True)
                 # Define error list
 
 

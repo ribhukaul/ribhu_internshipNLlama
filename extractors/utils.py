@@ -9,7 +9,7 @@ from langchain_community.document_loaders import UnstructuredExcelLoader
 import uuid
 
 
-def upload_df_as_excel(df):
+def upload_df_as_excel(df:pd.DataFrame):
     """Upload DF as excel file for LargeLanguageModel analysis.
 
     Args:
@@ -18,6 +18,9 @@ def upload_df_as_excel(df):
     Returns:
         str: path of the uploaded file
     """
+    
+    return df.to_string()
+    
     if os.environ.get("ENV") == "local":
         tmp_path = "tmp"
     else:
@@ -143,10 +146,10 @@ def search_in_pattern_in_text(pattern, text, pattern_inside):
     match = re.search(pattern, text, re.IGNORECASE)
     if not match:
         return
-    match = re.search(pattern_inside, match.group(0), re.IGNORECASE)
-    if not match:
+    match_final = re.findall(pattern_inside, match.group(0), re.IGNORECASE)
+    if not match_final:
         return
-    return match.group(len(match.groups()))
+    return match_final[-1]
 
 
 def extract_between(text, start, end):
