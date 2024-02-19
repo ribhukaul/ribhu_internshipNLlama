@@ -291,13 +291,12 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
             dict([pandas.dataframe]): tables as dataframe
         """
         try:
-            tasks = [asyncio.create_task(self.fill_tables(i)) for i in range(1, 3)]
-            await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
+            self.fill_tables([1,2,3])
 
-            sottostanti_table = self._extract_table_only_header("sottostanti", api_version="2023-10-31-preview")
-            main_info_table = self._extract_table("main_info")
-            cedola_table = self._extract_table("cedola", black_list_pages=[1])
-            cedola_table_2 = self._extract_table("cedola", black_list_pages=[0])
+            sottostanti_table,_ = self._extract_table_only_header("sottostanti", api_version="2023-10-31-preview")
+            main_info_table,_ = self._extract_table("main_info")
+            cedola_table,_ = self._extract_table("cedola", black_list_pages=[1])
+            cedola_table_2,_ = self._extract_table("cedola", black_list_pages=[0])
 
             cedola_table,cedola_table_2 = self.check_validity_cedola(cedola_table, main_info_table, sottostanti_table, cedola_table_2)
                 

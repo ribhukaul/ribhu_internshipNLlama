@@ -1,5 +1,4 @@
 from abc import abstractmethod
-import pandas as pd
 from ..models import Models
 from .config.cost_config import cost_per_token
 from ..utils import get_document_text
@@ -28,6 +27,7 @@ class Extractor:
             self.language = get_doc_language(self.text, self.file_id)
 
         self.di_tables_pages = {}
+        self.raw_data_pages = {}
         self.extraction = {}
 
     def _extract_table(self, type, black_list_pages=[]):
@@ -52,14 +52,16 @@ class Extractor:
             # Get all the tables from the page
             if self.di_tables_pages is not None and page not in self.di_tables_pages.keys():
                 page_num = int(page) + 1
-                tables = get_tables_from_doc(self.doc_path, specific_pages=page_num, language=self.language)
+                tables, raw_data = get_tables_from_doc(self.doc_path, specific_pages=page_num, language=self.language)
                 self.di_tables_pages[page] = tables
+                self.raw_data_pages[page] = raw_data
             else:
                 tables = self.di_tables_pages[page]
+                raw_data = self.raw_data_pages[page]
 
             # Select the right table
             table_nr = select_desired_table(tables, keywords)
-            return tables[int(table_nr)]
+            return tables[int(table_nr)], raw_data
 
         except Exception as error:
             print("extract table error" + repr(error))
@@ -68,6 +70,21 @@ class Extractor:
             # exreturn = dict()
             # for table in tables:
             #     exreturn.update(table)
+            
+            
+
+    def fill_tables(self, pages):
+        """experimental for faster runs, fills the tables in the document asynchronously all in one
+
+        Args:
+            page (_type_): _description_
+        """
+        fill, raw_data = get_tables_from_doc(self.doc_path, specific_pages=pages, language=self.language)
+        for idx, table in enumerate(fill):
+            safe_number= getattr(raw_data.tables[idx] if idx < len(raw_data.tables) else None, 'bounding_regions', None)[0].get("pageNumber", None)
+            if safe_number:
+                self.di_tables_pages.setdefault(str(safe_number - 1), []).append(table)
+                self.raw_data_pages.setdefault(str(safe_number - 1), []).append(raw_data)
 
     def _process_costs(self):
         """processes the cost of the calls given local config and prepares them for the output

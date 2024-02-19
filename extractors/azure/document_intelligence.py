@@ -111,7 +111,7 @@ def get_tables_from_doc(
     if query_list:
         return df_tables, result.documents[0].fields
 
-    return df_tables
+    return df_tables, result
 
 
 if __name__ == "__main__":

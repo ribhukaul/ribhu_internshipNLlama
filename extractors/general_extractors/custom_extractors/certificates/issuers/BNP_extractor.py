@@ -20,15 +20,6 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
         self.doc_path = doc_path
         super().__init__(doc_path)
 
-    async def fill_tables(self, page):
-        """experimental for faster runs, fills the tables in the document asynchronously all in one
-
-        Args:
-            page (_type_): _description_
-        """
-        fill = get_tables_from_doc(self.doc_path, specific_pages=page, language=self.language)
-
-        self.di_tables_pages[str(page - 1)] = fill
         
 
     async def get_tables(self):

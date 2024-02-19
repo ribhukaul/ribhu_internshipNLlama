@@ -22,9 +22,9 @@ class KidExtractor(Extractor):
             dict([pandas.dataframe]): tables as dataframe
         """
         try:
-            performance_table = self._extract_table("performance")
-            costi_ingresso_table = self._extract_table("costi_ingresso", black_list_pages=[0])
-            costi_gestione_table = self._extract_table("costi_gestione")
+            performance_table,_ = self._extract_table("performance")
+            costi_ingresso_table,_ = self._extract_table("costi_ingresso", black_list_pages=[0])
+            costi_gestione_table,_ = self._extract_table("costi_gestione")
         except Exception as error:
             print("calc table error" + repr(error))
             error_list = [performance_table, costi_ingresso_table, costi_gestione_table]

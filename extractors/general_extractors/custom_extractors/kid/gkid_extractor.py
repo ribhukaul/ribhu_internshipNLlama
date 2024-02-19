@@ -15,9 +15,9 @@ class GKidExtractor(KidExtractor):
             dict([pandas.dataframe]): tables as dataframe
         """
         try:
-            riy_table = self._extract_table("riy_perc_gkid")
-            costi_ingresso = self._extract_table("costi_ingresso_gkid", black_list_pages=[0])
-            costi_gestione = self._extract_table("costi_gestione_gkid")
+            riy_table,_ = self._extract_table("riy_perc_gkid")
+            costi_ingresso,_ = self._extract_table("costi_ingresso_gkid", black_list_pages=[0])
+            costi_gestione,_ = self._extract_table("costi_gestione_gkid")
 
         except Exception as error:
             print("calc table error" + repr(error))

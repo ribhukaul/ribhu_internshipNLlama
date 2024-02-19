@@ -58,25 +58,30 @@ class DerivatiKidExtractor(KidExtractor):
             # Select page with table
             keywords = word_representation[self.language][type]
             tables = []
+            raw_data = []
             # Get all the tables from the page
             if self.di_tables_pages is not None and not all(str(page) in self.di_tables_pages for page in pages_to_check):
                 for page in [page for page in pages_to_check if str(page) not in self.di_tables_pages.keys()]:
                     page_num = int(page) + 1
-                    new_tables = get_tables_from_doc(
+                    new_tables, new_raw_data = get_tables_from_doc(
                         self.doc_path,
                         specific_pages=page_num,
                         language=self.language,
                         api_version=api_version,
                     )
                     self.di_tables_pages[str(page)] = new_tables
+                    self.raw_data_pages[str(page)] = new_raw_data
+                    
                     tables.extend(table for table in new_tables)
+                    raw_data.extend(data for data in new_raw_data)
             else:
                 for page in pages_to_check:
                     tables.extend(table for table in self.di_tables_pages[str(page)])
+                    raw_data.extend(data for data in self.raw_data_pages[str(page)])
 
             # Select the right table
             table_nr = select_desired_table_only_header(tables, keywords)
-            return tables[int(table_nr)]
+            return tables[int(table_nr)], raw_data[int(table_nr)]
         except Exception as error:
             print("extract table error" + repr(error))
             return None
