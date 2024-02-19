@@ -72,7 +72,7 @@ class JSONExtraction:
     def build_basic_info(self):
         # Assuming 'prepare_json' contains a template for basic info
         
-        models_cost = [self.results[value] for value in available_costs if value in self.results]
+        models_cost = {value: self.results[value] for value in available_costs if value in self.results}
         basic_template = prepare_json['basic']
         basic_info = json.loads(basic_template.format(path=self.doc_path, total=self.results.get("total", {}), models=models_cost).replace('\'', '"').replace('\\','\\\\'))
         return basic_info
