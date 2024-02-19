@@ -9,6 +9,7 @@ from .json_config import (
     range_of,
     decimals_of,
     allow_null,
+    names_of_fields_to_clean_dot
 )
 import json
 from .cost_config import available_costs
@@ -26,14 +27,21 @@ class Field:
         self.allownull = allow_null[doc_type].get(key, False)
 
     def check_validity(self):
-        if self.name in ["SMOR RHP (€)", "SMOR 1Y (€)"]:
-            self.value = self.value.replace(".", "")
+        """clean the value
+        """
+        if self.name in names_of_fields_to_clean_dot:
+            self.value = str(self.value).replace(".", "")
         if self.data_type == "Float":
-            self.value = self.value.replace(",", ".")
+            self.value = str(self.value).replace(",", ".")
         if self.data_type == "Date":
             self.value = re.sub(r"(\d{2})/(\d{2})/(\d{4})", r"\3-\2-\1", self.value)
 
     def to_dict(self):
+        """Return the fields as a dictionary
+
+        Returns:
+            dict(): Dictionary with the fields
+        """
         self.check_validity()
         return {
             "name": self.name,
@@ -57,6 +65,11 @@ class JSONExtraction:
         self.sections = self.build_sections()
 
     def build_fields(self):
+        """creates the fields for the JSON
+
+        Returns:
+            dict(): fields for the JSON
+        """
         fields = {}
         for key in data_array[self.doc_type]:
             fields[field_names[self.doc_type][key]] = Field(
@@ -65,9 +78,13 @@ class JSONExtraction:
         return fields
 
     def build_basic_info(self):
-        # Assuming 'prepare_json' contains a template for basic info
+        """creates the basic info for the JSON
 
-        models_cost = [self.results[value] for value in available_costs if value in self.results]
+        Returns:
+            dict(): basic info for the JSON
+        """
+
+        models_cost = {value: self.results[value] for value in available_costs if value in self.results}
         basic_template = prepare_json["basic"]
         basic_info = json.loads(
             basic_template.format(path=self.doc_path, total=self.results.get("total", {}), models=models_cost)
@@ -77,10 +94,19 @@ class JSONExtraction:
         return basic_info
 
     def build_sections(self):
-        # Assuming 'prepare_json' contains the sections info directly as JSON
+        """creates the sections for the JSON
+
+        Returns:
+            dict(): sections for the JSON
+        """
         sections = json.loads(prepare_json["sections"][self.doc_type])
         return sections
 
     def to_json(self):
+        """jsonify
+
+        Returns:
+            json: final json
+        """
         complete = {**self.basic_info, "sections": self.sections, "extraction": self.fields}
         return json.dumps(complete, indent=4, ensure_ascii=False)

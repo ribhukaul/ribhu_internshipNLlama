@@ -29,15 +29,13 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
             dict([pandas.dataframe]): tables as dataframe
         """
         try:
-            tasks = []
-            for i in range(1, min([len(self.text) + 1, 6])):
-                tasks.append(asyncio.create_task(self.fill_tables(i)))
+            
+            self.fill_tables([i for i in range(1,min(len(self.text) + 1, 6))])
 
-            await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
             
             
 
-            performance_table = self._extract_table("performance", black_list_pages=[0])
+            performance_table,_ = self._extract_table("performance", black_list_pages=[0])
 
         except Exception as error:
             print("get_tables error" + repr(error))
@@ -192,13 +190,13 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
         #TODO: make better
         sottostante = None
         
-        sottostante = self._extract_table_only_header("sottostante_bnp", pages_to_check=[0,1])
+        sottostante,_ = self._extract_table_only_header("sottostante_bnp", pages_to_check=[0,1])
 
         extraction = await general_table_inspection(sottostante, "sottostante_bnp", self.file_id, language=self.language)
         
         extraction= dict(extraction)
         if len(self.di_tables_pages) > 3 and (extraction.get("instrument_bloombergcode") == ['not found'] or re.search("allegat",extraction.get("instrument_isin")[0], re.IGNORECASE) ):
-            sottostante = self._extract_table_only_header("sottostante_bnp", list(range(3, len(self.di_tables_pages))))
+            sottostante,_ = self._extract_table_only_header("sottostante_bnp", list(range(3, len(self.di_tables_pages))))
 
             extraction = await general_table_inspection(sottostante, "sottostante_bnp", self.file_id, language=self.language)
         # extraction = clean_response_regex( "main_info", self.language, extraction)
@@ -387,8 +385,24 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
                 "kid",
                 keep=True,
             )
+            json=self.create_json({
+                    "file_name": filename,
+                    **dict(basic_information),
+                    **dict(performance),
+                    **dict(riy),
+                    **dict(exit_entry_management_costs),
+                    **dict(allegato),
+                    **dict(api_costs),
+                    **dict(sottostanti),
+                    **dict(deductables),
+                    **dict(basic_information),
+                    **dict(clean_response_regex("bnp_main","it", main_info)),
+                    **dict(first_info),
+                }, "bnp")
             
             self._write_to_excel(complete, complete2, allegato, sottostanti, api_costs, filename)
+            
+            return json
 
 
         except Exception as error:

@@ -41,6 +41,7 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
 
         Returns: dict(): data extracted
         """
+        extraction = dict()
         try:
             # Extract and clean data
             extraction = dict(
@@ -80,8 +81,8 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
         Returns:
             dict(): dictionary containing the cedola
         """
+        extraction = dict()
         try:
-            extraction = dict()
             if isinstance(table, str):
                 extraction = self.regex_cedola(table)
             else:
@@ -95,7 +96,16 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
                 )
         except Exception as error:
             print("extract_cedola error" + repr(error))
-            extraction = {"cedola": "ERROR"}
+            error_list=[
+                "data_osservazione_cedola",
+                "liv_attiv_cedola",
+                "data_pagamento_cedola",
+                "importo_cedola",
+                "data_osservazione_autocall",
+                "liv_attiv_autocall",
+                "data_pagamento_autocall"
+            ]
+            extraction = {key: extraction.get(key, "ERROR") for key in error_list}
 
         return extraction
 
@@ -178,7 +188,21 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
             dict: Dictionary containing the sottostanti.
                 First extractions are arrays, second are single data.
         """
-        extraction = {}
+        extraction = {
+            "liv_fixing_iniziale": "ERROR",
+            "liv_att_cedola_perc": "ERROR",
+            "strike_level_perc": "ERROR", 
+            "livello_barriera": "ERROR",
+            "livello_cap": "ERROR",
+            "sottostante": "ERROR",
+            "tipo": "ERROR",
+            "borsa": "ERROR",
+            "bloom": "ERROR",
+            "isin": "ERROR",
+            "fixing_eur": "ERROR",
+            "barriera_eur": "ERROR",
+            "coupon_eur": "ERROR",  
+        }
         try:
             # Asynchronous tasks for general table inspection
             tasks = [
@@ -241,15 +265,6 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
 
         return extraction
 
-    async def fill_tables(self, page):
-        """experimental for faster runs, fills the tables in the document asynchronously all in one
-
-        Args:
-            page (_type_): _description_
-        """
-        fill = get_tables_from_doc(self.doc_path, specific_pages=page, language=self.language)
-
-        self.di_tables_pages[page - 1] = fill
         
     def check_validity_cedola(self, sottostanti_table, main_info_table, cedola_table, cedola_table_2):
         """check validity of table cedola and cedola2, if both are valid, it concatenates them
@@ -404,7 +419,6 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
 
         except Exception as error:
             print("first stage error" + repr(error))
-
         # SECOND STAGE: extract RIY, costs, commissions and performances
         try:
             tasks = []
@@ -450,7 +464,21 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
                 keep=True,
             )
 
+            
+            json=self.create_json({
+                    "file_name": filename,
+                    **dict(is_callable),
+                    **dict(basic_information),
+                    **dict(api_costs),
+                    **dict(sottostanti),
+                    **dict(exploded_cedola),
+                    **dict(basic_information),
+                    **dict(main_info),
+                }, "bnp")
+            
             self._write_to_excel(complete, exploded_cedola, sottostanti, api_costs, filename)
+            
+            return json
 
         except Exception as error:
             print("dictionary error: " + repr(error))

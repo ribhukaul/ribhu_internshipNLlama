@@ -27,7 +27,7 @@ class TabellaSottostanti(BaseModel):
         [NA], description="Coupon Trigger Level o Livello di Attivazione della Cedola, in EUR o USD"
     )
     strike_level_perc: List[str] = Field([NA], description="Strike Level")
-    livello_cap: List[str] = Field([NA], description="Livello Cap")
+    coupon_eur: List[str] = Field([NA], description="Livello Cap")
 
 
 class TabellaMainInfo(BaseModel):
@@ -55,7 +55,7 @@ class TabellaMainInfo(BaseModel):
 
 
 class InformazioniBaseCertificati(BaseModel):
-    isin: str = Field(NF, description="codice ISIN ")
+    isin: str = Field(NF, description="codice ISIN")
     descrizione: str = Field(NF, description="descrizione completa del certificato")
     emittente: str = Field(NF, description="ideatore del certificato")
 

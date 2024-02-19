@@ -1,4 +1,4 @@
-from numpy import isin
+
 
 
 NA = "N/A"
@@ -69,7 +69,106 @@ field_names = {
         "commissione_performance_gkid_max": "cod_commissioni_di_performance_max",
         "target_market": "cod_target_market",
     },
-    "certificates": {},
+    "leonteq": {
+    "data_realizzazione_cedola": "cod_riy_perc_rhp_min",
+    "data_pagamento": "cod_riy_perc_rhp_max",
+    "data_osservazione_cedola": "cod_costi_ingresso_min",
+    "data_pagamento_cedola": "cod_costi_ingresso_max",
+    "importo_cedola": "cod_costi_uscita_min",
+    "giorno_monitoraggio_rimborso": "cod_costi_uscita_max",
+    "sottostante": "cod_commissioni_di_gestione_min",
+    "tipo": "cod_commissioni_di_gestione_max",
+    "borsa": "cod_riy_perc_rhp_min",
+    "bloom": "cod_riy_perc_rhp_max",
+    "isin": "cod_costi_ingresso_min",
+    "fixing_eur": "cod_costi_ingresso_max",
+    "barriera_eur": "cod_costi_uscita_min",
+    "coupon_eur": "cod_costi_uscita_max",
+    "livello_barriera": "cod_commissioni_di_gestione_min",
+    "liv_att_cedola_perc": "cod_commissioni_di_gestione_max",
+    "liv_fixing_iniziale": "cod_riy_perc_rhp_min",
+    "livello_cap": "cod_riy_perc_rhp_max",
+    "prezzo": "cod_costi_ingresso_min",
+    "liv_fix_fin": "cod_costi_ingresso_max",
+    "emittente": "cod_costi_uscita_min",
+    "data_emissione": "cod_costi_uscita_max",
+    "quotazione": "cod_commissioni_di_gestione_min",
+    "perf_peg": "cod_commissioni_di_gestione_max",
+    "inv_min": "cod_riy_perc_rhp_min",
+    "garanzia_min_perc": "cod_riy_perc_rhp_max",
+    "valuta": "cod_costi_ingresso_min",
+    "descrizione": "cod_costi_ingresso_max",
+    "data_fix_ini": "cod_costi_uscita_min",
+    "data_negoziazione": "cod_costi_uscita_max",
+    "data_fix_fin": "cod_commissioni_di_gestione_min",
+    "liv_fix_ini": "cod_commissioni_di_gestione_max",
+    "mod_pagamento": "cod_riy_perc_rhp_min",
+    "tasso_cedola_cond": "cod_riy_perc_rhp_max",
+    "cedola_garantita_perc": "cod_costi_ingresso_min",
+    "rischio_cambio": "cod_costi_ingresso_max",
+    "importo_rimborso": "cod_costi_uscita_min",
+    "importo_protezione_capitale": "cod_costi_uscita_max",
+    "partecipazione": "cod_commissioni_di_gestione_min",
+    "callable": "cod_commissioni_di_gestione_max",
+    "putable": "cod_riy_perc_rhp_min",
+    "data_rimborso": "cod_riy_perc_rhp_max",
+    "periodo": "cod_costi_ingresso_min",
+    "autocallable": "cod_costi_ingresso_max",
+    "softcallable": "cod_costi_uscita_min",
+    "effetto_memoria": "cod_costi_uscita_max",
+    "strike_level_perc": "cod_commissioni_di_gestione_min",
+    "data_osservazione_autocall": "cod_commissioni_di_gestione_max",
+    "data_pagamento_autocall": "cod_riy_perc_rhp_min",
+    "autocall_trigger_lvl": "cod_riy_perc_rhp_max",
+    "data_rimborso_cedola": "cod_costi_ingresso_min",
+    "liv_attiv_cedola": "cod_costi_ingresso_max",
+    "liv_attiv_autocall": "cod_costi_uscita_min",
+    },
+    "bnp": {
+    "isin": "cod_isin",
+    "description": "cod_descrizione",
+    "currency": "cod_valuta",
+    "issuer_desc": "cod_emittente",
+    "strike_date": "cod_data_strike",
+    "issue_date": "cod_data_emissione",
+    "expiry_date": "cod_data_liquidazione",
+    "final_valuation_date": "cod_data_valutazione_finale",
+    "leva_cedolare": "cod_leva_cedolare",
+    "nominal": "cod_importo_nozionale",
+    "market": "cod_quotazione",
+    "unconditional_protection": "cod_protezione_incondizionata",
+    "protection": "cod_protezione_inferiore_100",
+    "barrier": "cod_barriera",
+    "barrier_type": "cod_tipo_barriera",
+    "callable": "cod_liquidazione_anticipata",
+    "autocallable": "cod_autocallability",
+    "unconditional_coupon_min": "cod_premio_incondizionato_min",
+    "conditional_coupon_min": "cod_premio_condizionato_min",
+    "memory": "cod_effetto_memoria",
+    "autocall": "cod_scadenza_anticipata",
+    "autocall barrier": "cod_barriera_scadenza_anticipata",
+    "conditional_coupon_barrier": "cod_barriera_premio_condizionato",
+    "cap": "cod_livello_cap",
+    "airbag": "cod_airbag",
+    "issue_price_perc": "cod_prezzo_emissione",
+    "instrument_isin": "cod_isin_strumento",
+    "instrument_bloombergcode": "cod_codice_bloomberg",
+    "instrument_description": "cod_descrizione_strumento",
+    "observation_coupon_date": "cod_data_osservazione_premio",
+    "payment_coupon_date": "cod_data_pagamento_premio",
+    "barrier_coupon": "cod_barriera_premio",
+    "unconditional_coupon": "cod_premio_incondizionato",
+    "conditional_coupon": "cod_premio_condizionato",
+    "payment_callable_date": "cod_data_pagamento_anticipato",
+    "observation_autocall_date": "cod_data_osservazione_autocall",
+    "barrier_autocall": "cod_barriera_autocall",
+    "payment_autocall_date": "cod_data_pagamento_autocall",
+    "value_autocall": "cod_valore_autocall",
+    "periodo_detenzione_raccomandato": "cod_periodo_detenzione",
+    "indicatore_sintetico_rischio": "cod_indicatore_rischio",
+    "importo_minimo": "cod_importo_minimo",
+    "leva_airbag": "cod_leva_airbag"
+},
 }
 
 
@@ -356,8 +455,195 @@ prepare_json = {
     }
 }
 """,
-        "gkid": """""",
-        "certificates": """""",
+        "gkid": """
+        {
+            "section0": {
+                "name": "Informazioni di base",
+                "list": [
+                    "date",
+                    "isin",
+                    "periodo_detenzione_raccomandato"
+                ]
+            },
+            "section1": {
+                "name": "Performance e Rischio",
+                "list": [
+                    "favorable_return",
+                    "favorable_return_rhp",
+                    "indicatore_sintetico_rischio_min",
+                    "indicatore_sintetico_rischio_max",
+                    "moderato_return",
+                    "moderato_return_rhp",
+                    "scenario_morte_1",
+                    "scenario_morte_rhp",
+                    "sfavorevole_return",
+                    "sfavorevole_return_rhp",
+                    "stress_return",
+                    "stress_return_rhp"
+                ]
+            },
+            "section2": {
+                "name": "Incidenza dei Costi",
+                "list": [
+                    "incidenza_costo_eur_1_min",
+                    "incidenza_costo_eur_1_max",
+                    "incidenza_costo_eur_2_min",
+                    "incidenza_costo_eur_2_max",
+                    "incidenza_costo_eur_rhp_min",
+                    "incidenza_costo_eur_rhp_max",
+                    "incidenza_costo_perc_1_min",
+                    "incidenza_costo_perc_1_max",
+                    "incidenza_costo_perc_2_min",
+                    "incidenza_costo_perc_2_max",
+                    "incidenza_costo_perc_rhp_min",
+                    "incidenza_costo_perc_rhp_max"
+                ]
+            },
+            "section3": {
+                "name": "Costi e Commissioni",
+                "list": [
+                    "costi_ingresso_gkid_min",
+                    "costi_ingresso_gkid_max",
+                    "costi_uscita_gkid_min",
+                    "costi_uscita_gkid_max",
+                    "commissione_gestione_gkid_min",
+                    "commissione_gestione_gkid_max",
+                    "commissione_transazione_gkid_min",
+                    "commissione_transazione_gkid_max",
+                    "commissione_performance_gkid_min",
+                    "commissione_performance_gkid_max"
+                ]
+            },
+            "section4": {
+                "name": "Target Market",
+                "list": [
+                    "target_market"
+                ]
+        }
+    }
+    """,
+        "leonteq": """
+        {
+    "section0": {
+      "name": "Informazioni di base",
+      "list": [
+        "valuta",
+        "data_emissione",
+        "periodo",
+        "data_rimborso",
+        "prezzo",
+        "quotazione",
+        "inv_min",
+        "data_fix_ini",
+        "data_negoziazione",
+        "mod_pagamento",
+        "descrizione",
+        "emittente"
+      ]
+    },
+    "section1": {
+      "name": "Cedole e Autocall",
+      "list": [
+        "data_osservazione_cedola",
+        "liv_attiv_cedola",
+        "data_pagamento_cedola",
+        "importo_cedola",
+        "data_osservazione_autocall",
+        "liv_attiv_autocall",
+        "data_pagamento_autocall"
+      ]
+    },
+    "section2": {
+      "name": "Sottostanti e Parametri di Mercato",
+      "list": [
+        "sottostante",
+        "tipo",
+        "borsa",
+        "bloom",
+        "isin",
+        "fixing_eur",
+        "barriera_eur",
+        "coupon_eur",
+        "strike_level_perc",
+        "liv_fixing_iniziale",
+        "liv_att_cedola_perc",
+        "livello_barriera",
+        "livello_cap"
+      ]
+    },
+    "section3": {
+      "name": "Dati Finanziari",
+      "list": [
+        "liv_fix_fin",
+        "perf_peg",
+        "garanzia_min_perc",
+        "data_fix_fin",
+        "liv_fix_ini",
+        "tasso_cedola_cond",
+        "cedola_garantita_perc",
+        "rischio_cambio",
+        "importo_rimborso",
+        "importo_protezione_capitale",
+        "partecipazione"
+      ]
+    }
+}
+        """,
+        "bnp": """
+        {
+    "section0": {
+      "name": "Informazioni di base",
+      "list": [
+        "periodo_detenzione_raccomandato",
+        "indicatore_sintetico_rischio"
+      ]
+    },
+    "section1": {
+      "name": "Informazioni Principali",
+      "list": [
+        "isin",
+        "issuer_desc",
+        "currency",
+        "strike_date",
+        "issue_date",
+        "expiry_date",
+        "final_valuation_date",
+        "nominal",
+        "market",
+        "barrier",
+        "issue_price_perc"
+      ]
+    },
+    "section2": {
+      "name": "Dettagli Sottostante",
+      "list": [
+        "instrument_description",
+        "instrument_bloombergcode",
+        "instrument_isin"
+      ]
+    },
+    "section3": {
+      "name": "Informazioni sui Premi",
+      "list": [
+        "observation_coupon_date",
+        "payment_coupon_date",
+        "conditional_coupon_barrier",
+        "unconditional_coupon",
+        "conditional_coupon"
+      ]
+    },
+    "section4": {
+      "name": "Informazioni sulla Scadenza",
+      "list": [
+        "payment_callable_date",
+        "observation_autocall_date",
+        "barrier_autocall",
+        "payment_autocall_date",
+        "value_autocall"
+      ]
+    }
+  }
+        """,
     },
 }
 
@@ -426,6 +712,106 @@ data_array = {
         "commissione_performance_gkid_max",
         "target_market",
     ],
+    "leonteq":[
+"data_realizzazione_cedola",
+"data_pagamento",
+"data_osservazione_cedola",
+"data_pagamento_cedola",
+"importo_cedola",
+"giorno_monitoraggio_rimborso",
+"sottostante",
+"tipo",
+"borsa",
+"bloom",
+"isin",
+"fixing_eur",
+"barriera_eur",
+"coupon_eur",
+"livello_barriera",
+"liv_att_cedola_perc",
+"liv_fixing_iniziale",
+"livello_cap",
+"prezzo",
+"liv_fix_fin",
+"emittente",
+"data_emissione",
+"quotazione",
+"perf_peg",
+"inv_min",
+"garanzia_min_perc",
+"valuta",
+"descrizione",
+"data_fix_ini",
+"data_negoziazione",
+"data_fix_fin",
+"liv_fix_ini",
+"mod_pagamento",
+"tasso_cedola_cond",
+"cedola_garantita_perc",
+"rischio_cambio",
+"importo_rimborso",
+"importo_protezione_capitale",
+"partecipazione",
+"callable",
+"putable",
+"data_rimborso",
+"periodo",
+"autocallable",
+"softcallable",
+"effetto_memoria",
+"strike_level_perc",
+"data_osservazione_autocall",
+"data_pagamento_autocall",
+"autocall_trigger_lvl",
+"data_rimborso_cedola",
+"liv_attiv_cedola",
+"liv_attiv_autocall"
+],
+    "bnp":[
+    "isin",
+    "description",
+    "currency",
+    "issuer_desc",
+    "strike_date",
+    "issue_date",
+    "expiry_date",
+    "final_valuation_date",
+    "leva_cedolare",
+    "nominal",
+    "market",
+    "unconditional_protection",
+    "protection",
+    "barrier",
+    "barrier_type",
+    "callable",
+    "autocallable",
+    "unconditional_coupon_min",
+    "conditional_coupon_min",
+    "memory",
+    "autocall",
+    "autocall barrier",
+    "conditional_coupon_barrier",
+    "cap",
+    "airbag",
+    "issue_price_perc",
+    "instrument_isin",
+    "instrument_bloombergcode",
+    "instrument_description",
+    "observation_coupon_date",
+    "payment_coupon_date",
+    "barrier_coupon",
+    "unconditional_coupon",
+    "conditional_coupon",
+    "payment_callable_date",
+    "observation_autocall_date",
+    "barrier_autocall",
+    "payment_autocall_date",
+    "value_autocall",
+    "periodo_detenzione_raccomandato",
+    "indicatore_sintetico_rischio",
+    "importo_minimo",
+    "leva_airbag"
+],
 }
 
 TRUE = "true"
@@ -496,17 +882,119 @@ allow_null = {
         "commissione_performance_gkid_max": FALSE,
         "target_market": FALSE,
     },
+    "leonteq":{
+    "data_realizzazione_cedola": FALSE,
+    "data_pagamento": FALSE,
+    "data_osservazione_cedola": TRUE,
+    "data_pagamento_cedola": FALSE,
+    "importo_cedola": FALSE,
+    "giorno_monitoraggio_rimborso": FALSE,
+    "sottostante": FALSE,
+    "tipo": FALSE,
+    "borsa": FALSE,
+    "bloom": FALSE,
+    "isin": FALSE,
+    "fixing_eur": FALSE,
+    "barriera_eur": TRUE,
+    "coupon_eur": TRUE,
+    "livello_barriera": TRUE,
+    "liv_att_cedola_perc": TRUE,
+    "liv_fixing_iniziale": TRUE,
+    "livello_cap": TRUE,
+    "prezzo": FALSE,
+    "liv_fix_fin": TRUE,
+    "emittente": FALSE,
+    "data_emissione": FALSE,
+    "quotazione": FALSE,
+    "perf_peg": TRUE,
+    "inv_min": FALSE,
+    "garanzia_min_perc": TRUE,
+    "valuta": FALSE,
+    "descrizione": FALSE,
+    "data_fix_ini": FALSE,
+    "data_negoziazione": FALSE,
+    "data_fix_fin": TRUE,
+    "liv_fix_ini": TRUE,
+    "mod_pagamento": FALSE,
+    "tasso_cedola_cond": TRUE,
+    "cedola_garantita_perc": TRUE,
+    "rischio_cambio": TRUE,
+    "importo_rimborso": TRUE,
+    "importo_protezione_capitale": TRUE,
+    "partecipazione": TRUE,
+    "callable": FALSE,
+    "putable": FALSE,
+    "data_rimborso": FALSE,
+    "periodo": FALSE,
+    "autocallable": FALSE,
+    "softcallable": FALSE,
+    "effetto_memoria": FALSE,
+    "strike_level_perc": TRUE,
+    "data_osservazione_autocall": FALSE,
+    "data_pagamento_autocall": FALSE,
+    "autocall_trigger_lvl": FALSE,
+    "data_rimborso_cedola": FALSE,
+    "liv_attiv_cedola": TRUE,
+    "liv_attiv_autocall": FALSE
+},
+    "bnp":{
+    "isin": FALSE,
+    "description": FALSE,
+    "currency": FALSE,
+    "issuer_desc": FALSE,
+    "strike_date": FALSE,
+    "issue_date": FALSE,
+    "expiry_date": FALSE,
+    "final_valuation_date": FALSE,
+    "leva_cedolare": FALSE,
+    "nominal": FALSE,
+    "market": TRUE,
+    "unconditional_protection": FALSE,
+    "protection": FALSE,
+    "barrier": FALSE,
+    "barrier_type": FALSE,
+    "callable": FALSE,
+    "autocallable": FALSE,
+    "unconditional_coupon_min": FALSE,
+    "conditional_coupon_min": FALSE,
+    "memory": FALSE,
+    "autocall": FALSE,
+    "autocall barrier": FALSE,
+    "conditional_coupon_barrier": FALSE,
+    "cap": FALSE,
+    "airbag": FALSE,
+    "issue_price_perc": FALSE,
+    "instrument_isin": FALSE,
+    "instrument_bloombergcode": FALSE,
+    "instrument_description": FALSE,
+    "observation_coupon_date": FALSE,
+    "payment_coupon_date": FALSE,
+    "barrier_coupon": FALSE,
+    "unconditional_coupon": FALSE,
+    "conditional_coupon": FALSE,
+    "payment_callable_date": FALSE,
+    "observation_autocall_date": FALSE,
+    "barrier_autocall": FALSE,
+    "payment_autocall_date": FALSE,
+    "value_autocall": FALSE,
+    "periodo_detenzione_raccomandato": FALSE,
+    "indicatore_sintetico_rischio": FALSE,
+    "importo_minimo": FALSE,
+    "leva_airbag": FALSE
+}
+
 }
 
 # extra info for json
 INT = "Integer"
 FLOAT = "Float"
 STRING = "String"
-
+DATE= "Date"
+BOOL = "Boolean"
 
 type_of = {
     "kid": {
-        "date": "Date",
+        "date": DATE,
         "isin": STRING,
         "periodo_detenzione_raccomandato": INT,
         "favorable_return": FLOAT,
@@ -530,7 +1018,7 @@ type_of = {
         "target_market": STRING,
     },
     "gkid": {
-        "date": "Date",
+        "date": DATE,
         "isin": STRING,
         "periodo_detenzione_raccomandato": INT,
         "favorable_return": FLOAT,
@@ -569,6 +1057,107 @@ type_of = {
         "commissione_performance_gkid_max": FLOAT,
         "target_market": STRING,
     },
+    "leonteq":{
+    "data_realizzazione_cedola": DATE,
+    "data_pagamento": DATE,
+    "data_osservazione_cedola": DATE,
+    "data_pagamento_cedola": DATE,
+    "importo_cedola": FLOAT,
+    "giorno_monitoraggio_rimborso": DATE,
+    "sottostante": STRING,
+    "tipo": STRING,
+    "borsa": STRING,
+    "bloom": STRING,
+    "isin": STRING,
+    "fixing_eur": FLOAT,
+    "barriera_eur": FLOAT,
+    "coupon_eur": FLOAT,
+    "livello_barriera": FLOAT,
+    "liv_att_cedola_perc": FLOAT,
+    "liv_fixing_iniziale": FLOAT,
+    "livello_cap": FLOAT,
+    "prezzo": FLOAT,
+    "liv_fix_fin": FLOAT,
+    "emittente": STRING,
+    "data_emissione": DATE,
+    "quotazione": FLOAT,
+    "perf_peg": FLOAT,
+    "inv_min": FLOAT,
+    "garanzia_min_perc": FLOAT,
+    "valuta": STRING,
+    "descrizione": STRING,
+    "data_fix_ini": DATE,
+    "data_negoziazione": DATE,
+    "data_fix_fin": DATE,
+    "liv_fix_ini": FLOAT,
+    "mod_pagamento": STRING,
+    "tasso_cedola_cond": FLOAT,
+    "cedola_garantita_perc": FLOAT,
+    "rischio_cambio": STRING,  # Assuming it's a description or currency code
+    "importo_rimborso": FLOAT,
+    "importo_protezione_capitale": FLOAT,
+    "partecipazione": FLOAT,
+    "callable": STRING,  # Assuming it's a feature description, could be BOOLEAN if true/false
+    "putable": STRING,  # Same as callable
+    "data_rimborso": DATE,
+    "periodo": INT,  # Assuming it refers to a time period in days/months/years
+    "autocallable": STRING,  # Assuming it's a feature description, could be BOOLEAN if true/false
+    "softcallable": STRING,  # Same as autocallable
+    "effetto_memoria": STRING,  # Assuming it's a description, could be BOOLEAN if true/false
+    "strike_level_perc": FLOAT,
+    "data_osservazione_autocall": DATE,
+    "data_pagamento_autocall": DATE,
+    "autocall_trigger_lvl": FLOAT,
+    "data_rimborso_cedola": DATE,
+    "liv_attiv_cedola": FLOAT,
+    "liv_attiv_autocall": FLOAT
+},
+    "bnp":{
+    "isin": STRING,
+    "description": STRING,
+    "currency": STRING,
+    "issuer_desc": STRING,
+    "strike_date": DATE,
+    "issue_date": DATE,
+    "expiry_date": DATE,
+    "final_valuation_date": DATE,
+    "leva_cedolare": FLOAT,
+    "nominal": FLOAT,
+    "market": STRING,
+    "unconditional_protection": STRING,  # Potrebbe essere BOOLEAN se si intende vero/falso
+    "protection": FLOAT,  # Se si intende una percentuale
+    "barrier": FLOAT,  # Se si intende una percentuale o un valore numerico
+    "barrier_type": STRING,
+    "callable": STRING,  # Potrebbe essere BOOLEAN se si intende vero/falso
+    "autocallable": STRING,  # Potrebbe essere BOOLEAN se si intende vero/falso
+    "unconditional_coupon_min": FLOAT,
+    "conditional_coupon_min": FLOAT,
+    "memory": STRING,  # Potrebbe essere BOOLEAN se si intende vero/falso
+    "autocall": STRING,  # Potrebbe essere BOOLEAN se si intende vero/falso
+    "autocall barrier": FLOAT,  # Se si intende una percentuale o un valore numerico
+    "conditional_coupon_barrier": FLOAT,  # Se si intende una percentuale o un valore numerico
+    "cap": FLOAT,
+    "airbag": FLOAT,
+    "issue_price_perc": FLOAT,
+    "instrument_isin": STRING,
+    "instrument_bloombergcode": STRING,
+    "instrument_description": STRING,
+    "observation_coupon_date": DATE,
+    "payment_coupon_date": DATE,
+    "barrier_coupon": FLOAT,  # Se si intende una percentuale o un valore numerico
+    "unconditional_coupon": FLOAT,
+    "conditional_coupon": FLOAT,
+    "payment_callable_date": DATE,
+    "observation_autocall_date": DATE,
+    "barrier_autocall": FLOAT,  # Se si intende una percentuale o un valore numerico
+    "payment_autocall_date": DATE,
+    "value_autocall": FLOAT,
+    "periodo_detenzione_raccomandato": INT,
+    "indicatore_sintetico_rischio": INT,
+    "importo_minimo": FLOAT,
+    "leva_airbag": FLOAT
+},
+
 }
 
 
@@ -641,6 +1230,108 @@ model_of = {
         "commissione_performance_gkid_max": PERCENT,
         "target_market": NA,
     },
+    "leonteq":{
+    "data_realizzazione_cedola": NA,
+    "data_pagamento": NA,
+    "data_osservazione_cedola": NA,
+    "data_pagamento_cedola": NA,
+    "importo_cedola": EURO,
+    "giorno_monitoraggio_rimborso": NA,
+    "sottostante": NA,
+    "tipo": NA,
+    "borsa": CAPS,
+    "bloom": CAPS,
+    "isin": CAPS,
+    "fixing_eur": EURO,
+    "barriera_eur": EURO,
+    "coupon_eur": EURO,
+    "livello_barriera": PERCENT,
+    "liv_att_cedola_perc": PERCENT,
+    "liv_fixing_iniziale": PERCENT,
+    "livello_cap": PERCENT,
+    "prezzo": EURO,
+    "liv_fix_fin": PERCENT,
+    "emittente": CAPS,
+    "data_emissione": NA,
+    "quotazione": EURO,
+    "perf_peg": PERCENT,
+    "inv_min": EURO,
+    "garanzia_min_perc": PERCENT,
+    "valuta": NA,
+    "descrizione": NA,
+    "data_fix_ini": NA,
+    "data_negoziazione": NA,
+    "data_fix_fin": NA,
+    "liv_fix_ini": PERCENT,
+    "mod_pagamento": NA,
+    "tasso_cedola_cond": PERCENT,
+    "cedola_garantita_perc": PERCENT,
+    "rischio_cambio": NA,
+    "importo_rimborso": EURO,
+    "importo_protezione_capitale": EURO,
+    "partecipazione": PERCENT,
+    "callable": NA,
+    "putable": NA,
+    "data_rimborso": NA,
+    "periodo": YEARS,
+    "autocallable": NA,
+    "softcallable": NA,
+    "effetto_memoria": NA,
+    "strike_level_perc": PERCENT,
+    "data_osservazione_autocall": NA,
+    "data_pagamento_autocall": NA,
+    "autocall_trigger_lvl": PERCENT,
+    "data_rimborso_cedola": NA,
+    "liv_attiv_cedola": PERCENT,
+    "liv_attiv_autocall": PERCENT
+},
+
+    "bnp":{
+    "isin": CAPS,
+    "description": NA,
+    "currency": EURO,
+    "issuer_desc": NA,
+    "strike_date": NA,
+    "issue_date": NA,
+    "expiry_date": NA,
+    "final_valuation_date": NA,
+    "leva_cedolare": PERCENT,
+    "nominal": EURO,
+    "market": NA,
+    "unconditional_protection": NA,  # Potrebbe essere PERCENT se si intende una percentuale
+    "protection": PERCENT,  # Se si intende una percentuale
+    "barrier": PERCENT,  # Se si intende una percentuale
+    "barrier_type": NA,
+    "callable": NA,
+    "autocallable": NA,
+    "unconditional_coupon_min": PERCENT,
+    "conditional_coupon_min": PERCENT,
+    "memory": NA,
+    "autocall": NA,
+    "autocall barrier": PERCENT,  # Se si intende una percentuale
+    "conditional_coupon_barrier": PERCENT,  # Se si intende una percentuale
+    "cap": PERCENT,
+    "airbag": PERCENT,
+    "issue_price_perc": PERCENT,
+    "instrument_isin": CAPS,
+    "instrument_bloombergcode": CAPS,
+    "instrument_description": NA,
+    "observation_coupon_date": NA,
+    "payment_coupon_date": NA,
+    "barrier_coupon": PERCENT,  # Se si intende una percentuale
+    "unconditional_coupon": PERCENT,
+    "conditional_coupon": PERCENT,
+    "payment_callable_date": NA,
+    "observation_autocall_date": NA,
+    "barrier_autocall": PERCENT,  # Se si intende una percentuale
+    "payment_autocall_date": NA,
+    "value_autocall": PERCENT,
+    "periodo_detenzione_raccomandato": YEARS,
+    "indicatore_sintetico_rischio": NA,
+    "importo_minimo": EURO,
+    "leva_airbag": PERCENT
+}
+
 }
 
 
@@ -709,6 +1400,108 @@ decimals_of = {
         "commissione_performance_gkid_max": 2,
         "target_market": None,
     },
+    "leonteq":{
+    "data_realizzazione_cedola": None,
+    "data_pagamento": None,
+    "data_osservazione_cedola": None,
+    "data_pagamento_cedola": None,
+    "importo_cedola": 2,
+    "giorno_monitoraggio_rimborso": None,
+    "sottostante": None,
+    "tipo": None,
+    "borsa": None,
+    "bloom": None,
+    "isin": None,
+    "fixing_eur": 2,
+    "barriera_eur": 2,
+    "coupon_eur": 2,
+    "livello_barriera": 2,
+    "liv_att_cedola_perc": 2,
+    "liv_fixing_iniziale": 2,
+    "livello_cap": 2,
+    "prezzo": 2,
+    "liv_fix_fin": 2,
+    "emittente": None,
+    "data_emissione": None,
+    "quotazione": 2,
+    "perf_peg": 2,
+    "inv_min": 2,  # Assuming this refers to an amount, hence 2 decimals.
+    "garanzia_min_perc": 2,
+    "valuta": None,
+    "descrizione": None,
+    "data_fix_ini": None,
+    "data_negoziazione": None,
+    "data_fix_fin": None,
+    "liv_fix_ini": 2,
+    "mod_pagamento": None,
+    "tasso_cedola_cond": 2,
+    "cedola_garantita_perc": 2,
+    "rischio_cambio": None,
+    "importo_rimborso": 2,
+    "importo_protezione_capitale": 2,
+    "partecipazione": 2,
+    "callable": None,
+    "putable": None,
+    "data_rimborso": None,
+    "periodo": None,
+    "autocallable": None,
+    "softcallable": None,
+    "effetto_memoria": None,
+    "strike_level_perc": 2,
+    "data_osservazione_autocall": None,
+    "data_pagamento_autocall": None,
+    "autocall_trigger_lvl": 2,
+    "data_rimborso_cedola": None,
+    "liv_attiv_cedola": 2,
+    "liv_attiv_autocall": 2
+},
+
+    "bnp":{
+    "isin": None,
+    "description": None,
+    "currency": None,
+    "issuer_desc": None,
+    "strike_date": None,
+    "issue_date": None,
+    "expiry_date": None,
+    "final_valuation_date": None,
+    "leva_cedolare": 2,
+    "nominal": 2,
+    "market": None,
+    "unconditional_protection": 2,  # Se si intende una percentuale, altrimenti None
+    "protection": 2,  # Se si intende una percentuale
+    "barrier": 2,  # Se si intende una percentuale o un valore numerico
+    "barrier_type": None,
+    "callable": None,
+    "autocallable": None,
+    "unconditional_coupon_min": 2,
+    "conditional_coupon_min": 2,
+    "memory": None,
+    "autocall": None,
+    "autocall barrier": 2,  # Se si intende una percentuale o un valore numerico
+    "conditional_coupon_barrier": 2,  # Se si intende una percentuale o un valore numerico
+    "cap": 2,
+    "airbag": 2,
+    "issue_price_perc": 2,
+    "instrument_isin": None,
+    "instrument_bloombergcode": None,
+    "instrument_description": None,
+    "observation_coupon_date": None,
+    "payment_coupon_date": None,
+    "barrier_coupon": 2,  # Se si intende una percentuale o un valore numerico
+    "unconditional_coupon": 2,
+    "conditional_coupon": 2,
+    "payment_callable_date": None,
+    "observation_autocall_date": None,
+    "barrier_autocall": 2,  # Se si intende una percentuale o un valore numerico
+    "payment_autocall_date": None,
+    "value_autocall": 2,
+    "periodo_detenzione_raccomandato": None,
+    "indicatore_sintetico_rischio": None,
+    "importo_minimo": 2,
+    "leva_airbag": 2
+},
+
 }
 
 
@@ -784,4 +1577,107 @@ range_of = {
         "commissione_performance_gkid_max": PERCENT_RANGE,
         "target_market": NO_RANGE,
     },
+    "leonteq":{
+    "data_realizzazione_cedola": DATE_RANGE,
+    "data_pagamento": DATE_RANGE,
+    "data_osservazione_cedola": DATE_RANGE,
+    "data_pagamento_cedola": DATE_RANGE,
+    "importo_cedola": NO_RANGE,  # Could have a minimum value but not a fixed range
+    "giorno_monitoraggio_rimborso": DATE_RANGE,
+    "sottostante": NO_RANGE,
+    "tipo": NO_RANGE,
+    "borsa": NO_RANGE,
+    "bloom": NO_RANGE,
+    "isin": ISIN_RANGE,
+    "fixing_eur": NO_RANGE,
+    "barriera_eur": NO_RANGE,
+    "coupon_eur": NO_RANGE,
+    "livello_barriera": PERCENT_RANGE,
+    "liv_att_cedola_perc": PERCENT_RANGE,
+    "liv_fixing_iniziale": PERCENT_RANGE,
+    "livello_cap": PERCENT_RANGE,
+    "prezzo": NO_RANGE,
+    "liv_fix_fin": PERCENT_RANGE,
+    "emittente": NO_RANGE,
+    "data_emissione": DATE_RANGE,
+    "quotazione": NO_RANGE,
+    "perf_peg": NO_RANGE,  # Assuming it's a performance measure, could be PERCENT_RANGE if it's a percentage
+    "inv_min": NO_RANGE,  # Minimum investment might have a lower limit but not a fixed range
+    "garanzia_min_perc": PERCENT_RANGE,
+    "valuta": NO_RANGE,
+    "descrizione": NO_RANGE,
+    "data_fix_ini": DATE_RANGE,
+    "data_negoziazione": DATE_RANGE,
+    "data_fix_fin": DATE_RANGE,
+    "liv_fix_ini": PERCENT_RANGE,
+    "mod_pagamento": NO_RANGE,
+    "tasso_cedola_cond": PERCENT_RANGE,
+    "cedola_garantita_perc": PERCENT_RANGE,
+    "rischio_cambio": NO_RANGE,  # Assuming this is a feature or description
+    "importo_rimborso": NO_RANGE,
+    "importo_protezione_capitale": NO_RANGE,
+    "partecipazione": PERCENT_RANGE,
+    "callable": NO_RANGE,
+    "putable": NO_RANGE,
+    "data_rimborso": DATE_RANGE,
+    "periodo": NO_RANGE,  # Assuming it's a duration, might have a minimum but not a fixed range
+    "autocallable": NO_RANGE,
+    "softcallable": NO_RANGE,
+    "effetto_memoria": NO_RANGE,
+    "strike_level_perc": PERCENT_RANGE,
+    "data_osservazione_autocall": DATE_RANGE,
+    "data_pagamento_autocall": DATE_RANGE,
+    "autocall_trigger_lvl": PERCENT_RANGE,
+    "data_rimborso_cedola": DATE_RANGE,
+    "liv_attiv_cedola": PERCENT_RANGE,
+    "liv_attiv_autocall": PERCENT_RANGE
+},
+    "bnp":{
+    "isin": ISIN_RANGE,
+    "description": NO_RANGE,
+    "currency": NO_RANGE,
+    "issuer_desc": NO_RANGE,
+    "strike_date": DATE_RANGE,
+    "issue_date": DATE_RANGE,
+    "expiry_date": DATE_RANGE,
+    "final_valuation_date": DATE_RANGE,
+    "leva_cedolare": PERCENT_RANGE,
+    "nominal": NO_RANGE,
+    "market": NO_RANGE,
+    "unconditional_protection": PERCENT_RANGE,  # Se si intende una percentuale
+    "protection": PERCENT_RANGE,  # Se si intende una percentuale
+    "barrier": PERCENT_RANGE,  # Se si intende una percentuale o un valore numerico
+    "barrier_type": NO_RANGE,
+    "callable": NO_RANGE,
+    "autocallable": NO_RANGE,
+    "unconditional_coupon_min": PERCENT_RANGE,
+    "conditional_coupon_min": PERCENT_RANGE,
+    "memory": NO_RANGE,
+    "autocall": NO_RANGE,
+    "autocall barrier": PERCENT_RANGE,  # Se si intende una percentuale
+    "conditional_coupon_barrier": PERCENT_RANGE,  # Se si intende una percentuale
+    "cap": PERCENT_RANGE,
+    "airbag": PERCENT_RANGE,
+    "issue_price_perc": PERCENT_RANGE,
+    "instrument_isin": ISIN_RANGE,
+    "instrument_bloombergcode": NO_RANGE,
+    "instrument_description": NO_RANGE,
+    "observation_coupon_date": DATE_RANGE,
+    "payment_coupon_date": DATE_RANGE,
+    "barrier_coupon": PERCENT_RANGE,  # Se si intende una percentuale
+    "unconditional_coupon": PERCENT_RANGE,
+    "conditional_coupon": PERCENT_RANGE,
+    "payment_callable_date": DATE_RANGE,
+    "observation_autocall_date": DATE_RANGE,
+    "barrier_autocall": PERCENT_RANGE,  # Se si intende una percentuale
+    "payment_autocall_date": DATE_RANGE,
+    "value_autocall": PERCENT_RANGE,
+    "periodo_detenzione_raccomandato": NO_RANGE,
+    "indicatore_sintetico_rischio": SRI_RANGE,
+    "importo_minimo": NO_RANGE,
+    "leva_airbag": PERCENT_RANGE
 }
+
+}
+
+names_of_fields_to_clean_dot=["SMOR RHP (€)", "SMOR 1Y (€)"]
