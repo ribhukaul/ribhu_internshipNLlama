@@ -122,7 +122,7 @@ langchain-community==0.0.19
     # via
     #   -r requirements.in
     #   langchain
-langchain-core==0.1.22
+langchain-core==0.1.23
     # via
     #   -r requirements.in
     #   langchain
