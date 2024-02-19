@@ -25,7 +25,7 @@ from extractors.general_extractors.custom_extractors.kid.kid_utils import (
     clean_response_regex,
     clean_response_strips,
 )
-from extractors.utils import is_in_text, upload_df_as_excel, check_valid
+from extractors.utils import is_in_text, check_valid
 from ..certificates_config.cert_cleaning import header_mappings, regex_callable
 
 
@@ -37,7 +37,7 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
 
     async def extract_general_data(self):
         """
-        Extract general data from the document (ISIN, RHP, SRI).
+        Extract general data from the document (ISIN, descrizione, emittente).
 
         Returns: dict(): data extracted
         """
@@ -72,6 +72,7 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
 
     async def extract_cedola(self, table):
         """extracts the cedola from the table
+        can be a complex table or a dense text
 
         Args:
             table (pd.DataFrame): table containing the cedola
@@ -85,10 +86,9 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
                 extraction = self.regex_cedola(table)
             else:
                 # kind of complex table extraction without tagging
-                table = upload_df_as_excel(table)
                 # TODO: check if works
                 extraction = await general_table_inspection(
-                    table,
+                    table.to_string(),
                     "cedola",
                     self.file_id,
                     language=self.language,
@@ -172,6 +172,7 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
 
         Args:
             table (pd.DataFrame): Table containing the sottostanti.
+            extracts from table and from header
 
         Returns:
             dict: Dictionary containing the sottostanti.
@@ -250,7 +251,18 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
 
         self.di_tables_pages[page - 1] = fill
         
-    def check_sottostanti(self, sottostanti_table, main_info_table, cedola_table, cedola_table_2):
+    def check_validity_cedola(self, sottostanti_table, main_info_table, cedola_table, cedola_table_2):
+        """check validity of table cedola and cedola2, if both are valid, it concatenates them
+
+        Args:
+            sottostanti_table (pd.Dataframe): to confront
+            main_info_table (pd.Dataframe): to confront
+            cedola_table (pd.Dataframe): found cedola table
+            cedola_table_2 (pd.Dataframe): found cedola table
+
+        Returns:
+            pd.Dataframe: valid cedola table
+        """
         cedola_valid= check_valid(cedola_table, [sottostanti_table, main_info_table])
         
         cedola2_valid = check_valid(cedola_table_2, [sottostanti_table, main_info_table])
@@ -273,7 +285,7 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
 
 
     async def get_tables(self):
-        """Calc table extractor, it extracts the three tables from the document asynchronously
+        """Calc table extractor, it extracts the tables from the document asynchronously
 
         Returns:
             dict([pandas.dataframe]): tables as dataframe
@@ -287,7 +299,7 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
             cedola_table = self._extract_table("cedola", black_list_pages=[1])
             cedola_table_2 = self._extract_table("cedola", black_list_pages=[0])
 
-            cedola_table,cedola_table_2 = self.check_sottostanti(cedola_table, main_info_table, sottostanti_table, cedola_table_2)
+            cedola_table,cedola_table_2 = self.check_validity_cedola(cedola_table, main_info_table, sottostanti_table, cedola_table_2)
                 
         except Exception as error:
             print("calc table error" + repr(error))
@@ -317,6 +329,15 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
         return is_callable
 
     def fill_array(self, dictionary):
+        """fills the arrays in the dictionary with '-'
+        so that they all have the same length for excel
+        
+        Args:
+            dictionary (dict): dictionary to fill
+            
+        Returns:
+            dict: dictionary with filled arrays
+        """
 
         max_length = max((len(value) for value in dictionary.values() if isinstance(value, list)), default=0)
         # Iterate through the dictionary and fill the arrays with '-'
@@ -328,6 +349,12 @@ class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):
         return dictionary
 
     def _write_to_excel(self, complete, exploded_cedola, sottostanti, api_costs, filename):
+        """writes the results to an excel file
+
+        Args:
+            args (dict()): all the results
+        """
+        
 
         with pd.ExcelWriter(
             "results\\30gennaio\\resultsmarco_{}.xlsx".format(os.path.basename(self.file_id)),

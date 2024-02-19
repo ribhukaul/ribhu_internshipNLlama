@@ -51,7 +51,9 @@ REGEX_NUMBERS_COMMA = "[+-]?(\s)?\d+((\s)?[,\.]?(\s)?\d+)*"
 REGEX_NUMBER = "[+-]?(\s)?\d+((\s)?\d+)*"
 REGEX_DATE = "\d{1,2}\/\d{1,2}\/\d{2,4}|\d+\s[A-Za-z]+\s\d+"
 REGEX_ISIN = "[A-Z]{2}[A-Z0-9]{9}[0-9]"
+CURRENCY="[A-Z]{3}"
 ANY = ".+"
+ANYTHING_WITH_NUMBERS = ".*\d+.*"
 regex_cleaning = {
     "it": {
         "general_info": {
@@ -138,6 +140,27 @@ regex_cleaning = {
             "isin": REGEX_ISIN,
             "descrizione": ANY,
             "emittente": ANY,
+        },
+        "bnp_main": {
+            "currency": CURRENCY,
+            "strike_date": ANYTHING_WITH_NUMBERS,
+            "issue_date": ANYTHING_WITH_NUMBERS,
+            "expiry_date": ANYTHING_WITH_NUMBERS,
+            "final_valuation_date": ANYTHING_WITH_NUMBERS,
+            "nominal": ANYTHING_WITH_NUMBERS,
+            "market": ANYTHING_WITH_NUMBERS,
+            "barrier": ANYTHING_WITH_NUMBERS,
+            "conditional_coupon_barrier": ANYTHING_WITH_NUMBERS,
+            "issue_price_perc": ANYTHING_WITH_NUMBERS,
+            "observation_coupon_date": ANYTHING_WITH_NUMBERS,
+            "payment_coupon_date": ANYTHING_WITH_NUMBERS,
+            "unconditional_coupon": ANYTHING_WITH_NUMBERS,
+            "conditional_coupon": ANYTHING_WITH_NUMBERS,
+            "payment_callable_date": ANYTHING_WITH_NUMBERS,
+            "observation_autocall_date": ANYTHING_WITH_NUMBERS,
+            "barrier_autocall": ANYTHING_WITH_NUMBERS,
+            "payment_autocall_date": ANYTHING_WITH_NUMBERS,
+            "value_autocall": ANYTHING_WITH_NUMBERS,
         },
     },
     "en": {

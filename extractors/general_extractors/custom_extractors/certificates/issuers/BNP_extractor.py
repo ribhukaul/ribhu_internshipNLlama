@@ -7,6 +7,7 @@ from extractors.azure.document_intelligence import get_tables_from_doc
 from extractors.general_extractors.config.json_config import NA
 from extractors.general_extractors.custom_extractors.certificates.derivati_extractor import DerivatiKidExtractor
 from extractors.general_extractors.custom_extractors.kid.kid_config.kid_tags import NF
+from extractors.general_extractors.custom_extractors.kid.kid_utils import clean_response_regex
 from extractors.general_extractors.llm_functions import general_table_inspection, llm_extraction_and_tag
 from extractors.general_extractors.utils import select_desired_page
 from extractors.models import Models
@@ -31,7 +32,7 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
         
 
     async def get_tables(self):
-        """calc table extractor, it extracts the three tables from the document asynchronously
+        """calc table extractor, it extracts the necessary tables from the document
 
         Returns:
             dict([pandas.dataframe]): tables as dataframe
@@ -62,7 +63,7 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
 
     async def extract_general_data(self):
         """
-        Extract general data from the document (ISIN, RHP, SRI).
+        Extract general data from the document (ISIN, RHP...ecc...).
 
         Returns: dict(): data extracted
         """
@@ -93,6 +94,7 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
     async def extract_deductables(self):
         """extracts the callable from the document
         looks if the word is in the document thats it
+        bool for some checks for regex in regex in other
 
         Returns:
             dict(): dictionary containing the callable
@@ -125,10 +127,8 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
         return ret
 
     async def extract_main_info(self):
-        """extracts the main info from the table
+        """extracts the main info from the main table/tables
 
-        Args:
-            table (pd.DataFrame): table containing the main info
 
         Returns:
             dict(): dictionary containing the main info
@@ -151,10 +151,9 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
         return extraction
 
     async def extract_allegato(self):
-        """Extracts the main info from the table
+        """Extracts info from the allegato table/s
+        allegati are from pages 4+
 
-        Args:
-            table (pd.DataFrame): table containing the main info
 
         Returns:
             dict: Dictionary containing the main info
@@ -190,7 +189,8 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
         return extraction
 
     async def extract_sottostanti(self):
-        """extracts the main info from the table
+        """extracts info from the sottostante table
+        sottostante can be in the first /second page or n.4+, so we need to check all
 
         Args:
             table (pd.DataFrame): table containing the main info
@@ -219,6 +219,12 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
         return extraction
 
     async def extract_entryexit_management_costs(self):
+        """extracts the entry exit management costs from the document
+        is multiple tables in page 2 or 3
+
+        Returns:
+            dict|object: found values
+        """
 
         extraction = await self.extract_from_multiple_tables([1, 2], ["costi_gestione", "costi_ingresso"])
         # extraction = clean_response_regex( "main_info", self.language, extraction)
@@ -235,13 +241,11 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
         return extraction
 
     async def extract_first_info(self):
-        """extracts the main info from the table
-
-        Args:
-            table (pd.DataFrame): table containing the main info
-
+        """extracts the first info from the text
+        info is in the first page
+        
         Returns:
-            dict(): dictionary containing the main info
+            dict(): dictionary containing the first info
         """
         extraction = dict()
         try:
@@ -257,6 +261,15 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
     
     
     def fill_array(self, dictionary):
+        """fills the arrays in the dictionary with '-'
+        to have the same length for excel
+
+        Args:
+            dictionary (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
 
         max_length = max((len(value) for value in dictionary.values() if isinstance(value, list)), default=0)
         # Iterate through the dictionary and fill the arrays with '-'
@@ -268,6 +281,11 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
         return dictionary
 
     def _write_to_excel(self, complete, complete2, allegato, sottostanti, api_costs, filename):
+        """writes the results to an excel file
+
+        Args:
+            args (dict()): all the results
+        """
         
         with pd.ExcelWriter(
             "results\\13febbraio\\resultsmarco_{}.xlsx".format(
@@ -361,7 +379,7 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
                 {
                     **dict(deductables),
                     **dict(basic_information),
-                    **dict(main_info),
+                    **dict(clean_response_regex("bnp_main","it", main_info)),
                     **dict(first_info),
                 },
                 "bnp",

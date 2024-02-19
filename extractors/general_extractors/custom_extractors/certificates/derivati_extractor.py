@@ -14,8 +14,7 @@ class DerivatiKidExtractor(KidExtractor):
         super().__init__(doc_path, "it")
 
     def extract_regex_text(self, type, page, boolean_to_check={}, str_to_check={}):
-        """extracts the callable from the document
-        looks if the word is in the document thats it
+        """Extracts the text from the page and checks if the regexes are present in the text.
 
         Returns:
             dict(): dictionary containing the callable

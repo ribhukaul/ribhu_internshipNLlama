@@ -8,7 +8,7 @@ import os
 from langchain_community.document_loaders import UnstructuredExcelLoader
 import uuid
 
-
+#unused
 def upload_df_as_excel(df:pd.DataFrame):
     """Upload DF as excel file for LargeLanguageModel analysis.
 
@@ -136,6 +136,15 @@ def get_document_text(file_path):
 
 
 def is_in_text(pattern, text) -> bool:
+    """returns True if the pattern is found in the text
+
+    Args:
+        pattern (str): pattern to search
+        text (str): text to search in
+
+    Returns:
+        bool: if the pattern is found in the text
+    """
 
     pattern = re.compile(pattern, re.IGNORECASE)
     ret = bool(pattern.search(text))
@@ -143,6 +152,16 @@ def is_in_text(pattern, text) -> bool:
 
 
 def search_in_pattern_in_text(pattern, text, pattern_inside):
+    """searches for a pattern inside a pattern in a text
+
+    Args:
+        pattern (str): initial pattern
+        text (str): text to search in
+        pattern_inside (str): pattern of the value to return
+
+    Returns:
+        str: value found
+    """
     match = re.search(pattern, text, re.IGNORECASE)
     if not match:
         return
@@ -153,12 +172,30 @@ def search_in_pattern_in_text(pattern, text, pattern_inside):
 
 
 def extract_between(text, start, end):
+    """extracts the text between two strings
+
+    Args:
+        text (str): text to search in
+        start (str): start of where to look
+        end (str): end of where to look
+
+    Returns:
+        str: text in between
+    """
     pattern = f"(\\n)?\s*{re.escape(start)}\s*(\\n)?\s*(\S.*?)\s*(?={re.escape(end)})"
     matches = re.findall(pattern, text, re.IGNORECASE)
     return matches[0][-1] if matches and matches[0] else None
 
 
 def format_pages_num(arr):
+    """return the list as the function wants,
+
+    Args:
+        arr (_type_): _description_
+
+    Returns:
+        str: strified list
+    """
     if not arr:
         return None
     if isinstance(arr, str):

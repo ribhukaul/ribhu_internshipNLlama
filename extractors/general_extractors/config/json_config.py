@@ -233,7 +233,7 @@ renaming = {
         "unconditional_coupon": "Premio/i",
         "conditional_coupon": "Premio/i Condizionato/i",
         "payment_callable_date": "Data di Liquidazione Anticipata Facoltativa",
-        "observation_autocall_date": "Data/e di Valutazione dell’Importo di Liquidazione (rimborso) Anticipato",
+        "observation_autocall_date": "Data/e di Valutazione dell'Importo di Liquidazione (rimborso) Anticipato",
         "barrier_autocall": "Barriera/e per la Scadenza Anticipata",
         "payment_autocall_date": "Data di Scadenza Anticipata",
         "value_autocall": "Premio/I di Uscita",

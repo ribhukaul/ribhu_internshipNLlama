@@ -2,7 +2,7 @@ from abc import abstractmethod
 import pandas as pd
 from ..models import Models
 from .config.cost_config import cost_per_token
-from ..utils import get_document_text, upload_df_as_excel
+from ..utils import get_document_text
 from extractors.general_extractors.config.cost_config import cost_per_token
 from .llm_functions import get_doc_language, llm_extraction
 from extractors.azure.document_intelligence import get_tables_from_doc
