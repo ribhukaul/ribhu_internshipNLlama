@@ -7,7 +7,7 @@
         "AZURE_FORM_RECOGNIZER_ENPOINT": "https://assicurativikidanalysis.cognitiveservices.azure.com/",
         "AZURE_FORM_RECOGNIZER_KEY": "323095cb382b4592a5831710cfbc2d93",
         "OPENAI_API_KEY": "d1dad1abf16c42368d94dcf30d9d0a93",
-        "OPENAI_API_BASE": "https://insurancekidapplicativo.openai.azure.com/",
+        "AZURE_OPENAI_ENDPOINT": "https://insurancekidapplicativo.openai.azure.com/",
         "OPENAI_API_VERSION": "2023-12-01-preview",
         "OPENAI_GPT35_DEP_NAME": "insurancegpt35",
         "OPENAI_GPT35_16K_DEP_NAME": "insurancegpt3516k",
