@@ -1,7 +1,6 @@
 import os
 import time
-from multiprocessing import Process, Pipe
-import asyncio
+import json
 import threading
 
 from AWSInteraction.S3Handler import S3ExtractionHandler
@@ -10,23 +9,27 @@ from extractors.general_extractors.custom_extractors.kid.insurance.gkid_extracto
 # TODO: 
 # - multiple files in one folder
 
+# TODO: DOCSTRING
 class ThreadedFunction(threading.Thread):
     def __init__(self, function, *args):
         threading.Thread.__init__(self)
         self.function = function
         self.args = args
         self.result = None
+        self.total_runtime= None
+        
 
     def run(self):
+        # time counter
+        start_time = time.time()
         extractor = self.function(*self.args)
         self.result = extractor.process()
+        self.total_runtime = time.time() - start_time
 
 
 class ExtractionHandler:
 
-    # Switch case to select correct custom extraction based on:
-    # - tenant
-    # - extraction type
+    # Switch case for custom extraction based on: -tenant -extraction type
     custom_extractors = {
         'insurance': {
             'kid': InsuranceKidExtractor,
@@ -67,7 +70,6 @@ class ExtractionHandler:
                 self.extractions[file_path]= {'error': 'file not found'}
         if parallel:
 
-
             threads = {}
             for file_key, file_path in self.local_saved_files.items():
                 thread = ThreadedFunction(self.extactor, file_path)
@@ -78,40 +80,11 @@ class ExtractionHandler:
                 thread.join()
             
             for file_key, thread in threads.items():
-                self.extractions[file_key] = thread.result
-            
-            # processes = []
-            # parent_connections = []
+                # result to dict
+                dict_result = json.loads(thread.result)
+                dict_result['extraction_time'] = thread.total_runtime
+                self.extractions[file_key] = json.dumps(thread.result)
 
-            # for _, file_local in self.local_saved_files.items():
-            #     # Create pipe for communication
-            #     parent_conn, child_conn = Pipe()
-            #     parent_connections.append(parent_conn)
-
-            #     process = Process(target=self.run_piped_function, args=(child_conn, file_local, self.extactor,))
-            #     processes.append(process)
-
-
-            # for process in processes:
-            #     process.start()
-            
-            # for process in processes:
-            #     process.join()
-            # # # async processing of the file
-            # # #partial_run_async_func = partial(self.run_async_function, function=self.extactor)
-            # # task = []
-            # # for _, file_local in self.local_saved_files.items():
-            # #     print("file items:", self.local_saved_files.items())
-            # #     task.append(asyncio.create_task(self.run_async_function(file_local, self.extactor)))
-            
-            # # await asyncio.wait(task, return_when=asyncio.ALL_COMPLETED)
-            # instances_total = 0
-            # for parent_connection in parent_connections:
-            #     instances_total += parent_connection.recv()[0]
-            # for i, it in enumerate(self.local_saved_files.items()):
-            #     file_key, _ = it
-            #     print(processes[i])
-            #     self.extractions[file_key] = processes[i]
         
         self.delete_local_files()
         

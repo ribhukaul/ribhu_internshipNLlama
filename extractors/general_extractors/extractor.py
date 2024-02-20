@@ -40,6 +40,7 @@ class Extractor:
 
         self.di_tables_pages = {}
         self.extraction = {}
+        
     # DOCSTRING MISSING
     def threader(self, functions_parameters):
 
