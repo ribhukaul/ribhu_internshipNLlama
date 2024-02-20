@@ -1,17 +1,40 @@
 {
-	"insurance": {
+	"general": {
 		"LANGCHAIN_TRACING_V2": "true",
 		"LANGCHAIN_ENDPOINT": "https://api.smith.langchain.com",
+		"AZURE_OPENAI_API_VERSION": "2023-12-01-preview"
+	},
+	"insurance": {
 		"LANGCHAIN_PROJECT": "insurance",
 		"AZURE_FORM_RECOGNIZER_ENPOINT": "https://assicurativikidanalysis.cognitiveservices.azure.com/",
-		"OPENAI_API_BASE": "https://insurancekidapplicativo.openai.azure.com/",
-		"OPENAI_API_VERSION": "2023-08-01-preview",
-		"TT": "23-09-15-preview",
-		"OPENAI_GPT35_DEP_NAME": "insurancegpt35",
-		"OPENAI_GPT35_16K_DEP_NAME": "insurancegpt3516k",
-		"OPENAI_GPT4_DEP_NAME": "insurancegpt4",
-		"OPENAI_GPT4_TURBO_DEP_NAME": "insurancegpt4turbo",
-		"OPENAI_EMBEDDING_DEP_NAME": "insuranceembedding"
-
+		"AZURE_OPENAI_ENDPOINT": "https://insurancekidapplicativo.openai.azure.com/",
+		"AZURE_OPENAI_GPT35_DEP_NAME": "insurancegpt35",
+		"AZURE_OPENAI_GPT35_16K_DEP_NAME": "insurancegpt3516k",
+		"AZURE_OPENAI_GPT4_DEP_NAME": "insurancegpt4",
+		"AZURE_OPENAI_GPT4_TURBO_DEP_NAME": "insurancegpt4turbo",
+		"AZURE_OPENAI_EMBEDDING_DEP_NAME": "insuranceembedding"
+	},
+	"aws_configs": {
+		"REGION": "eu-south-1",
+		"SECRET_MANAGER_PREFIX": "dde/dev/",
+		"SECRET_MANAGER_SUFFIX": "-llm-secret",
+		"S3_BUCKET": "dde-dev-working-671256662822-eu-south-1",
+		"AWS_PROFILE": "appicativo"
+	},
+	"local": {
+		"LANGCHAIN_TRACING_V2": "true",
+		"LANGCHAIN_PROJECT": "local",
+		"AZURE_FORM_RECOGNIZER_ENPOINT": "https://diapplicativotest.cognitiveservices.azure.com/",
+		"AZURE_OPENAI_ENDPOINT": "https://applicativotest.openai.azure.com/",
+		"AZURE_OPENAI_GPT35_DEP_NAME": "testinggpt35",
+		"AZURE_OPENAI_GPT35_16K_DEP_NAME": "testinggpt3516k",
+		"AZURE_OPENAI_GPT4_DEP_NAME": "testinggpt4",
+		"AZURE_OPENAI_GPT4_TURBO_DEP_NAME": "testinggpt4turbo",
+		"AZURE_OPENAI_EMBEDDING_DEP_NAME": "testingembedding"
+	},
+	"api_keys": {
+		"AZURE_FORM_RECOGNIZER_KEY": "YOURKEYHERE",
+		"LANGCHAIN_API_KEY": "YOURKEYHERE",
+		"AZURE_OPENAI_API_KEY": "YOURKEYHERE"
 	}
 }

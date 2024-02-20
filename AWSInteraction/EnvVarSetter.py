@@ -3,44 +3,63 @@ import json
 
 from AWSInteraction.AWSSecretsHandler import SecretsManagerExtractionHandler
 """
-TOO:
-TEST THIS CLASS
+In order to run the code locally while trying to connect to the S3 bucket and 
+AWS Secrets Manager, you need to configure a local auth profile on
+    https://docs.aws.amazon.com/cli/latest/userguide/sso-configure-profile-token.html#sso-configure-profile-token-auto-sso)
+and activate the and set the variable 
+AWS_PROFILE in AWSInteraction//config.json to the name of the profile you created.
 """
 
 
 class EnvVarSetter():
 
+
     def __init__(self, payload=None, tenant=None) -> None:
+
+        with open('AWSInteraction//config.json') as json_file:
+            self.config = json.load(json_file)
+
+        if os.environ.get("ENV") == None:
+            os.environ["ENV"] = "local"
 
         self.tenant = tenant
         if payload is not None:
             self.payload = payload
             self.tenant = payload['TENANT']
 
-
-    def set_all_env_vars(self) -> None:
+    # LAMBDA
+    def configure_lambda_env_vars(self, use_local_keys=False) -> None:
         """
-        Set all the local and the secret env variables.
+        Set the environment variables for the lambda function.
+        use_local_keys: if True, the API keys are taken from the local config file.
         """
-
+        if os.environ["ENV"] == "local":
+            self._set_env_variables("aws_configs")
         self.set_locally_saved_env_vars()
         self.set_aws_secret_manager_env_vars()
+
+        if use_local_keys and os.environ["ENV"] == "local":
+            self._set_env_variables("local")
+            self._set_env_variables("api_keys")
+
+    # LOCAL RUN (need api keys in config.json)
+    def configure_local_env(self) -> None:
+        """
+        Set the environment variables for local testing.
+        For this set up the config file should be modified by adding API keys.
+        """
+        self.set_locally_saved_env_vars()
+        self._set_env_variables("local")
+        self._set_env_variables("api_keys")
 
 
     def set_locally_saved_env_vars(self) -> None:
         """
         Set the environment variables that are saved locally in the config file.
         """
-
-        # load config.json file and transform to dict
-        with open('AWSInteraction//config.json') as json_file:
-            data = json.load(json_file)
-            tenant_variables = data[self.tenant]
-
-            # Create env variables
-            for key, value in tenant_variables.items():
-                os.environ[key] = value
-
+        # set tenant vars
+        self._set_env_variables("general")
+        self._set_env_variables(self.tenant)
 
     def set_aws_secret_manager_env_vars(self) -> None:
         """
@@ -61,10 +80,20 @@ class EnvVarSetter():
         for key, value in secret.items():
             os.environ[key] = value
 
+    def _set_env_variables(self, variable_group) -> None:
+        """
+        Set the environment variables from a dictionary.
+        """
+        env_variables = self.config.get(variable_group)
+        if env_variables is not None:
+            for key, value in env_variables.items():
+                os.environ[key] = value
+        else:
+            print(f"Variable group {variable_group} not found in the config file.")
 
 
-if __name__ == "__main__":
-    envVarSetter = EnvVarSetter()
-    envVarSetter.set_locally_saved_env_vars()
-    pass
+# if __name__ == "__main__":
+#     envVarSetter = EnvVarSetter()
+#     envVarSetter.set_locally_saved_env_vars()
+#     pass
 

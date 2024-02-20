@@ -13,7 +13,6 @@ at AWSInteraction\config.json:
     - "REGION": "eu-south-1"
     - "AWS_PROFILE": "appicativo" (yoour profile name, to create your SSO profile follow 
     https://docs.aws.amazon.com/cli/latest/userguide/sso-configure-profile-token.html#sso-configure-profile-token-auto-sso)
-    - "ENV":"local"
 
 For parallel execution:
 https://aws.amazon.com/blogs/compute/parallel-processing-in-python-with-aws-lambda/
@@ -25,7 +24,8 @@ def lambda_handler(event, context):
     requestContext = RequestContext(event)
 
     env_setter = EnvVarSetter(requestContext.payload)
-    env_setter.set_all_env_vars()
+    USE_LOCAL_KEYS = False # True if you want to use local keys
+    env_setter.configure_lambda_env_vars(use_local_keys=USE_LOCAL_KEYS)
 
     try:
         extraction_handler = ExtractionHandler(requestContext)
