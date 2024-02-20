@@ -2,10 +2,10 @@ from extractors.general_extractors.custom_extractors.kid.kid_extractor import Ki
 import asyncio
 import os
 
-from extractors.models import Models    
+from extractors.models import Models
+
 
 class InsuranceKidExtractor(KidExtractor):
-
 
     def __init__(self, doc_path) -> None:
         self.doc_path = doc_path
@@ -41,20 +41,20 @@ class InsuranceKidExtractor(KidExtractor):
 
         except Exception as error:
             print("first stage error" + repr(error))
-        
+
         # SECOND STAGE: extract RIY, costs, commissions and performances
-        #try:
-        functions_parameters = {
-            "riy": {"function":self.extract_riy}, 
-            "costs": {"function":self.extract_entryexit_costs, "args":{"table":tables["costi_ingresso"]}},
-            "management_costs": {"function":self.extract_management_costs, "args": {"table":tables["costi_gestione"]}},
-            "performance": {"function":self.extract_performances, "args":{"table":tables["performance"]}}
-            }
-        results = self.threader(functions_parameters)
-        riy = results["riy"]
-        exit_entry_costs = results["costs"]
-        management_costs = results["management_costs"]
-        performance = results["performance"]
+        try:
+            functions_parameters = {
+                "riy": {"function":self.extract_riy}, 
+                "costs": {"function":self.extract_entryexit_costs, "args":{"table":tables["costi_ingresso"]}},
+                "management_costs": {"function":self.extract_management_costs, "args": {"table":tables["costi_gestione"]}},
+                "performance": {"function":self.extract_performances, "args":{"table":tables["performance"]}}
+                }
+            results = self.threader(functions_parameters)
+            riy = results["riy"]
+            exit_entry_costs = results["costs"]
+            management_costs = results["management_costs"]
+            performance = results["performance"]
 
             # riy = self.extract_riy()
             # exit_entry_costs = self.extract_entryexit_costs(tables["costi_ingresso"])
@@ -62,8 +62,8 @@ class InsuranceKidExtractor(KidExtractor):
             # performance = self.extract_performances(tables["performance"])
         
 
-        # except Exception as error:
-        #     print("second stage error" + repr(error))
+        except Exception as error:
+            print("second stage error" + repr(error))
 
         try:
             # Format results
@@ -82,29 +82,29 @@ class InsuranceKidExtractor(KidExtractor):
             complete = self.raccorda(
                 {
                     "file_name": filename,
-                    **basic_information,
-                    **performance,
-                    **riy,
-                    **exit_entry_costs,
-                    **management_costs,
-                    **market,
-                    **api_costs,
+                    **dict(basic_information),
+                    **dict(performance),
+                    **dict(riy),
+                    **dict(exit_entry_costs),
+                    **dict(management_costs),
+                    **dict(market),
+                    **dict(api_costs),
                 },
-                "kid"
+                "kid",
             )
 
             complete = self.create_json(
                 {
                     "file_name": filename,
-                    **basic_information,
-                    **performance,
-                    **riy,
-                    **exit_entry_costs,
-                    **management_costs,
-                    **market,
-                    **api_costs
+                    **dict(basic_information),
+                    **dict(performance),
+                    **dict(riy),
+                    **dict(exit_entry_costs),
+                    **dict(management_costs),
+                    **dict(market),
+                    **dict(api_costs),
                 },
-                "kid"
+                "kid",
             )
 
         except Exception as error:
@@ -112,7 +112,6 @@ class InsuranceKidExtractor(KidExtractor):
             filename = os.path.splitext(os.path.basename(self.doc_path))[0]
             complete = dict([(filename), dict()])
 
-        
         print(complete)
         Models.clear_resources_file(filename)
 

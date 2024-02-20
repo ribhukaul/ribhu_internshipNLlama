@@ -5,29 +5,26 @@ from ...llm_functions import llm_extraction_and_tag
 
 class GKidExtractor(KidExtractor):
 
-    def __init__(self, doc_path, predefined_language='it') -> None:
+    def __init__(self, doc_path, predefined_language="it") -> None:
         super().__init__(doc_path, predefined_language)
 
-
     async def get_tables(self):
-        """ Get GKID tables asynchronusly.
+        """Get GKID tables asynchronusly.
 
         Returns:
             dict([pandas.dataframe]): tables as dataframe
         """
         try:
-            riy_table = self._extract_table("riy_perc_gkid")
-            costi_ingresso = self._extract_table("costi_ingresso_gkid", black_list_pages=[0])
-            costi_gestione = self._extract_table("costi_gestione_gkid")
+            riy_table,_ = self._extract_table("riy_perc_gkid")
+            costi_ingresso,_ = self._extract_table("costi_ingresso_gkid", black_list_pages=[0])
+            costi_gestione,_ = self._extract_table("costi_gestione_gkid")
 
         except Exception as error:
             print("calc table error" + repr(error))
-            error_list=[costi_ingresso, costi_gestione,riy_table]
+            error_list = [costi_ingresso, costi_gestione, riy_table]
             for i, key in enumerate(error_list):
                 if not key:
-                    error_list[i] = dict(
-                        [("ERROR", "ERROR")]
-                    )
+                    error_list[i] = dict([("ERROR", "ERROR")])
 
         return dict(
             [
@@ -49,18 +46,12 @@ class GKidExtractor(KidExtractor):
                 setattr(
                     page,
                     "page_content",
-                    clean_response_strips(
-                        "text_gkid", self.language, page.page_content
-                    ),
+                    clean_response_strips("text_gkid", self.language, page.page_content),
                 )
 
             # extract and clean
-            extraction = llm_extraction_and_tag(
-                self.text, self.language, "general_info_gkid", self.file_id
-            )
-            extraction = clean_response_regex(
-                "general_info_gkid", self.language, extraction
-            )
+            extraction = llm_extraction_and_tag(self.text, self.language, "general_info_gkid", self.file_id)
+            extraction = clean_response_regex("general_info_gkid", self.language, extraction)
             extraction = dict(extraction)
             if extraction["periodo_detenzione_raccomandato"] != []:
                 extraction["periodo_detenzione_raccomandato"] = str(
@@ -74,9 +65,9 @@ class GKidExtractor(KidExtractor):
 
         except Exception as error:
             print("extract general data error" + repr(error))
-            error_list = ["isin",  "sri"]
-            extraction = {key: (extraction[key] if extraction.get(key) is not None else "ERROR") for key in error_list}            
-            self.rhp = extraction["periodo_detenzione_raccomandato"]= "multiple"
+            error_list = ["isin", "sri"]
+            extraction = {key: (extraction[key] if extraction.get(key) is not None else "ERROR") for key in error_list}
+            self.rhp = extraction["periodo_detenzione_raccomandato"] = "multiple"
 
         return extraction
 
@@ -94,9 +85,7 @@ class GKidExtractor(KidExtractor):
 
         try:
             # clean rhp to avoid errors
-            clean = clean_response_regex(
-                "rhp", self.language, dict([("rhp", self.rhp)])
-            )["rhp"]
+            clean = clean_response_regex("rhp", self.language, dict([("rhp", self.rhp)]))["rhp"]
             rhp = str(int(clean if clean != "-" else "10"))
 
             extraction_riy = dict()
@@ -109,11 +98,7 @@ class GKidExtractor(KidExtractor):
             }
             extraction_riy.update(
                 self.raccorda(
-                    regex_extract(
-                        ["costi_totali-gkid", "incidenza-gkid"], table, self.language
-                    ),
-                    transform,
-                    keep=True
+                    regex_extract(["costi_totali-gkid", "incidenza-gkid"], table, self.language), transform, keep=True
                 )
             )
             table = table.iloc[:, :-1]
@@ -159,18 +144,14 @@ class GKidExtractor(KidExtractor):
             )
             extraction_riy.update(
                 self.raccorda(
-                    regex_extract(
-                        ["costi_totali-gkid", "incidenza-gkid"], table, self.language
-                    ),
+                    regex_extract(["costi_totali-gkid", "incidenza-gkid"], table, self.language),
                     transform,
                 ),
             )
 
             # divide ,clean, reunite
             eur = {key: value for key, value in extraction_riy.items() if "eur" in key}
-            perc = {
-                key: value for key, value in extraction_riy.items() if "perc" in key
-            }
+            perc = {key: value for key, value in extraction_riy.items() if "perc" in key}
             perc = clean_response_regex("riy%/-gkid", self.language, perc, to_add="%")
             eur = clean_response_regex("riy€-gkid", self.language, eur, to_add="€")
             extraction_riy = {**perc, **eur}
@@ -218,7 +199,7 @@ class GKidExtractor(KidExtractor):
                 "incidenza_costo_eur_rhp_min",
                 "incidenza_costo_eur_rhp_max",
             ]
-            extraction = {key: (extraction[key] if extraction.get(key) is not None else "ERROR") for key in error_list}    
+            extraction = {key: (extraction[key] if extraction.get(key) is not None else "ERROR") for key in error_list}
 
         return extraction_riy
 
@@ -248,12 +229,8 @@ class GKidExtractor(KidExtractor):
                 table_gestione,
                 self.language,
             )
-            costi_ingresso = clean_response_regex(
-                "costi_ingresso_gkid", self.language, costi_ingresso, to_add="%"
-            )
-            costi_gestione = clean_response_regex(
-                "costi_gestione_gkid", self.language, costi_gestione, to_add="%"
-            )
+            costi_ingresso = clean_response_regex("costi_ingresso_gkid", self.language, costi_ingresso, to_add="%")
+            costi_gestione = clean_response_regex("costi_gestione_gkid", self.language, costi_gestione, to_add="%")
 
             """legacy code general table extraction
             tasks = []
@@ -275,7 +252,9 @@ class GKidExtractor(KidExtractor):
                     "costi_uscita_min",
                     "costi_uscita_max",
                 ]
-                costi_ingresso = {key: (costi_ingresso[key] if costi_ingresso.get(key) is not None else "ERROR") for key in error_list}  
+                costi_ingresso = {
+                    key: (costi_ingresso[key] if costi_ingresso.get(key) is not None else "ERROR") for key in error_list
+                }
             if not costi_gestione or costi_gestione == {"ERROR": "ERROR"}:
                 error_list = [
                     "commissione_gestione_min",
@@ -285,14 +264,13 @@ class GKidExtractor(KidExtractor):
                     "commissione_performance_min",
                     "commissione_performance_max",
                 ]
-                costi_gestione = {key: (costi_gestione[key] if costi_gestione.get(key) is not None else "ERROR") for key in error_list}  
+                costi_gestione = {
+                    key: (costi_gestione[key] if costi_gestione.get(key) is not None else "ERROR") for key in error_list
+                }
 
         costi = {**dict(costi_gestione), **dict(costi_ingresso)}
 
         return costi
-
-
-
 
     def raccorda(self, dictionary, renaming, keep=False):
         """renames fiels
@@ -307,17 +285,7 @@ class GKidExtractor(KidExtractor):
         """
         # uncomment for extra fields
         # dictionary=self.create_json(dictionary)
-        new_dict = {
-            renaming[key]: value
-            for key, value in dictionary.items()
-            if key in renaming.keys()
-        }
+        new_dict = {renaming[key]: value for key, value in dictionary.items() if key in renaming.keys()}
         if keep:
-            new_dict.update(
-                {
-                    key: value
-                    for key, value in dictionary.items()
-                    if key not in renaming.keys()
-                }
-            )
+            new_dict.update({key: value for key, value in dictionary.items() if key not in renaming.keys()})
         return new_dict

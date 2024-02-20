@@ -1,9 +1,8 @@
 from langchain_openai import AzureChatOpenAI
 import os
 
-# For model availability
-# https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/models#model-summary-table-and-region-availability
-def azure_openai_model(model="gpt-3.5-turbo", temperature=0, verbose=True):
+
+def azure_openai_model(model="gpt-4-turbo", temperature=0, verbose=True):
     """Create an AzureChatOpenAI object.
 
     Args:

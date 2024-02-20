@@ -1,21 +1,30 @@
-
 from extractors.general_extractors.custom_extractors.certificates.certificates_config.cert_tags import (
+    InformazioniBaseBNP,
+    TabellaAllegatiBNP,
+    TabellaAllegatoScadenzaBNP,
     TabellaCedola,
+    TabellaDeductableVontobel,
+    TabellaFirstInfoVontobel,
+    TabellaMainInfoVontobel,
     TabellaSottostanti,
     TabellaMainInfo,
     CedolaStr,
     InformazioniBaseCertificati,
-    SottostantiHeader,
+    TabellaSottostantiHeader,
+    TabellaAllegatoPremioBNP,
+    TabellaFirstInfoBNP,
+    TabellaSottostanteBNP,
+    TabellaMainInfoBNP,
 )
 
 from extractors.general_extractors.custom_extractors.kid.kid_config.kid_tags import (
     InformazioniBase,
-    ScenariPerformance,
+    TabellaScenariPerformance,
     TabellaRiy,
     TabellaCostiIngresso,
     TabellaCostiGestione,
     InformazioniBaseGkid,
-    ScenariPerformanceGkid,
+    TabellaScenariPerformanceGkid,
     TabellaRiyPercGkid,
     TabellaRiyEurGkid,
     TabellaCostiIngressoGkid,
@@ -25,11 +34,9 @@ from extractors.general_extractors.custom_extractors.kid.kid_config.kid_tags imp
 )
 
 
-
 prompts = {
     "it": {
         "general_info": """Dal documento seguente, estrai 
-            - ISIN
             - Periodo di detenzione raccomandato o per quanto tempo si presuppone di detenere il prodotto(anni), converti in anni se necessario
             - indicatore sintetico di rischio
             - Data di realizzazione del documento
@@ -115,19 +122,88 @@ prompts = {
 
             DOCUMENTO:
             {context}""",
-            "general_info_certificati":"""Dal documento seguente, estrai 
+        "general_info_certificati": """Dal documento seguente, estrai 
             - ISIN
             - descrizione completa del certificato, appare scritta come certificato ... in VALUTA ... su .... , con valuta che può essere EUR o USD
             - emittente o ideatore del certificato, compare dopo: Ideatore:
             DOCUMENTO:
             {context}""",
-            "cedola_str":"""
+        "cedola_str": """
             Dal documento seguente, estrai esattamente come riportato il pezzo di testo
             mi interessa tutto il denso testo numerato che comprende date e costi e che usa il carattere '▪' come spaziatore.
             potrebbe non esistere, in quel caso ritorna N/A
             DOCUMENTO:
             {context}""",
+        "general_info_bnp": """Dal documento seguente, estrai 
+             -il periodo di detenzione raccomandato
+             -l'indicatore di rischio su 7 come dato
+            DOCUMENTO:
+            {context}""",
+        "first_info_bnp": """Dal documento seguente, estrai
+            -ISIN
+            - solamente l'emittente
+            DOCUMENTO:
+            {context}""",
+            "main_info_bnp":"""
+            dal documento seguente, estrai
+            -valuta del prezzo di emissione/valuta del prodotto
+            -data di strike
+            -data di emissione
+            -data di liquidazione (rimborso)
+            -data di valutazione dell'importo di liquidazione (rimborso)
+            -valore nominale o importo nozionale
+            -mercato di quotazione
+            -barriera
+            -barriera/e per il versamento del premio/i condizionato/i
+            -prezzo di emissione
+            -data/e di valutazione del/i premio/i condizionato/i
+            -data/e di pagamento del/i premio/i
+            -premio/i
+            -premio/i condizionato/i
+            -data di liquidazione anticipata facoltativa
+            -tutte le date di valutazione dell' importo di liquidazione (rimborso) anticipato
+            -barriera/e per la scadenza anticipata
+            -tutte le date di scadenza anticipata
+            -premio/i di uscita
+            DOCUMENTO:
+            {context}
+            """,
+            "allegato_bnp_premio":"""
+            dal documento seguente, estrai
+            tutte le data/e di valutazione del/i premio/i condizionato/i
+            tutte le data/e di pagamento del/i premio/i
+            barriera/e o barrierale per il versamento del Premio/i Condizionato/i
+            premio/i
+            Premio/i condizionato/i
+            DOCUMENTO:
+            {context}
             
+            """,
+            "allegato_bnp_scadenza":"""
+            dal documento seguente, estrai:
+            Data di Liquidazione Anticipata Facoltativa
+            tutte le Data/e di Valutazione dell'Importo di Liquidazione (rimborso) Anticipato
+            Barriera/e o barrierale per la Scadenza Anticipata
+            Data di Scadenza Anticipata
+            Premio/I di Uscita
+            DOCUMENTO:
+            {context}
+            """,
+            "allegati_bnp":"""
+            dal documento seguente, estrai:
+            tutte le data/e di valutazione del/i premio/i condizionato/i
+            tutte le data/e di pagamento del/i premio/i
+            barriera/e o barrierale per il versamento del Premio/i Condizionato/i
+            Premio/i
+            Premio/i condizionato/i
+            Data di Liquidazione Anticipata Facoltativa
+            tutte le Data/e di Valutazione dell'Importo di Liquidazione (rimborso) Anticipato
+            Barriera/e o barrierale per la Scadenza Anticipata
+            Data di Scadenza Anticipata
+            Premio/I di Uscita
+            DOCUMENTO:
+            {context}
+            """,
     },
     "en": {
         "general_info": """From the following document, extract:
@@ -155,6 +231,47 @@ prompts = {
 
             DOCUMENTO:
             {context}""",
+            "first_info_vontobel":"""
+            from the following document, extract:
+            -title, found after: "Final Terms for"
+            -the ISIN
+            -Issuer
+            DOCUMENT:
+            {context}
+            """,
+            "main_info_vontobel":"""
+            from the following document, extract:
+            -Settlement Currency
+            -Fixing Date
+            -Issue date
+            -Maturity date
+            -Final Valuation Date
+            -Calculation amount or Nominal Amount
+            -Bonus Amount
+            -Redemption Level
+            -Bonus Threshold
+            -Barrier percentages
+            -Memory
+            -Strike
+            -Early Redemption
+            -Barrier Event
+            -Observation Date(s) 
+            -Bonus Payment Date(s)
+            -Valuation Date (s)
+            -Early Redemption Date (n) 
+            -Underlying title, often right after 'Underlying'
+            -ISIN Underlying, in the section 'Underlying'
+            -Bloomberg Symbol, in the section 'Underlying'
+            DOCUMENT:
+            {context}
+            """,
+            "deductables_vontobel":"""
+            from the following document, extract:
+            -Issue Price
+            -Exchange Listing , often under 'Stock Exchange Listing'
+            DOCUMENT:
+            {context}
+            """,
     },
 }
 
@@ -162,78 +279,77 @@ prompts = {
 table_schemas = {
     "it": {
         "general_info": InformazioniBase,
-        "performance": ScenariPerformance,
+        "performance": TabellaScenariPerformance,
         "riy": TabellaRiy,
         "costi_ingresso": TabellaCostiIngresso,
         "costi_gestione": TabellaCostiGestione,
         "general_info_gkid": InformazioniBaseGkid,
-        "performance-gkid": ScenariPerformanceGkid,
+        "performance-gkid": TabellaScenariPerformanceGkid,
         "riy%/-gkid": TabellaRiyPercGkid,
         "riy€-gkid": TabellaRiyEurGkid,
         "costi_ingresso_gkid": TabellaCostiIngressoGkid,
         "costi_gestione_gkid": TabellaCostiGestioneGkid,
-        "cedola":TabellaCedola,
-        "sottostanti":TabellaSottostanti,
-        "main_info":TabellaMainInfo,
-        "cedola_str":CedolaStr,
-        "general_info_certificati":InformazioniBaseCertificati,
-        "sottostanti_header":SottostantiHeader,
+        "cedola": TabellaCedola,
+        "sottostanti": TabellaSottostanti,
+        "main_info": TabellaMainInfo,
+        "cedola_str": CedolaStr,
+        "general_info_certificati": InformazioniBaseCertificati,
+        "sottostanti_header": TabellaSottostantiHeader,
+        "general_info_bnp": InformazioniBaseBNP,
+        "main_info_bnp": TabellaMainInfoBNP,
+        "allegato_bnp_premio": TabellaAllegatoPremioBNP,
+        "allegato_bnp_scadenza": TabellaAllegatoScadenzaBNP,
+        "allegati_bnp": TabellaAllegatiBNP,
+        "first_info_bnp": TabellaFirstInfoBNP,
+        "sottostante_bnp": TabellaSottostanteBNP,
+        
     },
     "en": {
-        "performance": PerformanceScenarios, 
-        "riy": TableRiy
+        "performance": PerformanceScenarios,
+        "riy": TableRiy,
+        "first_info_vontobel": TabellaFirstInfoVontobel,
+        "main_info_vontobel": TabellaMainInfoVontobel,
+        "deductables_vontobel": TabellaDeductableVontobel,
+
         },
 }
 
 
-
 word_representation = {
     "it": {
-        "performance": [
-            "moderato",
-            "sfavorevole",
-            "favorevole",
-            "stress",
-            "possibile rimborso al",
-        ],
-        "riy": ["costi totali", "Costi totali", "riy", "Riy", "RIY"],
-        "riy_perc_gkid": ["costi totali", "Costi totali", "riy", "Riy", "RIY"],
-        "costi_ingresso": [
-            "costi di ingresso",
-            "costi di uscita",
-            "Costi di ingresso",
-            "Costi di uscita",
-        ],
+        "performance": ["moderato", "sfavorevole", "favorevole", "stress", "possibile rimborso al"],
+        "riy": ["costi totali", "riy"],
+        "riy_perc_gkid": ["costi totali", "riy"],
+        "costi_ingresso": ["costi di ingresso", "costi di uscita"],
         "costi_gestione": [
             "commissioni di gestione",
             "costi di transazione",
             "commissioni di performance",
             "costi amministrativi",
-            "Commissioni di gestione",
-            "Costi di transazione",
-            "Commissioni di performance",
-            "Costi amministrativi",
         ],
-        "costi_ingresso_gkid": [
-            "costi di ingresso",
-            "costi di uscita",
-            "Costi di ingresso",
-            "Costi di uscita",
-        ],
+        "costi_ingresso_gkid": ["costi di ingresso", "costi di uscita"],
         "costi_gestione_gkid": [
             "commissioni di gestione",
             "costi di transazione",
             "commissioni di performance",
             "costi amministrativi",
-            "Commissioni di gestione",
-            "Costi di transazione",
-            "Commissioni di performance",
-            "Costi amministrativi",
         ],
-        
-        "cedola": ["cedola", "Cedola","Data di Osservazione della Cedola", "Data di Pagamento della Cedola Condizionale", "Importo della Cedola Condizionale"],
-        "sottostanti": [ "Bloomberg Ticker", "bloomberg Ticker","Ticker", "Sottostante", "ISIN",],
-        "main_info": ["Valuta del prodotto", "Performance Peggiore", "Modalità di Pagamento"],
+        "cedola": [
+            "cedola",
+            "cedola",
+            "data di osservazione della cedola",
+            "data di pagamento della cedola condizionale",
+            "importo della cedola condizionale",
+        ],
+        "sottostanti": ["bloomberg ticker", "ticker", "sottostante", "isin"],
+        "main_info": ["valuta del prodotto", "performance peggiore", "modalità di pagamento"],
+        "sottostanti_table": ["bloomberg ticker", "ticker", "sottostante", "isin"],
+        "first_info_bnp": ["codice isin", "isin", "autorità competente", "redazione", "produttore"],
+        "main_info_bnp": ["data di strike", "strike", "prezzo di emissione", "emissione", "(rimborso)"],
+        "main_info_bnp2": ["valuta", "valuta del prodotto", "importo nozionale", "nozionale"],
+        "sottostante_bnp": ["bloomberg", "codice bloomberg", "sottostante"],
+        "allegato_bnp_premio": ["premio/i", "premio", "barriera/e", "condizionato"],
+        "allegato_bnp_scadenza": ["liquidazione", "anticipata", "facoltativa", "scadenza, rimborso"],
     },
     "en": {
         "performance": [

@@ -3,11 +3,15 @@ import pandas as pd
 from azure.ai.documentintelligence import DocumentIntelligenceClient
 from azure.core.credentials import AzureKeyCredential
 
+from extractors.utils import format_pages_num
+
 # Will need authentication for prod app
 # https://medium.com/@tophamcherie/using-python-to-programmatically-authenticate-to-azure-use-resources-6997ff326fb6
 
 
-def analyze_general_documents(doc_path, specific_pages=None, language="it", api_version="2023-10-31-preview", query_list=None):
+def analyze_general_documents(
+    doc_path, specific_pages=None, language="it", api_version="2023-10-31-preview", query_list=None
+):
     """Analyze a document with the Azure Form Recognizer API.
 
     Args:
@@ -33,19 +37,22 @@ def analyze_general_documents(doc_path, specific_pages=None, language="it", api_
     document_analysis_client = DocumentIntelligenceClient(
         endpoint=endpoint, credential=AzureKeyCredential(key), api_version=api_version
     )
-    features_chosen=None
+    features_chosen = None
     if query_list is not None:
-        features_chosen=["queryFields"]
-        
+        features_chosen = ["queryFields"]
+
+    specific_pages = format_pages_num(specific_pages)
+
     with open(doc_path, "rb") as pdf_file:
         # Analyze full document or specific pages
         poller = document_analysis_client.begin_analyze_document(
-            analyze_request=pdf_file, content_type="application/octet-stream",
+            analyze_request=pdf_file,
+            content_type="application/octet-stream",
             model_id="prebuilt-layout",
             locale=language_locale,
             features=features_chosen,
             query_fields=query_list,
-            pages=specific_pages
+            pages=specific_pages,
         )
         result = poller.result()
     return result
@@ -77,7 +84,9 @@ def table_json_to_df(json_data):
     return df
 
 
-def get_tables_from_doc(doc_path, specific_pages=None, language="it",api_version="2023-10-31-preview", query_list=None):
+def get_tables_from_doc(
+    doc_path, specific_pages=None, language="it", api_version="2023-10-31-preview", query_list=None
+):
     """Get tables from a document, can be used generally to save, or directly for query_list, in that case, return query_list also
 
     Args:
@@ -98,9 +107,9 @@ def get_tables_from_doc(doc_path, specific_pages=None, language="it",api_version
     for table in result.tables:
         df_tab = table_json_to_df(table)
         df_tables.append(df_tab)
-    
+
     if query_list:
         return df_tables, result.documents[0].fields
 
-    return df_tables
+    return df_tables, result
 

@@ -1,11 +1,10 @@
 import re
 from .kid_config.kid_cleaning import (
-    strips_cleaning, 
+    strips_cleaning,
     regex_cleaning,
     regex_search,
     exc_multiple_lines,
 )
-
 
 
 # TO REVIEW
@@ -43,6 +42,7 @@ def clean_response_regex(type, language, response, to_add=""):
 
     return response
 
+
 def clean_response_strips(type, language, response):
     """cleans a response using a list of strings to strip
 
@@ -63,8 +63,8 @@ def clean_response_strips(type, language, response):
     # remove leading and trailing spaces
     while response[0] in [",", ":", ".", ";", " ", '"', "'", "\\n"]:
         response = response[1:]
-    #replace is for json format
-    response= response.replace('"', r"\"")
+    # replace is for json format
+    response = response.replace('"', r"\"")
     return response
 
 
@@ -108,9 +108,7 @@ def regex_extract(searches, table, language):
         if field in searches:
             groups = divide_regex(value)
             # returning 0 and -1 takes care of all cases anyway
-            ret.update(
-                dict([(field + "_min", groups[0]), (field + "_max", groups[-1])])
-            )
+            ret.update(dict([(field + "_min", groups[0]), (field + "_max", groups[-1])]))
         else:
             ret.update(dict([(field, value)]))
     return ret
@@ -129,6 +127,7 @@ def search_reg(language, type, text):
     """
     match = re.search(regex_search[language][type], text, re.IGNORECASE)
     return match is not None
+
 
 def handle_exc(table, a, search, language):
     """handles exceptions where table may be split in multiple lines, looks until next search is found

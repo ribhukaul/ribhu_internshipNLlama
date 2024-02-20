@@ -197,3 +197,5 @@ pyrightconfig.json
 
 
 pyproject.toml
+
+tmp/*

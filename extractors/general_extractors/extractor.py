@@ -1,10 +1,12 @@
+from abc import abstractmethod
 from ..models import Models
 from .config.cost_config import cost_per_token
 from ..utils import get_document_text
 from extractors.general_extractors.config.cost_config import cost_per_token
-from .llm_functions import get_doc_language
+from .llm_functions import get_doc_language, llm_extraction
 from extractors.azure.document_intelligence import get_tables_from_doc
 from .utils import select_desired_page, select_desired_table
+from extractors.general_extractors.llm_functions import general_table_inspection, llm_extraction_and_tag
 from extractors.general_extractors.config.json_config import (
     renaming,
 )
@@ -26,6 +28,7 @@ class ThreadFunction(threading.Thread):
         return self.result
 
 
+
 class Extractor:
     """parent class for all extractors"""
 
@@ -39,6 +42,7 @@ class Extractor:
             self.language = get_doc_language(self.text, self.file_id)
 
         self.di_tables_pages = {}
+        self.raw_data_pages = {}
         self.extraction = {}
         
     # DOCSTRING MISSING
@@ -77,29 +81,23 @@ class Extractor:
         try:
             # Select page with table
             keywords = word_representation[self.language][type]
-            text = [
-                page if i not in black_list_pages else ""
-                for i, page in enumerate(self.text)
-            ]
+            text = [page if i not in black_list_pages else "" for i, page in enumerate(self.text)]
             page = select_desired_page(text, keywords)
 
             # Get all the tables from the page
-            if (
-                self.di_tables_pages is not None
-                and page not in self.di_tables_pages.keys()
-            ):
+            if self.di_tables_pages is not None and page not in self.di_tables_pages.keys():
                 page_num = int(page) + 1
-                tables = get_tables_from_doc(
-                    self.doc_path, specific_pages=page_num, language=self.language
-                )
+                tables, raw_data = get_tables_from_doc(self.doc_path, specific_pages=page_num, language=self.language)
                 self.di_tables_pages[page] = tables
+                self.raw_data_pages[page] = raw_data
             else:
                 tables = self.di_tables_pages[page]
+                raw_data = self.raw_data_pages[page]
 
             # Select the right table
             table_nr = select_desired_table(tables, keywords)
-            return tables[int(table_nr)]
-        
+            return tables[int(table_nr)], raw_data
+
         except Exception as error:
             print("extract table error" + repr(error))
             return None
@@ -107,8 +105,22 @@ class Extractor:
             # exreturn = dict()
             # for table in tables:
             #     exreturn.update(table)
+            
+            
 
-    
+    def fill_tables(self, pages):
+        """experimental for faster runs, fills the tables in the document asynchronously all in one
+
+        Args:
+            page (_type_): _description_
+        """
+        fill, raw_data = get_tables_from_doc(self.doc_path, specific_pages=pages, language=self.language)
+        for idx, table in enumerate(fill):
+            safe_number= getattr(raw_data.tables[idx] if idx < len(raw_data.tables) else None, 'bounding_regions', None)[0].get("pageNumber", None)
+            if safe_number:
+                self.di_tables_pages.setdefault(str(safe_number - 1), []).append(table)
+                self.raw_data_pages.setdefault(str(safe_number - 1), []).append(raw_data)
+
     def _process_costs(self):
         """processes the cost of the calls given local config and prepares them for the output
 
@@ -116,9 +128,11 @@ class Extractor:
             _type_: _description_
         """
         api_costs = Models.get_costs(self.file_id)
-        azure_costs = {"azure": {"pages":len(self.di_tables_pages), "cost": len(self.di_tables_pages) * cost_per_token["azure"]}}
+        azure_costs = {
+            "azure": {"pages": len(self.di_tables_pages), "cost": len(self.di_tables_pages) * cost_per_token["azure"]}
+        }
         api_costs.update(azure_costs)
-        
+
         total_tokens = sum(entry.get("tokens", 0) for entry in api_costs.values())
         total_cost = sum(entry.get("cost", 0) for entry in api_costs.values())
 
@@ -129,6 +143,48 @@ class Extractor:
                 entry["cost"] = round(entry["cost"], 2)
         return api_costs
 
+    async def extract_from_multiple_tables(self, pages, tags, complex=False):
+        """extracts from multiple tables
+
+        Args:
+            pages (int[]): pages to extract from
+
+        Returns:
+            dict(): dict containing the results
+        """
+        try:
+
+            extraction = dict()
+            list_tables = list(self.di_tables_pages)
+            tables = []
+            concatenated_str = "i valori sono in una di queste tabelle e solo in una o in nessuna, se si riferisce all'allegato ignoralo "
+            for page in pages:
+                tables += self.di_tables_pages[list_tables[page]]
+
+            for idx, table in enumerate(tables):
+                concatenated_str = concatenated_str + f"||||||||||||tabella numero {idx}:{table.to_string( na_rep='N/A')} "
+                
+
+            for tag in tags:
+                llm_extract=concatenated_str
+                if complex:
+                    llm_extract = llm_extraction(concatenated_str, tag, self.file_id, language=self.language)
+                extraction.update(
+                    dict(
+                        general_table_inspection(
+                            llm_extract,
+                            tag,
+                            self.file_id,
+                            language=self.language,
+                        )
+                    )
+                )
+
+        except Exception as error:
+            print("extract multiple tables error" + repr(error))
+
+        return extraction
+
     def create_json(self, results, type="kid"):
         """creates a json from the results
 
@@ -138,16 +194,16 @@ class Extractor:
         Returns:
             json: json of the results
         """
-        #dict for filename and costs, replace is for json format
-        
-        #complete={renaming[key]:value for key,value in results.items() if key in renaming.keys()}
-        
-        #return complete
-        
+        # dict for filename and costs, replace is for json format
+
+        # complete={renaming[key]:value for key,value in results.items() if key in renaming.keys()}
+
+        # return complete
+
         extraction = JSONExtraction(doc_type=type, results=results, doc_path=self.doc_path)
-        
+
         json_output = extraction.to_json()
-        
+
         return json_output
 
 
@@ -164,17 +220,13 @@ class Extractor:
         """
         # uncomment for extra fields
         # dictionary=self.create_json(dictionary)
-        new_dict = {
-            renaming[type][key]: value
-            for key, value in dictionary.items()
-            if key in renaming[type].keys()
-        }
+        new_dict = {renaming[type][key]: value for key, value in dictionary.items() if key in renaming[type].keys()}
         if keep:
-            new_dict.update(
-                {
-                    key: value
-                    for key, value in dictionary.items()
-                    if key not in renaming[type].keys()
-                }
-            )
+            new_dict.update({key: value for key, value in dictionary.items() if key not in renaming[type].keys()})
         return new_dict
+
+
+
+    @abstractmethod
+    def process(self):
+        ...

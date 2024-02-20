@@ -1,6 +1,6 @@
 from extractors.general_extractors.config.prompt_config import prompts, table_schemas, word_representation
 from extractors.general_extractors.utils import select_desired_page
-from extractors.utils import num_tokens_from_string, upload_df_as_excel
+from extractors.utils import num_tokens_from_string
 from langchain.prompts import PromptTemplate
 from .config.tags import *
 from ..models import Models
@@ -29,7 +29,7 @@ def get_doc_language(pages, file_id):
     return doc_language
 
 
-def llm_extraction(page, type, file_id, language="it", model="gpt-4", rhp=None):
+def llm_extraction(page, type, file_id, language="it", model="gpt-4-turbo", rhp=None):
     """extracts data from a document text
 
     Args:
@@ -80,7 +80,7 @@ def general_table_inspection(
         schema = table_schemas[language][table_type]
 
         # First normal extraction, then tagging
-        tag_model = "gpt-4"
+        tag_model = "gpt-4-turbo"
         if add_text != "":
             table = f"considera questo quando analizzi la tabella=-> {add_text} TABELLA-> {table}"
 
@@ -92,9 +92,7 @@ def general_table_inspection(
     return extraction_adapted
 
 
-def complex_table_inspection(
-    table, rhp, type, file_id, direct_tag=True, language="it"
-):
+def complex_table_inspection(table, rhp, type, file_id, direct_tag=True, language="it"):
     """
     searches table for information
     saves excel file with table in tmp to get around llm bug with incomplete stringified dataframe
@@ -112,23 +110,19 @@ def complex_table_inspection(
     """
 
     try:
-        table = upload_df_as_excel(table)
+        table = table.to_string()
         schema = table_schemas[language][type]
 
         # First normal extraction, then tagging
-        tag_model = "gpt-4"
+        tag_model = "gpt-4-turbo"
         if not direct_tag:
-            table = llm_extraction(
-                table, type, file_id, language=language, model=tag_model, rhp=rhp
-            )
+            table = llm_extraction(table, type, file_id, language=language, model=tag_model, rhp=rhp)
 
         if rhp is None:
             adapt_extraction = "CONSIDERA 1 ANNO , EXTRACTION={}".format(table)
         else:
             adapt_extraction = "RHP={} EXTRACTION={}".format(rhp, table)
-        extraction_adapted = Models.tag(
-            adapt_extraction, schema, file_id, model=tag_model
-        )
+        extraction_adapted = Models.tag(adapt_extraction, schema, file_id, model=tag_model)
     except Exception as error:
         print("table extraction error" + repr(error))
         extraction_adapted = {"ERROR": "ERROR"}
@@ -192,9 +186,6 @@ def llm_extraction_and_tag(pages, language, type, file_id):
     extraction = Models.extract(file_id, model, prompt, pages)
 
     # To ensure optimal data standardization
-    extraction = Models.tag(extraction, pydantic_class, file_id)
+    tagged = Models.tag(extraction, pydantic_class, file_id)
 
-    return extraction
-
-
-
+    return tagged
