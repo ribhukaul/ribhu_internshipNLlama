@@ -2,6 +2,8 @@ import os
 from concurrent.futures import ProcessPoolExecutor
 from AWSInteraction.EnvVarSetter import EnvVarSetter
 from extractors.general_extractors.custom_extractors.certificates.issuers.BNP_extractor import BNPDerivatiKidExtractor
+
+from extractors.general_extractors.custom_extractors.certificates.issuers.Vontobel_extractor import VontobelDerivatiKidExtractor
 from extractors.general_extractors.custom_extractors.kid.insurance.kid_extractor import InsuranceKidExtractor
 from extractors.general_extractors.custom_extractors.kid.insurance.gkid_extractor import InsuranceGKidExtractor
 from extractors.general_extractors.custom_extractors.certificates.issuers.Leonteq_extractor import (
@@ -39,6 +41,8 @@ def process_file(file_path, file_type):
                 extractor = LeonteqDerivatiKidExtractor(file_path)
             case "bnp":
                 extractor = BNPDerivatiKidExtractor(file_path)
+            case "vontobel":
+                extractor = VontobelDerivatiKidExtractor(file_path)
             case _:
                 raise ValueError("type not supported")
             
@@ -62,7 +66,7 @@ def main(doc_folder):
         env_setter = EnvVarSetter(tenant="insurance")
         env_setter.set_locally_saved_env_vars()
         # testing
-        file_type = "bnp"
+        file_type = "vontobel"
         all_files = []
         # list all the pdf files in the folder
         print("START")
@@ -71,7 +75,7 @@ def main(doc_folder):
 
         partial_process_file = partial(process_file, file_type=file_type)
         # async processing of the files
-        with ProcessPoolExecutor(max_workers=5) as executor:
+        with ProcessPoolExecutor(max_workers=1) as executor:
             results = executor.map(partial_process_file, all_files)
 
         # give request id
@@ -90,7 +94,7 @@ def main(doc_folder):
 
 
 if __name__ == "__main__":
-    folder = "kid\\documents\\testdoc\\temptemptemptemp\\dbg\\a"
+    folder = "kid\\documents\\testdoc\\vontobel\\Documenti"
     
     #for root, dirs, files in os.walk(folder):
         # Check if there are PDF files in the current directory
