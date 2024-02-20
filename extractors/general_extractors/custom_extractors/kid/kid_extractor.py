@@ -1,4 +1,4 @@
-import asyncio
+
 import re
 
 from ...llm_functions import complex_table_inspection, general_table_inspection, llm_extraction, tag_only

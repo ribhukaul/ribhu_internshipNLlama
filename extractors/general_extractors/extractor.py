@@ -6,7 +6,7 @@ from extractors.general_extractors.config.cost_config import cost_per_token
 from .llm_functions import get_doc_language, llm_extraction
 from extractors.azure.document_intelligence import get_tables_from_doc
 from .utils import select_desired_page, select_desired_table
-from extractors.general_extractors.llm_functions import general_table_inspection, llm_extraction_and_tag
+from extractors.general_extractors.llm_functions import general_table_inspection
 from extractors.general_extractors.config.json_config import (
     renaming,
 )

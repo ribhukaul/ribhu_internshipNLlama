@@ -3,31 +3,14 @@ import asyncio
 import os
 import re
 import pandas as pd
-from extractors.azure.document_intelligence import get_tables_from_doc
 from extractors.general_extractors.llm_functions import (
     llm_extraction_and_tag,
 )
-from extractors.general_extractors.llm_functions import (
-    complex_table_inspection,
-    general_table_inspection,
-    llm_extraction,
-    tag_only,
-)
-
+from extractors.general_extractors.llm_functions import general_table_inspection
 
 from extractors.models import Models
-from extractors.general_extractors.utils import (
-    is_in_text,
-    select_desired_page,
-    select_desired_table_only_header,
-    select_desired_table,
-)
-from extractors.general_extractors.custom_extractors.kid.kid_utils import (
-    clean_response_regex,
-    clean_response_strips,
-)
 from extractors.general_extractors.utils import check_valid
-from ..certificates_config.cert_cleaning import header_mappings, regex_callable
+from ..certificates_config.cert_cleaning import header_mappings
 
 
 class LeonteqDerivatiKidExtractor(DerivatiKidExtractor):

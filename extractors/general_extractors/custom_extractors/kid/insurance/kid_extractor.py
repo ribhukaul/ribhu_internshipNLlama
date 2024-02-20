@@ -1,5 +1,4 @@
 from extractors.general_extractors.custom_extractors.kid.kid_extractor import KidExtractor
-import asyncio
 import os
 
 from extractors.models import Models
