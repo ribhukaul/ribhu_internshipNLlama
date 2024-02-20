@@ -182,6 +182,6 @@ def llm_extraction_and_tag(pages, language, type, file_id):
     extraction = Models.extract(file_id, model, prompt, pages)
 
     # To ensure optimal data standardization
-    extraction = Models.tag(extraction, pydantic_class, file_id)
+    tagged = Models.tag(extraction, pydantic_class, file_id)
 
-    return extraction
+    return tagged

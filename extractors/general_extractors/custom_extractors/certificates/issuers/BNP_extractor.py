@@ -18,7 +18,7 @@ class BNPDerivatiKidExtractor(DerivatiKidExtractor):
 
     def __init__(self, doc_path) -> None:
         self.doc_path = doc_path
-        super().__init__(doc_path)
+        super().__init__(doc_path, "it")
 
         
 

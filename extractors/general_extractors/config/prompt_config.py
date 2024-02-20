@@ -3,6 +3,9 @@ from extractors.general_extractors.custom_extractors.certificates.certificates_c
     TabellaAllegatiBNP,
     TabellaAllegatoScadenzaBNP,
     TabellaCedola,
+    TabellaDeductableVontobel,
+    TabellaFirstInfoVontobel,
+    TabellaMainInfoVontobel,
     TabellaSottostanti,
     TabellaMainInfo,
     CedolaStr,
@@ -178,7 +181,7 @@ prompts = {
             
             """,
             "allegato_bnp_scadenza":"""
-            dal documento seguente, estrai
+            dal documento seguente, estrai:
             Data di Liquidazione Anticipata Facoltativa
             tutte le Data/e di Valutazione dell'Importo di Liquidazione (rimborso) Anticipato
             Barriera/e o barrierale per la Scadenza Anticipata
@@ -188,7 +191,7 @@ prompts = {
             {context}
             """,
             "allegati_bnp":"""
-            dal documento seguente, estrai
+            dal documento seguente, estrai:
             tutte le data/e di valutazione del/i premio/i condizionato/i
             tutte le data/e di pagamento del/i premio/i
             barriera/e o barrierale per il versamento del Premio/i Condizionato/i
@@ -229,6 +232,47 @@ prompts = {
 
             DOCUMENTO:
             {context}""",
+            "first_info_vontobel":"""
+            from the following document, extract:
+            -title, found after: "Final Terms for"
+            -the ISIN
+            -Issuer
+            DOCUMENT:
+            {context}
+            """,
+            "main_info_vontobel":"""
+            from the following document, extract:
+            -Settlement Currency
+            -Fixing Date
+            -Issue date
+            -Maturity date
+            -Final Valuation Date
+            -Calculation amount or Nominal Amount
+            -Bonus Amount
+            -Redemption Level
+            -Bonus Threshold
+            -Barrier percentages
+            -Memory
+            -Strike
+            -Early Redemption
+            -Barrier Event
+            -Observation Date(s) 
+            -Bonus Payment Date(s)
+            -Valuation Date (s)
+            -Early Redemption Date (n) 
+            -Underlying title, often right after 'Underlying'
+            -ISIN Underlying, in the section 'Underlying'
+            -Bloomberg Symbol, in the section 'Underlying'
+            DOCUMENT:
+            {context}
+            """,
+            "deductables_vontobel":"""
+            from the following document, extract:
+            -Issue Price
+            -Exchange Listing , often under 'Stock Exchange Listing'
+            DOCUMENT:
+            {context}
+            """,
     },
 }
 
@@ -259,8 +303,16 @@ table_schemas = {
         "allegati_bnp": TabellaAllegatiBNP,
         "first_info_bnp": TabellaFirstInfoBNP,
         "sottostante_bnp": TabellaSottostanteBNP,
+        
     },
-    "en": {"performance": PerformanceScenarios, "riy": TableRiy},
+    "en": {
+        "performance": PerformanceScenarios,
+        "riy": TableRiy,
+        "first_info_vontobel": TabellaFirstInfoVontobel,
+        "main_info_vontobel": TabellaMainInfoVontobel,
+        "deductables_vontobel": TabellaDeductableVontobel,
+
+        },
 }
 
 

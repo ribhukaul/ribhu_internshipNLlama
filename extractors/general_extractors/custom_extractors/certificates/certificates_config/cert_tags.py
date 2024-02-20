@@ -1,5 +1,6 @@
 from typing import List
 from langchain_core.pydantic_v1 import BaseModel, Field
+from numpy import isin
 
 NF = "not found"
 NA = "N/A"
@@ -147,3 +148,42 @@ class TabellaMainInfoBNP(BaseModel):
     #payment_autocall_date: List[str] = Field([NF], description="Data di Scadenza Anticipata")
     payment_autocall_date: str = Field(NF, description="tutte le Date in: Data di Scadenza Anticipata")
     value_autocall: str = Field(NF, description="Premio/I di Uscita")
+
+
+class TabellaFirstInfoVontobel(BaseModel):
+    isin: str = Field(NF, description="ISIN")
+    description: str = Field(NF, description="Title or description")
+    issuer_desc: str = Field(NF, description="Issuer")
+
+
+class TabellaMainInfoVontobel(BaseModel):
+    conditional_protection: str = Field(NF, description="Barrier")#
+    currency: str = Field(NF, description="Settlement Currency")
+    strike_date: str = Field(NF, description="Fixing Date")
+    issue_date: str = Field(NF, description="Issue date")
+    expiry_date: str = Field(NF, description="Maturity date")
+    final_valuation_date: str = Field(NF, description="Final Valuation Date")
+    nominal: str = Field(NF, description="Calculation amount or Nominal Amount")
+    autocall_barrier: str = Field(NF, description="Redemption Level")
+    conditional_coupon_barrier: List[str] = Field([NF], description="Bonus Threshold")
+    memory: str = Field(NF, description="Memory")
+    strike_level: List[str] = Field([NF], description="Strike")
+    autocallable: str = Field(NF, description="Early Redemption")
+    barrier_type: str = Field(NF, description="Barrier Event")
+    observation_coupon_date: List[str] = Field([NF], description="Observation Date")
+    payment_coupon_date: List[str] = Field([NF], description="Bonus Payment Date")
+    unconditional_coupon: List[str] = Field([NF], description="Bonus Amount")
+    conditional_coupon: List[str] = Field([NF], description="Bonus Amount")
+    payment_callable_date: List[str] = Field([NF], description="put default value")
+    observation_autocall_date: List[str] = Field([NF], description="Valuation Date ")
+    autocall_barrier: List[str] = Field([NF], description="Redemption Level ")
+    payment_autocall_date: List[str] = Field([NF], description="Early Redemption Date ")
+    instrument_description: List[str] = Field([NF], description="Underlying title")
+    instrument_isin: List[str] = Field([NF], description="ISIN Underlying")
+    instrument_bloombergcode: List[str] = Field([NF], description="Bloomberg Symbol Underlying")
+    
+
+
+class TabellaDeductableVontobel(BaseModel):
+    market: List[str] = Field([NF], description="Exchange Listing")
+    issue_price_perc: List[str] = Field([NF], description="Issue Price")

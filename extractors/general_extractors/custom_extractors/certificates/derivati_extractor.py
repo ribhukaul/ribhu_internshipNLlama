@@ -9,9 +9,9 @@ from extractors.general_extractors.config.prompt_config import word_representati
 
 class DerivatiKidExtractor(KidExtractor):
 
-    def __init__(self, doc_path) -> None:
+    def __init__(self, doc_path, predefined_language=False) -> None:
         self.doc_path = doc_path
-        super().__init__(doc_path, "it")
+        super().__init__(doc_path, predefined_language)
 
     def extract_regex_text(self, type, page, boolean_to_check={}, str_to_check={}):
         """Extracts the text from the page and checks if the regexes are present in the text.
