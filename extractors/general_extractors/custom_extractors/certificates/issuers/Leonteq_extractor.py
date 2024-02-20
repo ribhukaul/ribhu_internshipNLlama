@@ -17,6 +17,7 @@ from extractors.general_extractors.llm_functions import (
 
 from extractors.models import Models
 from extractors.general_extractors.utils import (
+    is_in_text,
     select_desired_page,
     select_desired_table_only_header,
     select_desired_table,
@@ -25,7 +26,7 @@ from extractors.general_extractors.custom_extractors.kid.kid_utils import (
     clean_response_regex,
     clean_response_strips,
 )
-from extractors.utils import is_in_text, check_valid
+from extractors.general_extractors.utils import check_valid
 from ..certificates_config.cert_cleaning import header_mappings, regex_callable
 
 

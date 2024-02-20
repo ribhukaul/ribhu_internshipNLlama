@@ -1,6 +1,6 @@
 from extractors.general_extractors.config.prompt_config import prompts, table_schemas, word_representation
 from extractors.general_extractors.utils import select_desired_page
-from extractors.utils import num_tokens_from_string
+from extractors.general_extractors.utils import num_tokens_from_string
 from langchain.prompts import PromptTemplate
 from .config.tags import *
 from ..models import Models

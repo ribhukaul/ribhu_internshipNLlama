@@ -4,7 +4,6 @@ This file contains the tags used to extract the data from the KID and GKID docum
 
 from typing import List
 
-#from langchain_core.pydantic_v1 import BaseModel, Field
 from pydantic import BaseModel, Field
 
 NF = "not found"

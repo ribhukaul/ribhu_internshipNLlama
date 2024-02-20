@@ -1,8 +1,8 @@
 from extractors.azure.document_intelligence import get_tables_from_doc
 from extractors.general_extractors.custom_extractors.kid.kid_extractor import KidExtractor
 from extractors.general_extractors.extractor import Extractor
-from extractors.general_extractors.utils import select_desired_table_only_header
-from extractors.utils import is_in_text, search_in_pattern_in_text
+from extractors.general_extractors.utils import is_in_text, select_desired_table_only_header
+from extractors.general_extractors.utils import search_in_pattern_in_text
 from .certificates_config.cert_cleaning import header_mappings, regex_callable, check_for
 
 from extractors.general_extractors.config.prompt_config import word_representation

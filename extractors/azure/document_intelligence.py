@@ -3,7 +3,7 @@ import pandas as pd
 from azure.ai.documentintelligence import DocumentIntelligenceClient
 from azure.core.credentials import AzureKeyCredential
 
-from extractors.utils import format_pages_num
+from extractors.general_extractors.utils import format_pages_num
 
 # Will need authentication for prod app
 # https://medium.com/@tophamcherie/using-python-to-programmatically-authenticate-to-azure-use-resources-6997ff326fb6

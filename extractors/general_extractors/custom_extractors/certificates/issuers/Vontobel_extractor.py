@@ -9,9 +9,9 @@ from extractors.general_extractors.custom_extractors.certificates.derivati_extra
 from extractors.general_extractors.custom_extractors.kid.kid_config.kid_tags import NF
 from extractors.general_extractors.custom_extractors.kid.kid_utils import clean_response_regex
 from extractors.general_extractors.llm_functions import general_table_inspection, llm_extraction_and_tag
-from extractors.general_extractors.utils import select_desired_page
+from extractors.general_extractors.utils import is_in_text, search_in_pattern_in_text, select_desired_page
 from extractors.models import Models
-from extractors.utils import extract_between, is_in_text, search_in_pattern_in_text
+from extractors.general_extractors.utils import extract_between
 
 
 class VontobelDerivatiKidExtractor(DerivatiKidExtractor):
