@@ -1,7 +1,7 @@
 from collections import defaultdict
 import re
 from langchain_community.document_loaders import PyPDFLoader
-
+import tiktoken
 import pandas as pd
 
 

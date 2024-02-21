@@ -21,20 +21,19 @@ https://aws.amazon.com/blogs/compute/parallel-processing-in-python-with-aws-lamb
 # TODO: CODE TO ELIMINATE OLDER FILE FROM /TMP
 def lambda_handler(event, context):
     print("RICEVUTO RICHIESTA: ", event)
-    requestContext = RequestContext(event)
-
-    env_setter = EnvVarSetter(requestContext.payload)
+    request_context = RequestContext(event)
+    env_setter = EnvVarSetter(request_context.payload)
     USE_LOCAL_KEYS = False # True if you want to use local keys
     env_setter.configure_lambda_env_vars(use_local_keys=USE_LOCAL_KEYS)
 
     try:
-        extraction_handler = ExtractionHandler(requestContext)
+        extraction_handler = ExtractionHandler(request_context)
         extraction_handler.runallfiles()
         extracted_data = extraction_handler.extractions
         extracted_data_json = json.dumps(extracted_data)
-    ## MOCKUP OUTPUT
-    #     with open('mock_output.json', 'r') as f:
-    #         extracted_data_json = f.read()
+        ## MOCKUP OUTPUT
+        #     with open('mock_output.json', 'r') as f:
+        #         extracted_data_json = f.read()
 
         return {
             'statusCode': 200,

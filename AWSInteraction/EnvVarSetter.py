@@ -43,7 +43,7 @@ class EnvVarSetter():
             self._set_env_variables("api_keys")
 
     # LOCAL RUN (need api keys in config.json)
-    def configure_local_env(self) -> None:
+    def configure_local_env_vars(self) -> None:
         """
         Set the environment variables for local testing.
         For this set up the config file should be modified by adding API keys.

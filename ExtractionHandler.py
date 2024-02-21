@@ -8,9 +8,13 @@ from extractors.general_extractors.custom_extractors.kid.insurance.kid_extractor
 from extractors.general_extractors.custom_extractors.kid.insurance.gkid_extractor import InsuranceGKidExtractor
 # TODO: 
 # - multiple files in one folder
-
-# TODO: DOCSTRING
+# - DOCSTRING
+# - LIST OF OBJECT INSTEAD OF list of files
+# - change parallel to parallelize the download of the files
 class ThreadedFunction(threading.Thread):
+    """
+    Create a thread to run a function in parallel with other threads.
+    """
     def __init__(self, function, *args):
         threading.Thread.__init__(self)
         self.function = function
@@ -41,10 +45,10 @@ class ExtractionHandler:
                   'prospetti': ''}
     }
 
-    def __init__(self, requestContext) -> None:
-        self.requestContext = requestContext
-        self.tenant = requestContext.payload['TENANT']
-        self.extractor_type = requestContext.payload['extractor_type']
+    def __init__(self, request_context) -> None:
+        self.request_context = request_context
+        self.tenant = request_context.payload['TENANT']
+        self.extractor_type = request_context.payload['extractor_type']
         self.extactor = self.custom_extractors[self.tenant][self.extractor_type]
         self.extractions = {}
         self.local_saved_files = {} # filekey: local_path
@@ -52,10 +56,10 @@ class ExtractionHandler:
 
     def runallfiles(self, parallel=True):
 
-        files_list = self.requestContext.payload['files']
+        files_list = self.request_context.payload['files']
         print("working_files:", files_list)
         for file_key in files_list:
-            s3handler = S3ExtractionHandler(self.requestContext, file_key)
+            s3handler = S3ExtractionHandler(self.request_context, file_key)
             file = s3handler.route(download=True)
             if file['statusCode'] == 200:
                 file_path = file['body']
@@ -64,7 +68,7 @@ class ExtractionHandler:
                 #@ELIA TO ASK
                 if not parallel:
                     # Run extraction
-                    self.extractions[file_key] = self.run_async_function(file_path, self.extactor)
+                    self.extractions[file_key] = self.extactor(file_path).process()
 
             else:
                 self.extractions[file_path]= {'error': 'file not found'}
@@ -80,38 +84,18 @@ class ExtractionHandler:
                 thread.join()
             
             for file_key, thread in threads.items():
-                # result to dict
                 dict_result = json.loads(thread.result)
                 dict_result['extraction_time'] = thread.total_runtime
                 self.extractions[file_key] = json.dumps(thread.result)
-
         
         self.delete_local_files()
         
         return self.extractions
-                
-    def run_piped_function(self, conn, file, function, *args):
-        doc_extractor = function(file, *args)
-        conn.send(doc_extractor.process())
-        conn.close()
-
-        #return await doc_extractor.process()
     
     def delete_local_files(self):
         """ 
-        Delete all the files that have been downloaded locally. The files are
-        deleter after 30 minutes from the download or if they have been already
-        processed in the current run.
+        Delete all the files that have been downloaded locally.
         """
-        # current_time = time.time()
-
-        # # lis
-        # refernece_folder = "/tmp"
-        # if os.getenv('ENV') == 'local':
-        #     refernece_folder = "tmp"
-
-        # list_all_files = os.listdir(refernece_folder)
-        
         for file in self.local_saved_files.values():
             try:
                 os.remove(file)
