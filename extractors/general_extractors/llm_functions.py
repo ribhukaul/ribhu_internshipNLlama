@@ -3,6 +3,7 @@ from extractors.general_extractors.utils import select_desired_page
 from extractors.general_extractors.utils import num_tokens_from_string
 from langchain.prompts import PromptTemplate
 from .config.tags import *
+
 from ..models import Models
 
 
@@ -110,7 +111,9 @@ def complex_table_inspection(table, rhp, type, file_id, direct_tag=True, languag
     """
 
     try:
-        table = table.to_string()
+        #table = table.to_string()
+        from extractors.general_extractors.utils import upload_df_as_excel
+        table = upload_df_as_excel(table)
         schema = table_schemas[language][type]
 
         # First normal extraction, then tagging

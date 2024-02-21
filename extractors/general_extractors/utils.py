@@ -93,8 +93,8 @@ def upload_df_as_excel(df:pd.DataFrame):
     Returns:
         str: path of the uploaded file
     """
-
-    return df.to_string()
+    import os
+    #return df.to_string()
 
     if os.environ.get("ENV") == "local":
         tmp_path = "tmp"
@@ -103,6 +103,8 @@ def upload_df_as_excel(df:pd.DataFrame):
     # Modify empty cells with " " to avoid upload errors
     df = df.replace(to_replace="", value=" ")
     df.fillna(' ', inplace=True)
+    import uuid
+    from langchain_community.document_loaders import UnstructuredExcelLoader
 
     # Save table to excel and upload it back
     random_file_name = str(uuid.uuid4()) + ".xlsx"
