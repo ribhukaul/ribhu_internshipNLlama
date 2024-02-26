@@ -91,30 +91,28 @@ class GKidExtractor(KidExtractor):
             extraction_riy = dict()
             # iterativly extract last column and then remove it, rename results and repeat
             transform = {
-                "costi_totali_min": "incidenza_costo_eur_rhp_min",
-                "costi_totali_max": "incidenza_costo_eur_rhp_max",
-                "incidenza_min": "incidenza_costo_perc_rhp_min",
-                "incidenza_max": "incidenza_costo_perc_rhp_max",
+                "costi_totali-gkid_min": "incidenza_costo_eur_rhp_min",
+                "costi_totali-gkid_max": "incidenza_costo_eur_rhp_max",
+                "incidenza-gkid_min": "incidenza_costo_perc_rhp_min",
+                "incidenza-gkid_max": "incidenza_costo_perc_rhp_max",
             }
-            extraction_riy.update(
-                self.raccorda(
+            riy_rhp = self.raccorda(
                     regex_extract(["costi_totali-gkid", "incidenza-gkid"], table, self.language), transform, keep=True
                 )
-            )
+
             table = table.iloc[:, :-1]
 
             # rhp/2 exist only if rhp>=10
             if int(rhp) >= 10:
                 transform.update(
                     {
-                        "costi_totali_min": "incidenza_costo_eur_2_min",
-                        "costi_totali_max": "incidenza_costo_eur_2_max",
-                        "incidenza_min": "incidenza_costo_perc_2_min",
-                        "incidenza_max": "incidenza_costo_perc_2_max",
+                        "costi_totali-gkid_min": "incidenza_costo_eur_2_min",
+                        "costi_totali-gkid_max": "incidenza_costo_eur_2_max",
+                        "incidenza-gkid_min": "incidenza_costo_perc_2_min",
+                        "incidenza-gkid_max": "incidenza_costo_perc_2_max",
                     }
                 )
-                extraction_riy.update(
-                    self.raccorda(
+                riy_2_rhp = self.raccorda(
                         regex_extract(
                             ["costi_totali-gkid", "incidenza-gkid"],
                             table,
@@ -122,33 +120,30 @@ class GKidExtractor(KidExtractor):
                         ),
                         transform,
                     )
-                )
+        
                 table = table.iloc[:, :-1]
             else:
-                extraction_riy.update(
-                    {
+                riy_2_rhp = {
                         "incidenza_costo_eur_2_min": "-",
                         "incidenza_costo_eur_2_max": "-",
                         "incidenza_costo_perc_2_min": "-",
                         "incidenza_costo_perc_2_max": "-",
                     }
-                )
+                
 
             transform.update(
                 {
-                    "costi_totali_min": "incidenza_costo_eur_1_min",
-                    "costi_totali_max": "incidenza_costo_eur_1_max",
-                    "incidenza_min": "incidenza_costo_perc_1_min",
-                    "incidenza_max": "incidenza_costo_perc_1_max",
+                    "costi_totali-gkid_min": "incidenza_costo_eur_1_min",
+                    "costi_totali-gkid_max": "incidenza_costo_eur_1_max",
+                    "incidenza-gkid_min": "incidenza_costo_perc_1_min",
+                    "incidenza-gkid_max": "incidenza_costo_perc_1_max",
                 }
             )
-            extraction_riy.update(
-                self.raccorda(
+            riy_1 = self.raccorda(
                     regex_extract(["costi_totali-gkid", "incidenza-gkid"], table, self.language),
-                    transform,
-                ),
-            )
-
+                    transform)
+            
+            extraction_riy = {**riy_rhp, **riy_1, **riy_2_rhp}
             # divide ,clean, reunite
             eur = {key: value for key, value in extraction_riy.items() if "eur" in key}
             perc = {key: value for key, value in extraction_riy.items() if "perc" in key}

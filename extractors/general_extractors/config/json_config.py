@@ -31,10 +31,10 @@ field_names = {
     },
     "gkid": {
         "date": "cod_data",
-        "isin": "cod_isin",
         "periodo_detenzione_raccomandato": "cod_rhp",
         "indicatore_sintetico_rischio_min": "cod_sri_min",
         "indicatore_sintetico_rischio_max": "cod_sri_max",
+
         "incidenza_costo_eur_1_min": "cod_riy_eur_1_min",
         "incidenza_costo_eur_1_max": "cod_riy_eur_1_max",
         "incidenza_costo_eur_2_min": "cod_riy_eur_2_min",
@@ -193,19 +193,8 @@ renaming = {
         "file_name": "NOME_FILE",
         "date": "Data",
         "periodo_detenzione_raccomandato": "RHP (anni)",
-        "favorable_return": "RSFAV 1Y %",
-        "favorable_return_rhp": "RSFAV RHP %",
         "indicatore_sintetico_rischio_min": "SRI MIN",
         "indicatore_sintetico_rischio_max": "SRI MAX",
-        "isin": "ISIN",
-        "moderato_return": "RSMOD 1Y %",
-        "moderato_return_rhp": "RSMOD RHP %",
-        "scenario_morte_1": "SMOR 1Y (€)",
-        "scenario_morte_rhp": "SMOR RHP (€)",
-        "sfavorevole_return": "RSSFAV 1Y %",
-        "sfavorevole_return_rhp": "RSSFAV RHP %",
-        "stress_return": "RSSTR 1Y %",
-        "stress_return_rhp": "RSSTR RHP %",
         "incidenza_costo_eur_1_min": "RIY 1Y EUR MIN",
         "incidenza_costo_eur_1_max": "RIY 1Y EUR MAX",
         "incidenza_costo_eur_2_min": "RIY RHP/2 EUR MIN",
@@ -449,7 +438,7 @@ prepare_json = {
 {
     "section0": {
         "name": "Informazioni di base",
-        "list": ["cod_date", "cod_isin", "cod_rhp", "cod_sri_min", "cod_sri_max"]
+        "list": ["cod_date", "cod_rhp", "cod_sri_min", "cod_sri_max"]
     },
     "section1": {
         "name": "Reduction In Yield", 
@@ -632,7 +621,6 @@ data_array = {
     ],
     "gkid": [
         "date",
-        "isin",
         "periodo_detenzione_raccomandato",
     
         "indicatore_sintetico_rischio_min",
