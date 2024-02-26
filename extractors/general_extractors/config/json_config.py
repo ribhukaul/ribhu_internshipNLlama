@@ -33,18 +33,9 @@ field_names = {
         "date": "cod_data",
         "isin": "cod_isin",
         "periodo_detenzione_raccomandato": "cod_rhp",
-        "favorable_return": "cod_rsfav_1y",
-        "favorable_return_rhp": "cod_rsfav_rhp",
         "indicatore_sintetico_rischio_min": "cod_sri_min",
         "indicatore_sintetico_rischio_max": "cod_sri_max",
-        "moderato_return": "cod_rsmod_1y",
-        "moderato_return_rhp": "cod_rsmod_rhp",
-        "scenario_morte_1": "cod_smor_1y",
-        "scenario_morte_rhp": "cod_smor_rhp",
-        "sfavorevole_return": "cod_rssfav_1y",
-        "sfavorevole_return_rhp": "cod_rssfav_rhp",
-        "stress_return": "cod_rsstr_1y",
-        "stress_return_rhp": "cod_rsstr_rhp",
+
         "incidenza_costo_eur_1_min": "cod_riy_eur_1_min",
         "incidenza_costo_eur_1_max": "cod_riy_eur_1_max",
         "incidenza_costo_eur_2_min": "cod_riy_eur_2_min",
@@ -57,6 +48,7 @@ field_names = {
         "incidenza_costo_perc_2_max": "cod_riy_perc_2_max",
         "incidenza_costo_perc_rhp_min": "cod_riy_perc_rhp_min",
         "incidenza_costo_perc_rhp_max": "cod_riy_perc_rhp_max",
+
         "costi_ingresso_gkid_min": "cod_costi_ingresso_min",
         "costi_ingresso_gkid_max": "cod_costi_ingresso_max",
         "costi_uscita_gkid_min": "cod_costi_uscita_min",
@@ -67,6 +59,7 @@ field_names = {
         "commissione_transazione_gkid_max": "cod_costi_di_transazione_max",
         "commissione_performance_gkid_min": "cod_commissioni_di_performance_min",
         "commissione_performance_gkid_max": "cod_commissioni_di_performance_max",
+
         "target_market": "cod_target_market",
     },
     "leonteq": {
@@ -377,7 +370,7 @@ column_order = {
         "Target Market",
         "Costi API",
     ],
-    "g-kid": [
+    "gkid": [
         "NOME_FILE",
         "Data",
         "ISIN",
@@ -435,11 +428,11 @@ prepare_json = {
 {
     "section0": {
         "name": "Informazioni di base",
-        "list": ["cod_data", "cod_isin", "cod_rhp"]
+        "list": ["cod_data", "cod_isin", "cod_sri", "cod_rhp"]
     },
     "section1": {
         "name": "Performance",
-        "list": ["cod_rsfav_1y", "cod_rsfav_rhp", "cod_sri", "cod_rsmod_1y", "cod_rsmod_rhp", "cod_smor_1y", "cod_smor_rhp", "cod_rssfav_1y", "cod_rssfav_rhp", "cod_rsstr_1y", "cod_rsstr_rhp"]
+        "list": ["cod_rsfav_1y", "cod_rsfav_rhp", "cod_rsmod_1y", "cod_rsmod_rhp", "cod_smor_1y", "cod_smor_rhp", "cod_rssfav_1y", "cod_rssfav_rhp", "cod_rsstr_1y", "cod_rsstr_rhp"]
     },
     "section2": {
         "name": "Reduction In Yield",
@@ -460,64 +453,49 @@ prepare_json = {
             "section0": {
                 "name": "Informazioni di base",
                 "list": [
-                    "date",
-                    "isin",
-                    "periodo_detenzione_raccomandato"
+                    "cod_date",
+                    "cod_isin",
+                    "cod_rhp",
+                    "cod_sri_min",
+                    "cod_sri_max"
                 ]
             },
             "section1": {
-                "name": "Performance e Rischio",
+                "name": "Incidenza dei Costi",
                 "list": [
-                    "favorable_return",
-                    "favorable_return_rhp",
-                    "indicatore_sintetico_rischio_min",
-                    "indicatore_sintetico_rischio_max",
-                    "moderato_return",
-                    "moderato_return_rhp",
-                    "scenario_morte_1",
-                    "scenario_morte_rhp",
-                    "sfavorevole_return",
-                    "sfavorevole_return_rhp",
-                    "stress_return",
-                    "stress_return_rhp"
+                    "cod_riy_eur_1_min",
+                    "cod_riy_eur_1_max",
+                    "cod_riy_eur_2_min",
+                    "cod_riy_eur_2_max",
+                    "cod_riy_eur_rhp_min",
+                    "cod_riy_eur_rhp_max",
+                    "cod_riy_perc_1_min",
+                    "cod_riy_perc_1_max",
+                    "cod_riy_perc_2_min",
+                    "cod_riy_perc_2_max",
+                    "cod_riy_perc_rhp_min",
+                    "cod_riy_perc_rhp_max",
                 ]
             },
             "section2": {
-                "name": "Incidenza dei Costi",
+                "name": "Costi e Commissioni",
                 "list": [
-                    "incidenza_costo_eur_1_min",
-                    "incidenza_costo_eur_1_max",
-                    "incidenza_costo_eur_2_min",
-                    "incidenza_costo_eur_2_max",
-                    "incidenza_costo_eur_rhp_min",
-                    "incidenza_costo_eur_rhp_max",
-                    "incidenza_costo_perc_1_min",
-                    "incidenza_costo_perc_1_max",
-                    "incidenza_costo_perc_2_min",
-                    "incidenza_costo_perc_2_max",
-                    "incidenza_costo_perc_rhp_min",
-                    "incidenza_costo_perc_rhp_max"
+                    "cod_costi_ingresso_min",
+                    "cod_costi_ingresso_max",
+                    "cod_costi_uscita_min",
+                    "cod_costi_uscita_max",
+                    "cod_commissioni_di_gestione_min",
+                    "cod_commissioni_di_gestione_max",
+                    "cod_costi_di_transazione_min",
+                    "cod_costi_di_transazione_max",
+                    "cod_commissioni_di_performance_min",
+                    "cod_commissioni_di_performance_max",
                 ]
             },
             "section3": {
-                "name": "Costi e Commissioni",
-                "list": [
-                    "costi_ingresso_gkid_min",
-                    "costi_ingresso_gkid_max",
-                    "costi_uscita_gkid_min",
-                    "costi_uscita_gkid_max",
-                    "commissione_gestione_gkid_min",
-                    "commissione_gestione_gkid_max",
-                    "commissione_transazione_gkid_min",
-                    "commissione_transazione_gkid_max",
-                    "commissione_performance_gkid_min",
-                    "commissione_performance_gkid_max"
-                ]
-            },
-            "section4": {
                 "name": "Target Market",
                 "list": [
-                    "target_market"
+                    "cod_target_market"
                 ]
         }
     }
