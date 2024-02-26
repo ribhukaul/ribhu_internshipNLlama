@@ -35,7 +35,6 @@ field_names = {
         "periodo_detenzione_raccomandato": "cod_rhp",
         "indicatore_sintetico_rischio_min": "cod_sri_min",
         "indicatore_sintetico_rischio_max": "cod_sri_max",
-
         "incidenza_costo_eur_1_min": "cod_riy_eur_1_min",
         "incidenza_costo_eur_1_max": "cod_riy_eur_1_max",
         "incidenza_costo_eur_2_min": "cod_riy_eur_2_min",
@@ -48,7 +47,6 @@ field_names = {
         "incidenza_costo_perc_2_max": "cod_riy_perc_2_max",
         "incidenza_costo_perc_rhp_min": "cod_riy_perc_rhp_min",
         "incidenza_costo_perc_rhp_max": "cod_riy_perc_rhp_max",
-
         "costi_ingresso_gkid_min": "cod_costi_ingresso_min",
         "costi_ingresso_gkid_max": "cod_costi_ingresso_max",
         "costi_uscita_gkid_min": "cod_costi_uscita_min",
@@ -59,7 +57,6 @@ field_names = {
         "commissione_transazione_gkid_max": "cod_costi_di_transazione_max",
         "commissione_performance_gkid_min": "cod_commissioni_di_performance_min",
         "commissione_performance_gkid_max": "cod_commissioni_di_performance_max",
-
         "target_market": "cod_target_market",
     },
     "leonteq": {
@@ -449,56 +446,39 @@ prepare_json = {
 }
 """,
         "gkid": """
-        {
-            "section0": {
-                "name": "Informazioni di base",
-                "list": [
-                    "cod_date",
-                    "cod_isin",
-                    "cod_rhp",
-                    "cod_sri_min",
-                    "cod_sri_max"
-                ]
-            },
-            "section1": {
-                "name": "Incidenza dei Costi",
-                "list": [
-                    "cod_riy_eur_1_min",
-                    "cod_riy_eur_1_max",
-                    "cod_riy_eur_2_min",
-                    "cod_riy_eur_2_max",
-                    "cod_riy_eur_rhp_min",
-                    "cod_riy_eur_rhp_max",
-                    "cod_riy_perc_1_min",
-                    "cod_riy_perc_1_max",
-                    "cod_riy_perc_2_min",
-                    "cod_riy_perc_2_max",
-                    "cod_riy_perc_rhp_min",
-                    "cod_riy_perc_rhp_max",
-                ]
-            },
-            "section2": {
-                "name": "Costi e Commissioni",
-                "list": [
-                    "cod_costi_ingresso_min",
-                    "cod_costi_ingresso_max",
-                    "cod_costi_uscita_min",
-                    "cod_costi_uscita_max",
-                    "cod_commissioni_di_gestione_min",
-                    "cod_commissioni_di_gestione_max",
-                    "cod_costi_di_transazione_min",
-                    "cod_costi_di_transazione_max",
-                    "cod_commissioni_di_performance_min",
-                    "cod_commissioni_di_performance_max",
-                ]
-            },
-            "section3": {
-                "name": "Target Market",
-                "list": [
-                    "cod_target_market"
-                ]
-        }
+{
+    "section0": {
+        "name": "Informazioni di base",
+        "list": ["cod_date", "cod_isin", "cod_rhp", "cod_sri_min", "cod_sri_max"]
+    },
+    "section1": {
+        "name": "Reduction In Yield", 
+        "list": ["cod_riy_eur_1_min", "cod_riy_eur_1_max", "cod_riy_eur_2_min",  "cod_riy_eur_2_max", "cod_riy_eur_rhp_min", "cod_riy_eur_rhp_max", 
+        "cod_riy_perc_1_min", "cod_riy_perc_1_max", "cod_riy_perc_2_min", "cod_riy_perc_2_max", "cod_riy_perc_rhp_min", "cod_riy_perc_rhp_max"
+        ]
+    },
+    "section2": {
+        "name": "Costi e Commissioni",
+        "list": [
+            "cod_costi_ingresso_min",
+            "cod_costi_ingresso_max",
+            "cod_costi_uscita_min",
+            "cod_costi_uscita_max",
+            "cod_commissioni_di_gestione_min",
+            "cod_commissioni_di_gestione_max",
+            "cod_costi_di_transazione_min",
+            "cod_costi_di_transazione_max",
+            "cod_commissioni_di_performance_min",
+            "cod_commissioni_di_performance_max"
+        ]
+    },
+    "section3": {
+        "name": "Target Market",
+        "list": [
+            "cod_target_market"
+        ]
     }
+}
     """,
         "leonteq": """
         {
