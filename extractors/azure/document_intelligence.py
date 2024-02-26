@@ -37,9 +37,9 @@ def analyze_general_documents(
     document_analysis_client = DocumentIntelligenceClient(
         endpoint=endpoint, credential=AzureKeyCredential(key), api_version=api_version
     )
-    features_chosen = None
+    features_chosen = ["ocrHighResolution"]
     if query_list is not None:
-        features_chosen = ["queryFields"]
+        features_chosen.append("queryFields")
 
     specific_pages = format_pages_num(specific_pages)
 
