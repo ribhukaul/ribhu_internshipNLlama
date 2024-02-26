@@ -12,9 +12,8 @@ STATUS_CODE_KEY = 'statusCode'
 class S3ExtractionHandler:
 
 
-    def __init__(self, requestContext, file_key, bucket=None) -> None:
+    def __init__(self, file_key, bucket=None) -> None:
         self.__set_download_folder()
-        self.requestContext = requestContext
         self.file_key = file_key
         if bucket is None:
             self.bucket = os.getenv('S3_BUCKET')
@@ -29,21 +28,10 @@ class S3ExtractionHandler:
         else:
             self.download_folder = '/tmp'
     
-    def route(self, download=False):
-        
-        if download:
-            file_name = str(uuid.uuid4()) +'.pdf'
-            download_path = os.path.join(self.download_folder, file_name)
-            download_response = self.download(self.file_key, download_path)
-            return download_response
-
-        return self.read()
-        
     def read(self):
         s3_object = self.s3.Object(
             bucket_name=self.bucket,
             key=self.file_key)
-        
         try:
             return {STATUS_CODE_KEY: 200, BODY_KEY: s3_object.get()['Body'].read()}#.decode('UTF-8')}
         except Exception as error:
@@ -51,8 +39,10 @@ class S3ExtractionHandler:
             traceback.print_exc()
             return {STATUS_CODE_KEY: 404, BODY_KEY: json.dumps({'message': 'file not found'})}
     
-    def download(self, file_key, download_path):
-        
+    def download(self, file_key, download_path=""):
+        if download_path == "":
+            file_name = str(uuid.uuid4()) +'.pdf'
+            download_path = os.path.join(self.download_folder, file_name)
         try:
             self.s3.download_file(self.bucket, file_key, download_path)
             return {STATUS_CODE_KEY: 200, BODY_KEY: download_path}
@@ -61,11 +51,18 @@ class S3ExtractionHandler:
             traceback.print_exc()
             return {STATUS_CODE_KEY: 404, BODY_KEY: json.dumps({'message': 'file not found'})}
 
-    # def write(self, requestContext):
-    #     s3_object = self.s3.Object(
-    #         bucket_name=self.bucket,
-    #         key='{0}/{1}'.format(requestContext.tenant, requestContext.payload['key'])
-    #     )
-    #     s3_object.put(Body=json.dumps(requestContext.payload["data"]))
-    #     return {STATUS_CODE_KEY: 200, BODY_KEY: "{}"}
-    
+    def list_files(self, prefix=''):
+        try:
+            key=self.file_key
+            if prefix != '':
+                key = prefix
+                
+            response = self.s3.list_objects_v2(Bucket=self.bucket, Prefix=key)
+            # create a lis tof all the files in the folder (excluding the subfolders)
+            f_k_list = [f_k["Key"] for f_k in response['Contents'] if os.path.dirname(f_k["Key"]) == key]
+
+            return {STATUS_CODE_KEY: 200, BODY_KEY: f_k_list}
+        except Exception as error:
+            print(error)
+            traceback.print_exc()
+            return {STATUS_CODE_KEY: 404, BODY_KEY: json.dumps({'message': 'file not found'})}

@@ -1,7 +1,7 @@
-from extractors.general_extractors.custom_extractors.kid.kid_extractor import KidExtractor
 import os
 
 from extractors.models import Models
+from extractors.general_extractors.custom_extractors.kid.kid_extractor import KidExtractor
 
 
 class InsuranceKidExtractor(KidExtractor):
@@ -31,12 +31,6 @@ class InsuranceKidExtractor(KidExtractor):
             tables = results["tables"]
             basic_information = results["basic_information"]
             market = results["market"]
-            print("Tables and basic information:")
-            print(type(tables))
-            print(tables.keys())
-            print(basic_information)
-            print(basic_information['isin'])
-
 
         except Exception as error:
             print("first stage error" + repr(error))
@@ -53,13 +47,7 @@ class InsuranceKidExtractor(KidExtractor):
             riy = results["riy"]
             exit_entry_costs = results["costs"]
             management_costs = results["management_costs"]
-            performance = results["performance"]
-
-            # riy = self.extract_riy()
-            # exit_entry_costs = self.extract_entryexit_costs(tables["costi_ingresso"])
-            # management_costs = self.extract_management_costs(tables["costi_gestione"])
-            # performance = self.extract_performances(tables["performance"])
-        
+            performance = results["performance"]       
 
         except Exception as error:
             print("second stage error" + repr(error))
@@ -115,5 +103,4 @@ class InsuranceKidExtractor(KidExtractor):
         Models.clear_resources_file(filename)
 
         return complete
-
 

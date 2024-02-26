@@ -28,7 +28,7 @@ def lambda_handler(event, context):
 
     try:
         extraction_handler = ExtractionHandler(request_context)
-        extraction_handler.runallfiles()
+        extraction_handler.run()
         extracted_data = extraction_handler.extractions
         extracted_data_json = json.dumps(extracted_data)
         ## MOCKUP OUTPUT
