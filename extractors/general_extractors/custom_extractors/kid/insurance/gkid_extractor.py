@@ -1,6 +1,7 @@
-from extractors.general_extractors.custom_extractors.kid.gkid_extractor import GKidExtractor
-import asyncio
 import os
+
+from extractors.models import Models
+from extractors.general_extractors.custom_extractors.kid.gkid_extractor import GKidExtractor
 
 
 class InsuranceGKidExtractor(GKidExtractor):
@@ -9,51 +10,39 @@ class InsuranceGKidExtractor(GKidExtractor):
         self.doc_path = doc_path
         super().__init__(doc_path, "it")
 
-    async def process(self):
-        """main processor in different phases
+    def process(self):
+        """main processor in different phases.
 
         Returns:
             dict(filename,dict()): dictionary containing the results for the file
         """
         # first phase for essenctial data for second phase and general information
         try:
-            tasks = []
-            # Extraction of tables
-            tasks.append(asyncio.create_task(self.get_tables()))
-            # Extraction general information
-            tasks.append(asyncio.create_task(self.extract_general_data()))
-            # Extraction of market
-            tasks.append(asyncio.create_task(self.extract_market("market_gkid")))
-
-            await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
-
-            
-            tables,basic_information,market = [task.result() for task in tasks]
+            functions_parameters = {
+                "tables": {"function": self.get_tables},
+                "basic_information": {"function": self.extract_general_data},
+                "market": {"function": self.extract_market, "args": {"market_type": "market_gkid"}},
+            }
+            results = self.threader(functions_parameters)
+            tables, basic_information, market= results["tables"],  = results["basic_information"], results["market"]
+           
 
         except Exception as error:
             print("first stage error" + repr(error))
         # second phase for all the rest
         try:
-            tasks = []
-            # extraction of riy
-            tasks.append(asyncio.create_task(self.extract_riy(tables["riy_table"])))
-            # extraction of costs and commissions
-            tasks.append(
-                asyncio.create_task(self.extract_cost_commissions(tables["costi_ingresso"], tables["costi_gestione"]))
-            )
-
-            await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
-
-            
-            riy, costs = [task.result() for task in tasks]
+            functions_parameters = {
+                "riy": {"function": self.extract_riy, "args": {"table": tables["riy_table"]}},
+                "costs": {"function": self.extract_entryexit_costs, "args": {"table_ingresso": tables["costi_ingresso"], "table_uscite": tables["costi_uscite"]}},
+            }
+            results = self.threader(functions_parameters)
+            riy, costs = results["riy"], results["costs"]
 
         except Exception as error:
             print("second stage error" + repr(error))
 
         try:
-            # Merge and orders all the results
-
-
+            # REVIEW: what name do they need?
             filename = os.path.splitext(os.path.basename(self.doc_path))[0]
 
             api_costs = self._process_costs()
@@ -76,4 +65,7 @@ class InsuranceGKidExtractor(GKidExtractor):
             filename = os.path.splitext(os.path.basename(self.doc_path))[0]
             complete = dict([(filename), dict()])
         print(complete)
+        Models.clear_resources_file(filename)
+
         return complete
+
