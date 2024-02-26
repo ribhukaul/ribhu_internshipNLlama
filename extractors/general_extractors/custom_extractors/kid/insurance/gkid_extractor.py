@@ -24,7 +24,7 @@ class InsuranceGKidExtractor(GKidExtractor):
                 "market": {"function": self.extract_market, "args": {"market_type": "market_gkid"}},
             }
             results = self.threader(functions_parameters)
-            tables, basic_information, market= results["tables"],  = results["basic_information"], results["market"]
+            tables, basic_information, market = results["tables"], results["basic_information"], results["market"]
            
 
         except Exception as error:
@@ -33,7 +33,7 @@ class InsuranceGKidExtractor(GKidExtractor):
         try:
             functions_parameters = {
                 "riy": {"function": self.extract_riy, "args": {"table": tables["riy_table"]}},
-                "costs": {"function": self.extract_entryexit_costs, "args": {"table_ingresso": tables["costi_ingresso"], "table_uscite": tables["costi_uscite"]}},
+                "costs": {"function": self.extract_cost_commissions, "args": {"table_ingresso": tables["costi_ingresso"], "table_gestione": tables["costi_gestione"]}},
             }
             results = self.threader(functions_parameters)
             riy, costs = results["riy"], results["costs"]

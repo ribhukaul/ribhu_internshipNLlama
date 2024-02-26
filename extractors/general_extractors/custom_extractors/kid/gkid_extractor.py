@@ -8,7 +8,7 @@ class GKidExtractor(KidExtractor):
     def __init__(self, doc_path, predefined_language="it") -> None:
         super().__init__(doc_path, predefined_language)
 
-    async def get_tables(self):
+    def get_tables(self):
         """Get GKID tables asynchronusly.
 
         Returns:
@@ -34,7 +34,7 @@ class GKidExtractor(KidExtractor):
             ]
         )
 
-    async def extract_general_data(self):
+    def extract_general_data(self):
         """
         Extract general data from the document. Namely ISIN, RHP and SRI.
 
@@ -72,7 +72,7 @@ class GKidExtractor(KidExtractor):
         return extraction
 
     # TO REVIEW @elia
-    async def extract_riy(self, table):
+    def extract_riy(self, table):
         """
         Extracts the riy from the given table.
 
@@ -203,7 +203,7 @@ class GKidExtractor(KidExtractor):
 
         return extraction_riy
 
-    async def extract_cost_commissions(self, table_ingresso, table_gestione):
+    def extract_cost_commissions(self, table_ingresso, table_gestione):
         """extracts costs and commissions from the document
 
         Args:

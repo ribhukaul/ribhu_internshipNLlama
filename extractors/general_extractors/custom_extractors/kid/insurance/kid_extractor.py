@@ -53,13 +53,7 @@ class InsuranceKidExtractor(KidExtractor):
             print("second stage error" + repr(error))
 
         try:
-            # Format results
-            riy = dict(riy)
-            print("This is the RIY: ", riy)
-            performance = dict(performance)
-            exit_entry_costs = dict(exit_entry_costs)
-            management_costs = dict(management_costs)
-
+            
             # REVIEW: what name do they need?
             filename = os.path.splitext(os.path.basename(self.doc_path))[0]
 
