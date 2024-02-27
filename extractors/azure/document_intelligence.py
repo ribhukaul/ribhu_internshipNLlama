@@ -105,11 +105,35 @@ def get_tables_from_doc(
     # Get tables
     df_tables = []
     for table in result.tables:
-        df_tab = table_json_to_df(table)
+        df_tab = table_json_to_df_v2(table)
         df_tables.append(df_tab)
 
     if query_list:
         return df_tables, result.documents[0].fields
 
     return df_tables, result
+
+
+
+def table_json_to_df_v2(tab):
+
+    num_rows = tab.row_count
+    num_columns = tab.column_count
+    columns = [""] * num_columns
+    df = pd.DataFrame(columns=columns, index=range(0, num_rows))
+
+    # Set headers
+    for cell in tab.cells:
+        row = cell.row_index
+        col = cell.column_index
+        col_span = cell.column_span
+        row_span = cell.row_span
+
+        content = cell.content
+        # convert None to 0
+        col_span = 0 if col_span is  None else col_span
+        row_span = 0 if row_span is  None else row_span
+        df.iloc[row : row + row_span+1, col : col + col_span+1] = content
+
+    return df
 
