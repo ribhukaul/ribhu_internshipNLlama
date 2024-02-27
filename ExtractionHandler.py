@@ -116,9 +116,10 @@ class ExtractionHandler:
             thread.join()
         
         for file_key, thread in threads.items():
-            # dict_result = json.loads(thread.result)
-            # dict_result['extraction_time'] = thread.total_runtime
-            self.extractions[file_key] = thread.result#json.dumps(dict_result)
+            import json
+            dict_result = json.loads(thread.result)
+            dict_result['extraction_time'] = thread.total_runtime
+            self.extractions[file_key] = json.dumps(dict_result,indent=4, ensure_ascii=False)
 
         self._delete_local_files()
 
