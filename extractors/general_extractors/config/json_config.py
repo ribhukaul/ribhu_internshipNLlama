@@ -952,7 +952,7 @@ type_of = {
         "periodo_detenzione_raccomandato": INT,
         "indicatore_sintetico_rischio_min": INT,
         "indicatore_sintetico_rischio_max": INT,
-        "incidenza_costo_eur_1_min": "",
+        "incidenza_costo_eur_1_min": FLOAT,
         "incidenza_costo_eur_1_max": FLOAT,
         "incidenza_costo_eur_2_min": FLOAT,
         "incidenza_costo_eur_2_max": FLOAT,
