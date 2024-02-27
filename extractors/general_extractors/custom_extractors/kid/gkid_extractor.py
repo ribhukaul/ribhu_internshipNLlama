@@ -146,10 +146,11 @@ class GKidExtractor(KidExtractor):
             
             extraction_riy = {**riy_rhp, **riy_1, **riy_2_rhp}
             # divide ,clean, reunite
+            # codice di @elia da rivedere
             eur = {key: value for key, value in extraction_riy.items() if "eur" in key}
             perc = {key: value for key, value in extraction_riy.items() if "perc" in key}
-            perc = clean_response_regex("riy%/-gkid", self.language, perc, to_add="%")
-            eur = clean_response_regex("riy€-gkid", self.language, eur, to_add="€")
+            perc = clean_response_regex("riy%/-gkid", self.language, perc, to_add="")
+            eur = clean_response_regex("riy€-gkid", self.language, eur, to_add="")
             extraction_riy = {**perc, **eur}
 
             """ 
