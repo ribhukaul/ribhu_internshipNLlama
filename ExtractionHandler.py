@@ -47,7 +47,7 @@ class ThreadedFunctionV(threading.Thread):
     def run(self):
         # time counter
         start_time = time.time()
-        if self.scope.get("type") == "DIRECTORY":
+        if self.scope.get("type").lower() == "directory":
             # get list of files
             local_files_path = self.download_files_from_dir(self.scope["key"])
         else:
