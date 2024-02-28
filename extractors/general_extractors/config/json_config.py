@@ -6,7 +6,7 @@ NA = "N/A"
 
 field_names = {
     "kid": {
-        "date": "cod_data",
+        "date": "cod_date",
         "isin": "cod_isin",
         "periodo_detenzione_raccomandato": "cod_rhp",
         "favorable_return": "cod_rsfav_1y",
@@ -30,7 +30,7 @@ field_names = {
         "target_market": "cod_target_market",
     },
     "gkid": {
-        "date": "cod_data",
+        "date": "cod_date",
         "periodo_detenzione_raccomandato": "cod_rhp",
         "indicatore_sintetico_rischio_min": "cod_sri_min",
         "indicatore_sintetico_rischio_max": "cod_sri_max",
@@ -414,7 +414,7 @@ prepare_json = {
 {
     "section0": {
         "name": "Informazioni di base",
-        "list": ["cod_data", "cod_isin", "cod_sri", "cod_rhp"]
+        "list": ["cod_date", "cod_isin", "cod_sri", "cod_rhp"]
     },
     "section1": {
         "name": "Performance",
