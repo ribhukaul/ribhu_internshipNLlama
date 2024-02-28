@@ -72,14 +72,15 @@ class ExtractionHandler:
 
     # Switch case for custom extraction based on: -tenant -extraction type
     custom_extractors = {
-        'insurance': {
+        'waminsurance': {
             'kid': InsuranceKidExtractor,
             'gkid': InsuranceGKidExtractor
         },
-        'certifictes': {'certificates': ''},
-        'funds': {'peergroup': ''},
-        'bonds': {'bloombergss': '',
-                  'prospetti': ''}
+        'wamderivati': {},
+        'wamfondi': {},
+        'wambond': {},
+        'wamasset':{},
+        'sim':{}
     }
 
     def __init__(self, request_context) -> None:
