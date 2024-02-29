@@ -15,7 +15,14 @@
 		"AZURE_OPENAI_EMBEDDING_DEP_NAME": "insuranceembedding"
 	},
 	"wamderivati":{
-
+		"LANGCHAIN_PROJECT": "insurance",
+		"AZURE_FORM_RECOGNIZER_ENPOINT": "https://assicurativikidanalysis.cognitiveservices.azure.com/",
+		"AZURE_OPENAI_ENDPOINT": "https://insurancekidapplicativo.openai.azure.com/",
+		"AZURE_OPENAI_GPT35_DEP_NAME": "insurancegpt35",
+		"AZURE_OPENAI_GPT35_16K_DEP_NAME": "insurancegpt3516k",
+		"AZURE_OPENAI_GPT4_DEP_NAME": "insurancegpt4",
+		"AZURE_OPENAI_GPT4_TURBO_DEP_NAME": "insurancegpt4turbo",
+		"AZURE_OPENAI_EMBEDDING_DEP_NAME": "insuranceembedding"
 	},
 	"wambond":{
 

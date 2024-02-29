@@ -75,8 +75,10 @@ class ExtractionHandler:
         'waminsurance': {
             'kid': InsuranceKidExtractor,
             'gkid': InsuranceGKidExtractor
-        },
-        'wamderivati': {},
+            },
+        'wamderivati': {
+            'complexity': InsuranceKidExtractor
+            },
         'wamfondi': {},
         'wambond': {},
         'wamasset':{},
