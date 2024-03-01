@@ -29,6 +29,16 @@ field_names = {
         "commissione_performance": "cod_commissioni_di_performance",
         "target_market": "cod_target_market",
     },
+    "kidcredem": {
+        "date": "cod_date",
+        "isin": "cod_isin",
+        "periodo_detenzione_raccomandato": "cod_rhp",
+        "favorable_return_rhp": "cod_rsfav_rhp",
+        "indicatore_sintetico_rischio": "cod_sri",
+        "moderato_return_rhp": "cod_rsmod_rhp",
+        "incidenza_costo_1": "cod_riy_1y",
+        "incidenza_costo_rhp": "cod_riy_rhp",
+    },
     "gkid": {
         "date": "cod_date",
         "periodo_detenzione_raccomandato": "cod_rhp",
@@ -189,6 +199,18 @@ renaming = {
         "target_market": "Target Market",
         "api_costs": "Costi API",
     },
+    "kidcredem": {
+        "file_name": "file_name",
+        "date": "Data",
+        "isin": "ISIN",
+        "periodo_detenzione_raccomandato": "RHP (anni)",
+        "favorable_return_rhp": "RSFAV RHP %",
+        "indicatore_sintetico_rischio": "SRI",
+        "moderato_return_rhp": "RSMOD RHP %",
+        "incidenza_costo_1": "RIY 1Y %",
+        "incidenza_costo_rhp": "RIY RHP %",
+        "api_costs": "Costi API",
+    },        
     "gkid": {
         "file_name": "NOME_FILE",
         "date": "Data",
@@ -356,6 +378,18 @@ column_order = {
         "Target Market",
         "Costi API",
     ],
+    "kidcredem": [
+        "file_name",
+        "Data",
+        "ISIN",
+        "RHP (anni)",
+        "SRI",
+        "RSMOD RHP %",
+        "RSFAV RHP %",
+        "RIY 1Y %",
+        "RIY RHP %",
+        "Target Market",
+        "Costi API"],
     "gkid": [
         "NOME_FILE",
         "Data",
@@ -431,6 +465,22 @@ prepare_json = {
     "section4": {
         "name": "Target Market",
         "list": ["cod_target_market"]
+    }
+}
+""",
+"kidcredem": """
+{
+    "section0": {
+        "name": "Informazioni di base",
+        "list": ["cod_date", "cod_isin", "cod_sri", "cod_rhp"]
+    },
+    "section1": {
+        "name": "Performance",
+        "list": ["cod_rsfav_rhp", "cod_rsmod_rhp"]
+    },
+    "section2": {
+        "name": "Reduction In Yield",
+        "list": ["cod_riy_1y", "cod_riy_rhp"]
     }
 }
 """,
@@ -619,6 +669,16 @@ data_array = {
         "commissione_performance",
         "target_market",
     ],
+    "kidcredem": [
+        "date",
+        "isin",
+        "periodo_detenzione_raccomandato",
+        "favorable_return_rhp",
+        "indicatore_sintetico_rischio",
+        "moderato_return_rhp",
+        "incidenza_costo_1",
+        "incidenza_costo_rhp",
+    ],
     "gkid": [
         "date",
         "periodo_detenzione_raccomandato",
@@ -778,6 +838,16 @@ allow_null = {
         "commissione_transazione": FALSE,
         "commissione_performance": TRUE,
         "target_market": FALSE,
+    },
+    "kidcredem": {
+        "date": FALSE,
+        "isin": FALSE,
+        "periodo_detenzione_raccomandato": FALSE,
+        "favorable_return_rhp": FALSE,
+        "indicatore_sintetico_rischio": FALSE,
+        "moderato_return_rhp": FALSE,
+        "incidenza_costo_1": TRUE,
+        "incidenza_costo_rhp": FALSE,
     },
     "gkid": {
         "date": FALSE,
@@ -946,6 +1016,16 @@ type_of = {
         "commissione_performance": FLOAT,
         "target_market": STRING,
     },
+    "kidcredem": {
+        "date": DATE,
+        "isin": STRING,
+        "periodo_detenzione_raccomandato": INT,
+        "favorable_return_rhp": FLOAT,
+        "indicatore_sintetico_rischio": INT,
+        "moderato_return_rhp": FLOAT,
+        "incidenza_costo_1": FLOAT,
+        "incidenza_costo_rhp": FLOAT,
+    },
     "gkid": {
         "date": DATE,
         "isin": STRING,
@@ -1109,14 +1189,22 @@ model_of = {
         "commissione_performance": PERCENT,
         "target_market": NA,
     },
+    "kidcredem": {
+        "date": NA,
+        "isin": CAPS,
+        "periodo_detenzione_raccomandato": YEARS,
+        "favorable_return_rhp": PERCENT,
+        "indicatore_sintetico_rischio": YEARS,
+        "moderato_return_rhp": PERCENT,
+        "incidenza_costo_1": PERCENT,
+        "incidenza_costo_rhp": PERCENT,
+    },
     "gkid": {
         "date": NA,
         "isin": CAPS,
         "periodo_detenzione_raccomandato": YEARS,
-       
         "indicatore_sintetico_rischio_min": YEARS,
         "indicatore_sintetico_rischio_max": YEARS,
-        
         "incidenza_costo_eur_1_min": EURO,
         "incidenza_costo_eur_1_max": EURO,
         "incidenza_costo_eur_2_min": EURO,
@@ -1270,6 +1358,16 @@ decimals_of = {
         "commissione_transazione": 2,
         "commissione_performance": 2,
         "target_market": NA,
+    },
+    "kidcredem": {
+        "date": NA,
+        "isin": NA,
+        "periodo_detenzione_raccomandato": NA,
+        "favorable_return_rhp": 2,
+        "indicatore_sintetico_rischio": NA,
+        "moderato_return_rhp": 2,
+        "incidenza_costo_1": 2,
+        "incidenza_costo_rhp": 2,
     },
     "gkid": {
         "date": None,
@@ -1439,6 +1537,16 @@ range_of = {
         "commissione_transazione": PERCENT_RANGE,
         "commissione_performance": PERCENT_RANGE,
         "target_market": NO_RANGE,
+    },
+    "kidcredem": {
+        "date": DATE_RANGE,
+        "isin": ISIN_RANGE,
+        "periodo_detenzione_raccomandato": PERCENT_RANGE,
+        "favorable_return_rhp": PERCENT_RANGE,
+        "indicatore_sintetico_rischio": SRI_RANGE,
+        "moderato_return_rhp": PERCENT_RANGE,
+        "incidenza_costo_1": PERCENT_RANGE,
+        "incidenza_costo_rhp": PERCENT_RANGE,
     },
     "gkid": {
         "date": DATE_RANGE,

@@ -31,6 +31,9 @@ class TabellaScenariPerformance(BaseModel):
     scenario_morte_1: str = Field(NF, description="Valore in euro(€) o '-'  a 1 anno scenario moderato")
     scenario_morte_rhp: str = Field(NF, description="Valore in euro(€) a RHP anni scenario moderato")
 
+class TabellaScenariPerformanceCredem(BaseModel):
+    moderato_return_rhp: str = Field(NF, description="Rendimento percentuale(%) a RHP anni scenario moderato")
+    favorable_return_rhp: str = Field(NF, description="Rendimento percentuale(%) a RHP anni scenario favorevole")
 
 class TabellaRiy(BaseModel):
     # 1 ANNO

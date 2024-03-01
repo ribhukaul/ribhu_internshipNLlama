@@ -4,12 +4,13 @@ import threading
 
 from AWSInteraction.S3Handler import S3ExtractionHandler
 from extractors.general_extractors.custom_extractors.kid.insurance.kid_extractor import InsuranceKidExtractor
+from extractors.general_extractors.custom_extractors.kid.insurance.kid_extractor_credem import InsuranceKidCredemExtractor
 from extractors.general_extractors.custom_extractors.kid.insurance.gkid_extractor import InsuranceGKidExtractor
 # TODO: 
 # - documentare
 
 
-class ThreadedFunctionV(threading.Thread):
+class ThreadedFunction(threading.Thread):
     """
     Create a thread to run a function in parallel with other threads.
     """
@@ -74,14 +75,22 @@ class ExtractionHandler:
     custom_extractors = {
         'waminsurance': {
             'kid': InsuranceKidExtractor,
-            'gkid': InsuranceGKidExtractor
+            'gkid': InsuranceGKidExtractor,
+            'kidcredem': InsuranceKidCredemExtractor
             },
         'wamderivati': {
-            'complexity': InsuranceKidExtractor
+            'complexity': InsuranceKidExtractor,
+            'productionderivatives':''
             },
-        'wamfondi': {},
-        'wambond': {},
-        'wamasset':{},
+        'wamfondi': {
+            'peergroup': ''
+        },
+        'wambond': {
+            'bloombergss': ''
+        },
+        'wamasset':{
+            'kidasset'
+        },
         'sim':{}
     }
 
@@ -111,7 +120,7 @@ class ExtractionHandler:
         print("working_files:", files_list)
         threads = {}
         for file_key in files_list:
-            thread = ThreadedFunctionV(self.extactor, file_key)
+            thread = ThreadedFunction(self.extactor, file_key)
             threads[file_key["key"]] = thread
             thread.start()
         

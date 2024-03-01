@@ -20,6 +20,7 @@ from extractors.general_extractors.custom_extractors.certificates.certificates_c
 from extractors.general_extractors.custom_extractors.kid.kid_config.kid_tags import (
     InformazioniBase,
     TabellaScenariPerformance,
+    TabellaScenariPerformanceCredem,
     TabellaRiy,
     TabellaCostiIngresso,
     TabellaCostiGestione,
@@ -280,6 +281,7 @@ table_schemas = {
     "it": {
         "general_info": InformazioniBase,
         "performance": TabellaScenariPerformance,
+        "performance_credem": TabellaScenariPerformanceCredem,
         "riy": TabellaRiy,
         "costi_ingresso": TabellaCostiIngresso,
         "costi_gestione": TabellaCostiGestione,
