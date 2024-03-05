@@ -52,7 +52,7 @@ class GKidExtractor(KidExtractor):
 
             # extract and clean
             extraction = llm_extraction_and_tag(self.text, self.language, "general_info_gkid", self.file_id)
-            extraction = clean_response_regex("general_info_gkid", self.language, extraction)
+            #extraction = clean_response_regex("general_info_gkid", self.language, extraction)
             extraction = dict(extraction)
             if extraction["periodo_detenzione_raccomandato"] != []:
                 extraction["periodo_detenzione_raccomandato"] = str(

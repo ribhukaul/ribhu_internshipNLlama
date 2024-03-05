@@ -99,7 +99,6 @@ regex_cleaning = {
             "rhp": "\d+",
         },
         "general_info_gkid": {
-            "isin": "[A-Z0-9]{12}",
             "periodo_detenzione_raccomandato": REGEX_NUMBER,
             "indicatore_sintetico_rischio_min": REGEX_NUMBER,
             "indicatore_sintetico_rischio_max": REGEX_NUMBER,

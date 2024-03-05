@@ -13,6 +13,8 @@ from .json_config import (
 )
 import json
 from .cost_config import available_costs
+import locale
+import datetime
 
 
 class Field:
@@ -27,15 +29,47 @@ class Field:
         self.allownull = allow_null[doc_type].get(key, False)
 
     def check_validity(self):
-        """clean the value
-        """
+        """clean the value"""
         if self.name in names_of_fields_to_clean_dot:
             self.value = str(self.value).replace(".", "")
         if self.data_type == "Float":
-            self.value = str(self.value).replace(",", ".")
+            if isinstance(self.value, str):
+                self.value = str(self.value).replace(",", ".")
+            if isinstance(self.value, list):
+                self.value = [str(value).replace(",", ".") for value in self.value]
         if self.data_type == "Date":
-            self.value = re.sub(r"(\d{2})/(\d{2})/(\d{4})", r"\3-\2-\1", self.value)
-
+            if isinstance(self.value, str):
+                self.value = self.transform_date(self.value)
+            if isinstance(self.value, list):
+                self.value = [self.transform_date(value) for value in self.value]
+ 
+   
+    def transform_date(self, date_str):
+        # Supported date formats
+        english_formats = ["%m/%d/%Y", "%B %d, %Y", "%Y-%m-%d", "%Y/%m/%d", "%Y.%m.%d"]  
+        italian_formats = ["%d/%m/%Y", "%d %B %Y", "%Y-%m-%d", "%Y/%m/%d", "%Y.%m.%d"]
+ 
+        # Attempt parsing in both English and Italian
+        locale.setlocale(locale.LC_TIME, 'it_IT')
+        for fmt in italian_formats :
+            try:
+                date_object = datetime.datetime.strptime(date_str, fmt)
+                return date_object.strftime("%Y-%m-%d")  # Output in YYYY-MM-DD
+            except ValueError:
+                pass  # Try the next format if it doesn't match
+           
+        locale.setlocale(locale.LC_TIME, 'en_US')
+        for fmt in english_formats :
+            try:
+                date_object = datetime.datetime.strptime(date_str, fmt)
+                return date_object.strftime("%Y-%m-%d")  # Output in YYYY-MM-DD
+            except ValueError:
+                pass  # Try the next format if it doesn't match
+ 
+        # If all parsing attempts fail
+        return date_str # Return the original string
+    
+    
     def to_dict(self):
         """Return the fields as a dictionary
 

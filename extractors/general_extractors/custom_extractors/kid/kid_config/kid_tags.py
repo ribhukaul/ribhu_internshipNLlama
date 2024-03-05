@@ -74,7 +74,7 @@ class InformazioniBaseGkid(BaseModel):
         NF, description="Indicatore Sintetico di Rischio nel caso massimo o migliore,(a:)(il secondo)"
     )
     periodo_detenzione_raccomandato: List[int] = Field(
-        NF,
+        [],
         description="il periodo di detenzione massimo raccomandato in anni,ritorna solo un valore, quello maggiore di quelli dati",
     )
     date: str = Field(NF, description="data di realizzazione del documento")

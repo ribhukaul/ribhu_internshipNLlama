@@ -79,8 +79,7 @@ prompts = {
 
             DOCUMENTO:
             {context}""",
-        "general_info_gkid": """Dal documento seguente, estrai 
-            - ISIN
+        "general_info_gkid": """Dal documento seguente, estrai
             - Periodo di detenzione raccomandato 
             - indicatore sintetico di rischio minimo o peggiore(da:)(il primo)
             - indicatore sintetico di rischio massimo o migliore(a:)(il secondo)
