@@ -397,16 +397,6 @@ column_order = {
         "RHP (anni)",
         "SRI MIN",
         "SRI MAX",
-        "RSSTR 1Y %",
-        "RSSTR RHP %",
-        "RSSFAV 1Y %",
-        "RSSFAV RHP %",
-        "RSMOD 1Y %",
-        "RSMOD RHP %",
-        "RSFAV 1Y %",
-        "RSFAV RHP %",
-        "SMOR 1Y (€)",
-        "SMOR RHP (€)",
         "RIY 1Y % MIN",
         "RIY 1Y % MAX",
         "RIY RHP/2 % MIN",
@@ -1682,4 +1672,5 @@ range_of = {
 
 }
 
-names_of_fields_to_clean_dot=["SMOR RHP (€)", "SMOR 1Y (€)"]
+names_of_fields_to_clean_dot=["SMOR RHP (€)", "SMOR 1Y (€)", "RIY 1Y EUR MIN", "RIY 1Y EUR MAX",
+                              "RIY RHP/2 EUR MIN", "RIY RHP/2 EUR MAX", "RIY RHP EUR MIN", "RIY RHP EUR MAX"]
