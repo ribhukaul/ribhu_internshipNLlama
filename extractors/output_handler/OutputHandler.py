@@ -129,7 +129,7 @@ class OutputHandler:
         if "total" in api_cost:
             del api_cost["total"]
                 
-        self.complete_output['extractioncosts'] = {
+        self.complete_output['extraction_cost'] = {
             "total": total,
             "currency": "EUR",
             "models": api_cost
