@@ -110,27 +110,17 @@ class InsuranceKidCredemExtractor(KidExtractor):
 
             api_costs = self._process_costs()
 
-            # raccordo
-            complete = self.raccorda(
-                {
-                    "file_name": filename,
-                    **dict(basic_information),
-                    **dict(performance),
-                    **dict(riy),
-                    **dict(api_costs),
-                },
-                "kid",
-            )
-
-            complete = self.create_json(
-                {
-                    "file_name": filename,
-                    **dict(basic_information),
-                    **dict(performance),
-                    **dict(riy),
-                    **dict(api_costs),
-                },
+            complete = self.create_output(
+                "waminsurance",
                 "kidcredem",
+                {
+                    "file_name": filename,
+                    **dict(basic_information),
+                    **dict(performance),
+                    **dict(riy),
+                    "api_costs": api_costs,
+                }
+   
             )
 
         except Exception as error:

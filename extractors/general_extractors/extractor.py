@@ -7,12 +7,10 @@ from .llm_functions import get_doc_language, llm_extraction
 from extractors.azure.document_intelligence import get_tables_from_doc
 from .utils import select_desired_page, select_desired_table
 from extractors.general_extractors.llm_functions import general_table_inspection
-from extractors.general_extractors.config.json_config import (
-    renaming,
-)
-from .config.JsonClasses import JSONExtraction
+
 from .config.prompt_config import word_representation
 import threading
+from extractors.output_handler.OutputHandler import OutputHandler
 
 class ThreadFunction(threading.Thread):
     def __init__(self, function, args):
@@ -185,46 +183,18 @@ class Extractor:
 
         return extraction
 
-    def create_json(self, results, type="kid"):
-        """creates a json from the results
+    def create_output(self, tenant, extractor_type, results):
+        """creates a output with correct format
 
         Args:
             results (dict()): results to convert
+            type (str, optional): type of extraction.
 
         Returns:
-            json: json of the results
+            dict: dictionary containing the results
         """
-        # dict for filename and costs, replace is for json format
-
-        # complete={renaming[key]:value for key,value in results.items() if key in renaming.keys()}
-
-        # return complete
-
-        extraction = JSONExtraction(doc_type=type, results=results, doc_path=self.doc_path)
-
-        json_output = extraction.to_json()
-
-        return json_output
-
-
-    def raccorda(self, dictionary, type, keep=False):#could tecnically go to utils
-        """renames fiels
-
-        Args:
-            dictionary (dict()): dict to rename
-            rename (dict()): dict containing the renaming
-            keep (bool, optional): if true, keeps the old field. Defaults to False.
-
-        Returns:
-            new_dict dict(): dict renamed
-        """
-        # uncomment for extra fields
-        # dictionary=self.create_json(dictionary)
-        new_dict = {renaming[type][key]: value for key, value in dictionary.items() if key in renaming[type].keys()}
-        if keep:
-            new_dict.update({key: value for key, value in dictionary.items() if key not in renaming[type].keys()})
-        return new_dict
-
+        extraction_output = OutputHandler(tenant=tenant, extractor_type=extractor_type, results=results, doc_path=self.doc_path)
+        return extraction_output.complete_output
 
 
     @abstractmethod

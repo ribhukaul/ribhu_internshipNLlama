@@ -1,6 +1,7 @@
 import os
 import time
 import threading
+import json
 
 from AWSInteraction.S3Handler import S3ExtractionHandler
 from extractors.general_extractors.custom_extractors.kid.insurance.kid_extractor import InsuranceKidExtractor
@@ -128,8 +129,7 @@ class ExtractionHandler:
             thread.join()
         
         for file_key, thread in threads.items():
-            import json
-            dict_result = json.loads(thread.result)
+            dict_result = thread.result
             dict_result['extraction_time'] = thread.total_runtime
             self.extractions[file_key] = json.dumps(dict_result,indent=4, ensure_ascii=False)
 

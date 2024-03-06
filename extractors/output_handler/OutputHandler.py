@@ -85,21 +85,23 @@ class Field:
 class OutputHandler:
 
     config_selector = {
-        # waminsurance
-        "waminsurance-kid": kid.kid,
-        "waminsurance-gkid": gkid.gkid,
-        "waminsurance-kidcredem": kidcredem.kidcredem,
-        #wamderivati
-        "wamderivati-complexity": complexity.complexity,
+        "waminsurance": {
+            "kid": kid.kid,
+            "kidcredem": kidcredem.kidcredem,
+            "gkid": gkid.gkid,
+            },
+        "wamderivati": {
+            "complexity": complexity.complexity,
+            }
         }
     
-    
-    def __init__(self, extractor_type, results, doc_path):
+    def __init__(self, tenant, extractor_type, results, doc_path):
         self.complete_output = {"file_path": doc_path}
-        self.fields_config = self.config_selector[extractor_type]
+        self.fields_config = self.config_selector[tenant][extractor_type]
         self.results = results
         self.build_fields()
         self.build_additional_info()
+
 
     def build_fields(self):
         """creates the fields for the JSON

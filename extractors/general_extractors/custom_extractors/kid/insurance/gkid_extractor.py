@@ -48,16 +48,15 @@ class InsuranceGKidExtractor(GKidExtractor):
             api_costs = self._process_costs()
 
             # raccordo
-            complete = self.create_json(
+            complete = self.create_output("waminsurance", "gkid",
                 {
                     "file_name": filename,
                     **dict(basic_information),
                     **dict(riy),
                     **dict(costs),
                     **dict(market),
-                    **dict(api_costs),
+                    "api_costs": api_costs,
                 },
-                "gkid",
             )
 
         except Exception as error:
