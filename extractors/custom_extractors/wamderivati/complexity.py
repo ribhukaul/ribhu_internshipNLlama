@@ -58,7 +58,7 @@ class WamDerivatiComplexity(Extractor):
         # rename df columns 
         df_final_renamed = df_final.rename(columns=new_df_renaming)
         # from df to dict
-        tags = df_final.to_dict(orient="records")[0]
+        tags = df_final_renamed.to_dict(orient="records")[0]
         
 
         api_costs = self._process_costs()
