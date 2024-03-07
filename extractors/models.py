@@ -5,7 +5,6 @@ import tiktoken
 from .general_extractors.config.cost_config import cost_per_token
 from langchain.chains import LLMChain
 
-
 class Models:
     """create an instance for each model to avoid loading it multiple times
     was a singleton but not variegated enough
@@ -91,6 +90,27 @@ class Models:
             page_content = "".join(getattr(page, "page_content", "") for page in pages)
         cls.calc_costs(file_id, model, inputs=[page_content, prompt], outputs=[response])
         return response
+    
+    @classmethod
+    def general_extract(cls, file_id, model, prompt, input):
+        """ 
+        extracts information from text using a language model
+        
+        Args:
+            file_id (str): file_id for costs
+            model (str): type of model to use
+            text (str): text to search
+            system_message (str, optional): system message to add. Defaults to ''.
+            human_message (str, optional): human message to add. Defaults to ''.
+            
+            Returns:
+            str: response from the model
+        """
+        llm = Models(model)
+        chain = LLMChain(llm=llm, prompt=prompt)
+        response = chain.run(input=input)
+        cls.calc_costs(file_id, model, inputs=[input, prompt], outputs=[response])
+        return response
 
     @classmethod
     def calc_costs(cls, file_id, model, inputs=[], outputs=[]):
@@ -163,3 +183,4 @@ class Models:
             del cls._file_locks[file_id]
         if file_id in cls._costs:
             del cls._costs[file_id]
+

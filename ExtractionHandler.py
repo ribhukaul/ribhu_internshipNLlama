@@ -7,6 +7,7 @@ from AWSInteraction.S3Handler import S3ExtractionHandler
 from extractors.general_extractors.custom_extractors.kid.insurance.kid_extractor import InsuranceKidExtractor
 from extractors.general_extractors.custom_extractors.kid.insurance.kid_extractor_credem import InsuranceKidCredemExtractor
 from extractors.general_extractors.custom_extractors.kid.insurance.gkid_extractor import InsuranceGKidExtractor
+from extractors.custom_extractors.wamderivati.complexity import WamDerivatiComplexity
 # TODO: 
 # - documentare
 
@@ -80,7 +81,7 @@ class ExtractionHandler:
             'kidcredem': InsuranceKidCredemExtractor
             },
         'wamderivati': {
-            'complexity': InsuranceKidExtractor,
+            'complexity': WamDerivatiComplexity,
             'productionderivatives':''
             },
         'wamfondi': {
