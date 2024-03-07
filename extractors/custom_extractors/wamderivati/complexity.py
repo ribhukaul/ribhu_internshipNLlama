@@ -2,7 +2,7 @@
 
 from extractors.models import Models
 from extractors.general_extractors.extractor import Extractor
-from llm_applications.Derivati.setting.pydantic_schema import PydanticSchema_unicredit_noLangChain
+from .complexity_custom.setting.pydantic_schema import PydanticSchema_unicredit_noLangChain
 import os
 from langchain_core.prompts import PromptTemplate
 from .complexity_custom.setting.column_config import column_dict, columns_to_clean, columns_to_date_convert, new_df_renaming
