@@ -59,22 +59,7 @@ class WamAssetKidExtractor(KidExtractor):
 
             api_costs = self._process_costs()
 
-            # raccordo
-            complete = self.raccorda(
-                {
-                    "file_name": filename,
-                    **dict(basic_information),
-                    **dict(performance),
-                    **dict(riy),
-                    **dict(exit_entry_costs),
-                    **dict(management_costs),
-                    **dict(market),
-                    **dict(api_costs),
-                },
-                "kid",
-            )
-
-            complete = self.create_json(
+            complete = self.create_output(
                 "wamasset",
                 "kidasset",
                 {
@@ -85,9 +70,9 @@ class WamAssetKidExtractor(KidExtractor):
                     **dict(exit_entry_costs),
                     **dict(management_costs),
                     **dict(market),
-                    **dict(api_costs),
-                },
-                "kid",
+
+                    "api_costs": api_costs,
+                }
             )
 
         except Exception as error:
