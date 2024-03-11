@@ -1,5 +1,6 @@
 from .configs.waminsurance import gkid, kid, kidcredem
 from .configs.wamderivati import complexity
+from .configs.wamasset import kidasset
 
 import locale
 import datetime
@@ -92,7 +93,10 @@ class OutputHandler:
             },
         "wamderivati": {
             "complexity": complexity.complexity,
-            }
+            },
+        "wamasset":{
+            "kidasset": kidasset.kidasset
+        }
         }
     
     def __init__(self, tenant, extractor_type, results, doc_path):

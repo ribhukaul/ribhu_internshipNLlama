@@ -7,6 +7,7 @@ from AWSInteraction.S3Handler import S3ExtractionHandler
 from extractors.general_extractors.custom_extractors.kid.insurance.kid_extractor import InsuranceKidExtractor
 from extractors.general_extractors.custom_extractors.kid.insurance.kid_extractor_credem import InsuranceKidCredemExtractor
 from extractors.general_extractors.custom_extractors.kid.insurance.gkid_extractor import InsuranceGKidExtractor
+from extractors.general_extractors.custom_extractors.kid.wamasset.kid_extractor_asset import WamAssetKidExtractor
 from extractors.custom_extractors.wamderivati.complexity import WamDerivatiComplexity
 # TODO: 
 # - documentare
@@ -91,7 +92,7 @@ class ExtractionHandler:
             'bloombergss': ''
         },
         'wamasset':{
-            'kidasset'
+            'kidasset': WamAssetKidExtractor
         },
         'sim':{}
     }
@@ -102,7 +103,7 @@ class ExtractionHandler:
         self.extractor_type = request_context.payload['extractor_type']
         self.extactor = self.custom_extractors[self.tenant][self.extractor_type]
         self.extractions = {}
-        self.local_saved_files = {} # filekey: local_path
+        self.local_saved_files = {} 
 
     def _delete_local_files(self):
         """ 
