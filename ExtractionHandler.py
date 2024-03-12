@@ -4,9 +4,10 @@ import threading
 import json
 
 from AWSInteraction.S3Handler import S3ExtractionHandler
-from extractors.general_extractors.custom_extractors.kid.insurance.kid_extractor import InsuranceKidExtractor
-from extractors.general_extractors.custom_extractors.kid.insurance.kid_extractor_credem import InsuranceKidCredemExtractor
-from extractors.general_extractors.custom_extractors.kid.insurance.gkid_extractor import InsuranceGKidExtractor
+from extractors.custom_extractors.waminsurance.fullkid import WamInsuranceKidExtractor
+from extractors.custom_extractors.waminsurance.fullgkid import WamInsuranceGKidExtractor
+from extractors.custom_extractors.waminsurance.credemkid import WamInsuranceKidCredemExtractor
+
 from extractors.general_extractors.custom_extractors.kid.wamasset.kid_extractor_asset import WamAssetKidExtractor
 from extractors.custom_extractors.wamderivati.complexity import WamDerivatiComplexity
 # TODO: 
@@ -77,9 +78,9 @@ class ExtractionHandler:
     # Switch case for custom extraction based on: -tenant -extraction type
     custom_extractors = {
         'waminsurance': {
-            'kid': InsuranceKidExtractor,
-            'gkid': InsuranceGKidExtractor,
-            'kidcredem': InsuranceKidCredemExtractor
+            'kid': WamInsuranceKidExtractor,
+            'gkid': WamInsuranceGKidExtractor,
+            'kidcredem': WamInsuranceKidCredemExtractor
             },
         'wamderivati': {
             'complexity': WamDerivatiComplexity,

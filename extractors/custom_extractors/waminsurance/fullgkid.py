@@ -4,7 +4,7 @@ from extractors.models import Models
 from extractors.general_extractors.custom_extractors.kid.gkid_extractor import GKidExtractor
 
 
-class InsuranceGKidExtractor(GKidExtractor):
+class WamInsuranceGKidExtractor(GKidExtractor):
 
     def __init__(self, doc_path) -> None:
         self.doc_path = doc_path
