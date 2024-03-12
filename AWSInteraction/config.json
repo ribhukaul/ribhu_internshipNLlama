@@ -31,14 +31,13 @@
 
 	},
 	"wamasset":{
-		"LANGCHAIN_PROJECT": "insurance",
-		"AZURE_FORM_RECOGNIZER_ENPOINT": "https://assicurativikidanalysis.cognitiveservices.azure.com/",
-		"AZURE_OPENAI_ENDPOINT": "https://insurancekidapplicativo.openai.azure.com/",
-		"AZURE_OPENAI_GPT35_DEP_NAME": "insurancegpt35",
-		"AZURE_OPENAI_GPT35_16K_DEP_NAME": "insurancegpt3516k",
-		"AZURE_OPENAI_GPT4_DEP_NAME": "insurancegpt4",
-		"AZURE_OPENAI_GPT4_TURBO_DEP_NAME": "insurancegpt4turbo",
-		"AZURE_OPENAI_EMBEDDING_DEP_NAME": "insuranceembedding"
+		"LANGCHAIN_PROJECT": "wamasset",
+		"AZURE_FORM_RECOGNIZER_ENPOINT": "https://wamasset-di.cognitiveservices.azure.com/",
+		"AZURE_OPENAI_ENDPOINT": "https://wamasset-oai.openai.azure.com/",
+		"AZURE_OPENAI_GPT35_DEP_NAME": "wamassetgpt35",
+		"AZURE_OPENAI_GPT35_16K_DEP_NAME": "wamassetgpt3516k",
+		"AZURE_OPENAI_GPT4_DEP_NAME": "wamassetgpt4",
+		"AZURE_OPENAI_GPT4_TURBO_DEP_NAME": "wamassetgpt4turbo"
 	},
 	"sim":{
 
