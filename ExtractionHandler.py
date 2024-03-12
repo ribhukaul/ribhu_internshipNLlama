@@ -7,8 +7,8 @@ from AWSInteraction.S3Handler import S3ExtractionHandler
 from extractors.custom_extractors.waminsurance.fullkid import WamInsuranceKidExtractor
 from extractors.custom_extractors.waminsurance.fullgkid import WamInsuranceGKidExtractor
 from extractors.custom_extractors.waminsurance.credemkid import WamInsuranceKidCredemExtractor
+from extractors.custom_extractors.wamasset.fullkid import WamAssetKidExtractor
 
-from extractors.general_extractors.custom_extractors.kid.wamasset.kid_extractor_asset import WamAssetKidExtractor
 from extractors.custom_extractors.wamderivati.complexity import WamDerivatiComplexity
 # TODO: 
 # - documentare
