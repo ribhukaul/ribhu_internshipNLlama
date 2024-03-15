@@ -22,6 +22,11 @@ class EnvVarSetter():
         if os.environ.get("ENV") == None:
             os.environ["ENV"] = "local"
 
+        if os.getenv('ENV') == 'local':
+            os.environ['LOCAL_SAVE_FOLDER'] = 'tmp'
+        else:
+            os.environ['LOCAL_SAVE_FOLDER']  = '/tmp'
+
         self.tenant = tenant
         if payload is not None:
             self.payload = payload

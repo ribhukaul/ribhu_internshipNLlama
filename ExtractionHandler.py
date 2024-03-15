@@ -10,6 +10,8 @@ from extractors.custom_extractors.waminsurance.credemkid import WamInsuranceKidC
 from extractors.custom_extractors.wamasset.fullkid import WamAssetKidExtractor
 
 from extractors.custom_extractors.wamderivati.complexity import WamDerivatiComplexity
+from extractors.custom_extractors.wambond.bloombergss import WamBondBloombergSS
+
 # TODO: 
 # - documentare
 
@@ -35,7 +37,6 @@ class ThreadedFunction(threading.Thread):
             print("File {} not found".format(file_key))
             return None
         
-    
     def download_files_from_dir(self, folder_key):
         local_file_list = []
         s3handler = S3ExtractionHandler(folder_key)
@@ -48,7 +49,6 @@ class ThreadedFunction(threading.Thread):
                 local_file_list.append(file_path)
         return local_file_list
                 
-
     def run(self):
         # time counter
         start_time = time.time()
@@ -90,7 +90,7 @@ class ExtractionHandler:
             'peergroup': ''
         },
         'wambond': {
-            'bloombergss': ''
+            'bloombergss': WamBondBloombergSS
         },
         'wamasset':{
             'kidasset': WamAssetKidExtractor

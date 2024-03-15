@@ -41,7 +41,9 @@ class S3ExtractionHandler:
     
     def download(self, file_key, download_path=""):
         if download_path == "":
-            file_name = str(uuid.uuid4()) +'.pdf'
+            # get file extension
+            extension = file_key.split('.')[-1]
+            file_name = str(uuid.uuid4()) + extension
             download_path = os.path.join(self.download_folder, file_name)
         try:
             self.s3.download_file(self.bucket, file_key, download_path)
