@@ -12,14 +12,14 @@ header_mappings = {
 
 regex_callable = {
     "leonteq": {
-        "autocallable": "autocallable|rimbors.{1,5}anticipat",
-        "softcallable": "softcallable|diritt.{1,4}non.{0,3}obblig",
-        "effetto_memoria": "effett.{1,5}memori",
+        "autocall": "autocallable|rimbors.{1,5}anticipat",
+        "callable": "softcallable|diritt.{1,4}non.{0,3}obblig",
+        "memory": "effett.{1,5}memori",
         "putable": "putable",
     },
     "bnp": {
         "callable": r"Scadenza\s*Anticipata\s*Opzionale",
-        "autocallable": r"Scadenza\s*Anticipata\s*Automatica",
+        "autocall": r"Scadenza\s*Anticipata\s*Automatica",
         "unconditional_protection": r"quest.\s*prodott.\s*offre\s*.{0,5}\s*protezione\s*totale\s*.{0,10}Importo\s*Nozionale\s*.{0,5}\s*scadenza",
         "memory": r"Tutt.\s*.{0,5}\s*Premi\s*Condizionat.\s*.{0,5}\s*versat.\s*.{0,5}\s*accumuleranno\s*.{0,5}\s*saranno\s*versat.\s*solo\s*.{0,5}\s*.{0,5}\s*Condizion.\s*del\s*Premio\s*Condizionato\s*verrà\s*soddisfatta\s*successivamente",
         "barrier_type": r"corrspondenz.\s*.{0,5}\s*data\s*.{0,5}\s*Valutazione\s*.{0,10}importo\s*.{0,5}\s*Liqidazione,\s*.{0,5}\s*prezzo\s*.{0,5}\s*Riferimento\s*Finale\s*.{0,5}\s*inferiroe\s*.{0,5}\s*barriera",

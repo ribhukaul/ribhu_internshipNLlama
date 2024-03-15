@@ -1,6 +1,8 @@
 from .kid_extractor import KidExtractor
 from .kid_utils import clean_response_strips, clean_response_regex, regex_extract
 from ...llm_functions import llm_extraction_and_tag
+# TO REVIEW @elia
+#from extractors.general_extractors.custom_extractors.kid.kid_config.cleaning_gkid  import regex_cleaning, regex_search, strips_cleaning
 
 
 class GKidExtractor(KidExtractor):
@@ -66,7 +68,7 @@ class GKidExtractor(KidExtractor):
 
         except Exception as error:
             print("extract general data error" + repr(error))
-            error_list = ["isin", "sri"]
+            error_list = ["indicatore_sintetico_rischio_max","indicatore_sintetico_rischio_min"]
             extraction = {key: (extraction[key] if extraction.get(key) is not None else "ERROR") for key in error_list}
             self.rhp = extraction["periodo_detenzione_raccomandato"] = "multiple"
 
@@ -153,33 +155,6 @@ class GKidExtractor(KidExtractor):
             eur = clean_response_regex("riy€-gkid", self.language, eur, to_add="")
             extraction_riy = {**perc, **eur}
 
-            """ 
-                #legacy code for riy extraction
-                #rhmezzi=None
-                #if(int(rhp)>=10):
-                    #rhmezzi=str(math.ceil(int(rhp)/2))
-                #complex table extraction
-                tasks=[]
-                tasks.append(asyncio.create_task(complex_table_inspection(table, rhp,rhmezzi, 'riy%',self.file_id, direct_tag=True, language=self.language)))
-                tasks.append(asyncio.create_task(complex_table_inspection(table, rhp,rhmezzi, 'riy€',self.file_id, direct_tag=True, language=self.language)))
-
-                await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
-
-                extraction_riy=tasks[0].result()
-                other_one=tasks[1].result()
-                """
-
-            """
-                #tag only text extraction
-                extraction_riy = tag_only(self.text,'riy%',self.language,self.file_id, rhp=self.rhp, rhmezzi=str(int(rhp)/2))
-                extraction_riy=clean_response("riy%", self.language, extraction_riy, regex=True,to_add="%")
-                
-                other_one=tag_only(self.text,'riy€',self.language,self.file_id, rhp=self.rhp, rhmezzi=str(int(rhp)/2))
-                other_one=clean_response("riy€", self.language, other_one, regex=True,to_add="€")
-                
-                extraction_riy=dict(extraction_riy)
-                extraction_riy.update(dict(other_one))
-                """
         except Exception as error:
             print("extract riy error" + repr(error))
             error_list = [
@@ -196,7 +171,7 @@ class GKidExtractor(KidExtractor):
                 "incidenza_costo_eur_rhp_min",
                 "incidenza_costo_eur_rhp_max",
             ]
-            extraction = {key: (extraction[key] if extraction.get(key) is not None else "ERROR") for key in error_list}
+            extraction_riy = {key: (extraction_riy[key] if extraction_riy.get(key) is not None else "ERROR") for key in error_list}
 
         return extraction_riy
 
@@ -228,17 +203,6 @@ class GKidExtractor(KidExtractor):
             )
             costi_ingresso = clean_response_regex("costi_ingresso_gkid", self.language, costi_ingresso, to_add="%")
             costi_gestione = clean_response_regex("costi_gestione_gkid", self.language, costi_gestione, to_add="%")
-
-            """legacy code general table extraction
-            tasks = []
-            
-            tasks.append(asyncio.create_task(general_table_inspection(table_ingresso,'costi_ingresso', language=self.language, add_text="estrai il valore % dopo {} anni".format(self.rhp))))
-            tasks.append(asyncio.create_task(general_table_inspection(table_gestione,'costi_gestione', language=self.language, add_text="estrai il valore % dopo {} anni".format(self.rhp))))
-            
-            await asyncio.wait(tasks, return_when=asyncio.ALL_COMPLETED)
-            
-            costi_ingresso = tasks[0].result()  
-            costi_gestione  = tasks[1].result()"""
 
         except Exception as error:
             print("extract cost commissions error" + repr(error))

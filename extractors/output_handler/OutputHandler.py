@@ -1,5 +1,5 @@
 from .configs.waminsurance import gkid, kid, kidcredem
-from .configs.wamderivati import complexity
+from .configs.wamderivati import complexity, bnp
 from .configs.wamasset import kidasset
 
 import locale
@@ -93,6 +93,7 @@ class OutputHandler:
             },
         "wamderivati": {
             "complexity": complexity.complexity,
+            "bnp": bnp.bnp
             },
         "wamasset":{
             "kidasset": kidasset.kidasset

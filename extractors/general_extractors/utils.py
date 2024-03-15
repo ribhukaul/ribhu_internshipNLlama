@@ -83,7 +83,6 @@ def select_desired_table_only_header(tables, words_repr):  # change from normal 
     return tb_number
 
 
-#unused
 def upload_df_as_excel(df:pd.DataFrame):
     """Upload DF as excel file for LargeLanguageModel analysis.
 
@@ -311,3 +310,36 @@ def check_valid(main_table, other_tables):
         not main_table.equals(other) for other in other_tables
     ) and isinstance(main_table, pd.DataFrame)
 
+def set_flag(extraction, pattern):
+    """sets a flag if the pattern is found in the extraction
+    Args:
+        extraction (str): to search in
+        pattern (str): regex pattern
+    Returns:
+        bool: if the pattern is found in the extraction
+    """
+
+    if is_in_text(pattern, extraction):
+        extraction = True
+    else:
+        extraction = False
+
+    return extraction
+
+
+def filter_list_by_pattern(extraction, pattern):
+    """filter the list leaving only the pattern
+    Args:
+        extraction (List): to clean
+        pattern (str): regex pattern
+    Returns:
+        List: cleaned list
+    """
+
+    searches = []
+    for str in extraction:
+        search = re.search(pattern, str)
+        if search:
+            searches.append(search.group(1))
+    extraction = searches if searches else ["not found"]
+    return extraction

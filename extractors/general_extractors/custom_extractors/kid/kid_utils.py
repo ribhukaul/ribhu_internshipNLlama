@@ -7,7 +7,7 @@ from .kid_config.kid_cleaning import (
 )
 
 
-# TO REVIEW
+# TO REVIEW -VEDERE CODICE ELIA
 def clean_response_regex(type, language, response, to_add=""):
     """cleans a response using a regex
 

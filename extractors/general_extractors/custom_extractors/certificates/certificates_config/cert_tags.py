@@ -1,5 +1,6 @@
 from typing import List
-from langchain_core.pydantic_v1 import BaseModel, Field
+#from langchain_core.pydantic_v1 import BaseModel, Field
+from pydantic import BaseModel, Field
 
 NF = "not found"
 NA = "N/A"
@@ -113,8 +114,7 @@ class TabellaAllegatiBNP(BaseModel):
     unconditional_coupon: List[str] = Field([NF], description="Premio/i")
     conditional_coupon: List[str] = Field([NF], description="Premio/i Condizionato/i")
     payment_callable_date: List[str] = Field([NF], description="Data di Liquidazione Anticipata Facoltativa")
-    observation_autocall_date: List[str] = Field(
-        [NF], description="Data/e di Valutazione dell’Importo di Liquidazione (rimborso) Anticipato"
+    observation_autocall_date: List[str] = Field([NF], description="Data/e di Valutazione dell Importo di Liquidazione (rimborso) Anticipato"
     )
     barrier_autocall: List[str] = Field([NF], description="Barriera/e o barrierale per la Scadenza Anticipata")
     payment_autocall_date: List[str] = Field([NF], description="Data di Scadenza Anticipata")

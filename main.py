@@ -4,11 +4,9 @@ from AWSInteraction.EnvVarSetter import EnvVarSetter
 from extractors.general_extractors.custom_extractors.certificates.issuers.BNP_extractor import BNPDerivatiKidExtractor
 
 from extractors.general_extractors.custom_extractors.certificates.issuers.Vontobel_extractor import VontobelDerivatiKidExtractor
-from extractors.general_extractors.custom_extractors.kid.insurance.kid_extractor import InsuranceKidExtractor
-from extractors.general_extractors.custom_extractors.kid.insurance.gkid_extractor import InsuranceGKidExtractor
-from extractors.general_extractors.custom_extractors.certificates.issuers.Leonteq_extractor import (
-    LeonteqDerivatiKidExtractor,
-)
+
+from extractors.general_extractors.custom_extractors.certificates.issuers.Leonteq_extractor import LeonteqDerivatiKidExtractor
+
 
 # from extractors.Derivati.Spot_KID_extractor import write_info
 # from extractors.Derivati.Global_KID_extractor import GlobalExtractor
@@ -33,10 +31,10 @@ def process_file(file_path, file_type):
     """
     try:
         match file_type:
-            case "kid":
-                extractor = InsuranceKidExtractor(file_path)
-            case "g-kid":
-                extractor = InsuranceGKidExtractor(file_path)
+            # case "kid":
+            #     extractor = InsuranceKidExtractor(file_path)
+            # case "gkid":
+            #     extractor = InsuranceGKidExtractor(file_path)
             case "leonteq":
                 extractor = LeonteqDerivatiKidExtractor(file_path)
             case "bnp":
@@ -63,21 +61,22 @@ def main(doc_folder):
         doc_folder (str): folder containing the pdf files
     """
     try:
-        env_setter = EnvVarSetter(tenant="insurance")
-        env_setter.set_locally_saved_env_vars()
+        env_setter = EnvVarSetter()
+        env_setter.configure_local_env_vars()
         # testing
-        file_type = "vontobel"
+        file_type = "bnp"
         all_files = []
         # list all the pdf files in the folder
         print("START")
         all_files = glob.glob(os.path.join(doc_folder, "**\\*.pdf"), recursive=True)
         results = {}
 
-        partial_process_file = partial(process_file, file_type=file_type)
-        # async processing of the files
-        with ProcessPoolExecutor(max_workers=1) as executor:
-            results = executor.map(partial_process_file, all_files)
-
+        # partial_process_file = partial(process_file, file_type=file_type)
+        # # async processing of the files
+        # with ProcessPoolExecutor(max_workers=1) as executor:
+        #     results = executor.map(partial_process_file, all_files)
+        for file in all_files:
+            results = process_file(file, file_type)
         # give request id
         Models.clear_resources_group(str(-1))
         # orders results
@@ -94,7 +93,8 @@ def main(doc_folder):
 
 
 if __name__ == "__main__":
-    folder = "kid\\documents\\testdoc\\vontobel\\Documenti"
+
+    folder = "dati\\derivati\\bnp"
     
     #for root, dirs, files in os.walk(folder):
         # Check if there are PDF files in the current directory

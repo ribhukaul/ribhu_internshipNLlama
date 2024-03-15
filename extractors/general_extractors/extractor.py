@@ -119,6 +119,7 @@ class Extractor:
                 self.di_tables_pages.setdefault(str(safe_number - 1), []).append(table)
                 self.raw_data_pages.setdefault(str(safe_number - 1), []).append(raw_data)
 
+    # REVIEW
     def _process_costs(self):
         """processes the cost of the calls given local config and prepares them for the output
 
@@ -141,7 +142,7 @@ class Extractor:
                 entry["cost"] = round(entry["cost"], 2)
         return api_costs
 
-    async def extract_from_multiple_tables(self, pages, tags, complex=False):
+    def extract_from_multiple_tables(self, pages, tags, complex=False):
         """extracts from multiple tables
 
         Args:
@@ -166,6 +167,7 @@ class Extractor:
             for tag in tags:
                 llm_extract=concatenated_str
                 if complex:
+                    #concatenated_str += " " + "Aggiungi un # alla fine della risposta"
                     llm_extract = llm_extraction(concatenated_str, tag, self.file_id, language=self.language)
                 extraction.update(
                     dict(
@@ -195,7 +197,25 @@ class Extractor:
         """
         extraction_output = OutputHandler(tenant=tenant, extractor_type=extractor_type, results=results, doc_path=self.doc_path)
         return extraction_output.complete_output
+    
+    # TEMPORARY
+    def raccorda(self, dictionary, renaming:dict, keep=False):  # could tecnically go to utils
+        """renames fiels
 
+        Args:
+            dictionary (dict()): dict to rename
+            rename (dict()): dict containing the renaming
+            keep (bool, optional): if true, keeps the old field. Defaults to False.
+
+        Returns:
+            new_dict dict(): dict renamed
+        """
+        # uncomment for extra fields
+        # dictionary=self.create_json(dictionary)
+        new_dict = {renaming[key]: value for key, value in dictionary.items() if key in renaming.keys()}
+        if keep:
+            new_dict.update({key: value for key, value in dictionary.items() if key not in renaming.keys()})
+        return new_dict
 
     @abstractmethod
     def process(self):

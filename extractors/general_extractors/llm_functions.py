@@ -2,11 +2,12 @@ from extractors.general_extractors.config.prompt_config import prompts, table_sc
 from extractors.general_extractors.utils import select_desired_page
 from extractors.general_extractors.utils import num_tokens_from_string
 from langchain.prompts import PromptTemplate
-from .config.tags import *
+#from .config.tags import *
+from extractors.configs.prompts.tags.general import DocLanguage
 
 from ..models import Models
 
-
+# Reviw change and swap to simple TAG
 def get_doc_language(pages, file_id):
     """Get the language of the document.
 
