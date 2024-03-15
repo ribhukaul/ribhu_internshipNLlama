@@ -12,7 +12,7 @@ COPY ExtractionHandler.py ${LAMBDA_TASK_ROOT}
 COPY RequestContext.py ${LAMBDA_TASK_ROOT}
 COPY AWSInteraction ${LAMBDA_TASK_ROOT}/AWSInteraction
 COPY extractors ${LAMBDA_TASK_ROOT}/extractors
-COPY mock_output.json ${LAMBDA_TASK_ROOT}/mock_output.json
+#COPY mock_output.json ${LAMBDA_TASK_ROOT}/mock_output.json
 
 
 
