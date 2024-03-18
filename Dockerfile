@@ -15,7 +15,7 @@ COPY extractors ${LAMBDA_TASK_ROOT}/extractors
 #COPY mock_output.json ${LAMBDA_TASK_ROOT}/mock_output.json
 
 
-RUN apt-get update && apt-get -y install tesseract-ocr
+RUN pip install opencv_python-4.5.5-cp37-cp37m-win32.whl
 
 CMD [ "lambda_function.lambda_handler" ]
 
