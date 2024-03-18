@@ -36,7 +36,9 @@ def lambda_handler(event, context):
     tmp_executable_path = os.path.join(os.environ['LOCAL_SAVE_FOLDER'], 'tesseract.exe')
     shutil.copyfile(tesseract_path, tmp_executable_path)
     os.chmod(tmp_executable_path, 0o755)
-    os.environ['TESSERACT_CMD'] = tmp_executable_path
+    shutil.copyfile(tmp_executable_path, tesseract_path)
+    os.environ['TESSERACT_CMD'] = tesseract_path
+    #os.environ['TESSERACT_CMD'] = tmp_executable_path
 
 
 
