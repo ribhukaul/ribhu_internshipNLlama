@@ -23,6 +23,8 @@ https://aws.amazon.com/blogs/compute/parallel-processing-in-python-with-aws-lamb
 
 # TODO: CODE TO ELIMINATE OLDER FILE FROM /TMP
 def lambda_handler(event, context):
+    # curretn dir
+    # print()
     print("RICEVUTO RICHIESTA: ", event)
     request_context = RequestContext(event)
     env_setter = EnvVarSetter(request_context.payload)
@@ -60,12 +62,39 @@ def lambda_handler(event, context):
             }
 
 
-# if __name__ == '__main__':
-#    import os
-#    os.environ['ENV'] = 'local'
-#    event = {
-#        "body": "{\r\n  \"files\": [\"basepfts/workspaces/test severini/AXA WF Global Factors - Sustainable Equity (LU0943665348).pdf\" ], \"TENANT\": \"insurance\", \"extractor_type\": \"kid\"\r\n}"}
-#    x = lambda_handler(event, None)
-#    print(x)
+if __name__ == '__main__':
+   import os
+
+   import json
+
+   reqq = {
+   "TENANT": "waminsurance",
+                "extractor_type": "complexity",
+                "extraction_model": "extraction_model",
+                "files": [
+                        {
+                                "key": "waminsurance/workspaces/chris/UL22US_233_0723.pdf",
+                                "type": "FILE"
+                        }
+                        # ,
+                        # {
+                        #         "key": "basepfts/workspaces/e/allianz (1).pdf",
+                        #         "type": "FILE"
+                        # }
+                ]
+   }
+#    reqq ={
+#             "TENANT": "wamderivati", 
+#             "extractor_type": "complexity", 
+#             "extraction_model": "gpt-4", 
+#             "files": [{
+#                  "key": "wamderivati/workspaces/test derivati/allianz.pdf", 
+#                  "type": "file"}]}
+   os.environ['ENV'] = 'local'
+   req = json.dumps(reqq)
+   event = {
+       "body": req}#"{\r\n  \"files\": [\"basepfts/workspaces/33/d" ], \"TENANT\": \"insurance\", \"extractor_type\": \"kid\"\r\n}"}
+   x = lambda_handler(event, None)
+   print(x)
 
     
