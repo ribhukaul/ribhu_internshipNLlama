@@ -28,7 +28,7 @@ def get_text(image, mode='data', psm=6):
     Returns:
         dict or str: The extracted text. If mode is 'data', returns a dictionary with information about each word. If mode is 'string', returns a string with the extracted text.
     """
-    pytesseract.pytesseract.tesseract_cmd =os.environ['TESSERACT_CMD']
+    #pytesseract.pytesseract.tesseract_cmd =os.environ['TESSERACT_CMD']
     retries = 0
     while retries < 5:
         try:

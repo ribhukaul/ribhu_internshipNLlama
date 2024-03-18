@@ -15,6 +15,8 @@ COPY extractors ${LAMBDA_TASK_ROOT}/extractors
 #COPY mock_output.json ${LAMBDA_TASK_ROOT}/mock_output.json
 
 
+RUN yum -y install tesseract
+
 
 CMD [ "lambda_function.lambda_handler" ]
 
