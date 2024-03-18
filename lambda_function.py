@@ -64,27 +64,27 @@ def lambda_handler(event, context):
             }
 
 
-if __name__ == '__main__':
-   import os
+# if __name__ == '__main__':
+#    import os
 
-   import json
+#    import json
 
-   reqq = {
-   "TENANT": "waminsurance",
-                "extractor_type": "complexity",
-                "extraction_model": "extraction_model",
-                "files": [
-                        {
-                                "key": "waminsurance/workspaces/chris/UL22US_233_0723.pdf",
-                                "type": "FILE"
-                        }
-                        # ,
-                        # {
-                        #         "key": "basepfts/workspaces/e/allianz (1).pdf",
-                        #         "type": "FILE"
-                        # }
-                ]
-   }
+#    reqq = {
+#    "TENANT": "waminsurance",
+#                 "extractor_type": "complexity",
+#                 "extraction_model": "extraction_model",
+#                 "files": [
+#                         {
+#                                 "key": "waminsurance/workspaces/chris/UL22US_233_0723.pdf",
+#                                 "type": "FILE"
+#                         }
+#                         # ,
+#                         # {
+#                         #         "key": "basepfts/workspaces/e/allianz (1).pdf",
+#                         #         "type": "FILE"
+#                         # }
+#                 ]
+#    }
 #    reqq ={
 #             "TENANT": "wamderivati", 
 #             "extractor_type": "complexity", 
@@ -92,11 +92,11 @@ if __name__ == '__main__':
 #             "files": [{
 #                  "key": "wamderivati/workspaces/test derivati/allianz.pdf", 
 #                  "type": "file"}]}
-   os.environ['ENV'] = 'local'
-   req = json.dumps(reqq)
-   event = {
-       "body": req}#"{\r\n  \"files\": [\"basepfts/workspaces/33/d" ], \"TENANT\": \"insurance\", \"extractor_type\": \"kid\"\r\n}"}
-   x = lambda_handler(event, None)
-   print(x)
+#    os.environ['ENV'] = 'local'
+#    req = json.dumps(reqq)
+#    event = {
+#        "body": req}#"{\r\n  \"files\": [\"basepfts/workspaces/33/d" ], \"TENANT\": \"insurance\", \"extractor_type\": \"kid\"\r\n}"}
+#    x = lambda_handler(event, None)
+#    print(x)
 
     
