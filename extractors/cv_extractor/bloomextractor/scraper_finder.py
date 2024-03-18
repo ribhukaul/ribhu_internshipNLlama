@@ -4,7 +4,8 @@ from typing import Tuple, Optional, List
 import pytesseract
 import numpy as np
 #
-pytesseract.pytesseract.tesseract_cmd ='extractors\\cv_extractor\\tesseract\\tesseract.exe'
+
+pytesseract.pytesseract.tesseract_cmd ='/extractors/cv_extractor/tesseract/tesseract.exe'
 
 
 def get_text(image, mode='data', psm=6):
