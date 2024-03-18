@@ -33,11 +33,17 @@ def get_text(image, mode='data', psm=6):
     while retries < 5:
         try:
             if mode=='data':
-                return pytesseract.image_to_data(image, output_type=pytesseract.Output.DICT)
+                x = pytesseract.image_to_data(image, output_type=pytesseract.Output.DICT)
+                print(x)
+                return x
             elif mode=='string':
-                return pytesseract.image_to_string(image, config=f'--psm {psm}')
+                x = pytesseract.image_to_string(image, config=f'--psm {psm}')
+                print(x)
+                return x
             elif mode=='boxes':
-                return pytesseract.image_to_boxes(image)
+                x = pytesseract.image_to_boxes(image)
+                print(x)
+                return x#pytesseract.image_to_boxes(image)
         except Exception as ex:
             print(ex)
             retries += 1
