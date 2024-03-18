@@ -14,8 +14,10 @@ COPY AWSInteraction ${LAMBDA_TASK_ROOT}/AWSInteraction
 COPY extractors ${LAMBDA_TASK_ROOT}/extractors
 #COPY mock_output.json ${LAMBDA_TASK_ROOT}/mock_output.json
 
-
-RUN pip install opencv_python-4.5.5-cp37-cp37m-win32.whl
+# for tesseract
+RUN rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+RUN yum -y update
+RUN yum -y install tesseract
 
 CMD [ "lambda_function.lambda_handler" ]
 
