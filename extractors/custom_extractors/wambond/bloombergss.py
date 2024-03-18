@@ -1,6 +1,3 @@
-
-
-from extractors.models import Models
 from extractors.general_extractors.extractor import Extractor
 from extractors.cv_extractor.bloomextractor.scraper import extract_data_from_ss
 
@@ -55,7 +52,7 @@ class WamBondBloombergSS(Extractor):
         # If isin not there, add a "NOT FOUND" value
         if "isin" not in new_flattened_dict:
             new_flattened_dict["isin"] = "NOT FOUND"
-        return flattened_dict
+        return flattened_dict['info']
 
     def process(self):
         file_estr = {}
@@ -75,8 +72,8 @@ class WamBondBloombergSS(Extractor):
         filename = self.doc_path[0].split("/")[-1]
 
         complete = self.create_output(
-            "wamderivati",
-            "complexity",
+            "wambond",
+            "bloombergss",
             {
                 "file_name": filename,
                 **dict(complete),

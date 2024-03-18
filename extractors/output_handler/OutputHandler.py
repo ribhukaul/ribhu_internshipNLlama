@@ -1,6 +1,7 @@
 from .configs.waminsurance import gkid, kid, kidcredem
 from .configs.wamderivati import complexity, bnp
 from .configs.wamasset import kidasset
+from .configs.wambond import bloombergss
 
 import locale
 import datetime
@@ -97,8 +98,11 @@ class OutputHandler:
             },
         "wamasset":{
             "kidasset": kidasset.kidasset
+        },
+        "wambond":{
+            "bloombergss": bloombergss.bloombergss
         }
-        }
+    }
     
     def __init__(self, tenant, extractor_type, results, doc_path):
         self.complete_output = {"file_path": doc_path}
