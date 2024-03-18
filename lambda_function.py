@@ -35,8 +35,8 @@ def lambda_handler(event, context):
     tesseract_path = os.path.join(os.getcwd(),'extractors/cv_extractor/tesseract')#]/tesseract.exe')
     #
     tmp_executable_path = os.path.join(os.environ['LOCAL_SAVE_FOLDER'],'tesseract')#'tesseract.exe')
-    shutil.copyfile(tesseract_path, tmp_executable_path)
-    shutil.move(tmp_executable_path, tmp_executable_path)#+'.exe')
+    #shutil.copyfile(tesseract_path, tmp_executable_path)
+    shutil.move(tesseract_path, tmp_executable_path)#+'.exe')
     file_executable = os.path.join(tmp_executable_path, 'tesseract.exe')
     os.chmod(file_executable, 0o755)
     #shutil.copyfile(tmp_executable_path, tesseract_path)
