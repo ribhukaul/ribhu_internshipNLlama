@@ -1,4 +1,7 @@
 import json
+import os
+import shutil
+
 from RequestContext import RequestContext
 from ExtractionHandler import ExtractionHandler
 from AWSInteraction.EnvVarSetter import EnvVarSetter
@@ -25,6 +28,16 @@ def lambda_handler(event, context):
     env_setter = EnvVarSetter(request_context.payload)
     USE_LOCAL_KEYS = False # True if you want to use local keys
     env_setter.configure_lambda_env_vars(use_local_keys=USE_LOCAL_KEYS)
+
+
+    tesseract_path = os.path.join(os.getcwd(),'extractors/cv_extractor/tesseract/tesseract.exe')
+    tmp_executable_path = os.path.join(os.environ['LOCAL_SAVE_FOLDER'], 'tesseract.exe')
+    shutil.copyfile(tesseract_path, tmp_executable_path)
+    os.chmod(tmp_executable_path, 0o755)
+    os.environ['TESSERACT_CMD'] = tmp_executable_path
+
+
+
 
     try:
         extraction_handler = ExtractionHandler(request_context)
