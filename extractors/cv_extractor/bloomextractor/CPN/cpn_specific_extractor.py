@@ -1,5 +1,4 @@
-from bloombergterminalscraper.bloomextractor.scraper_finder import find_roi, get_text
-
+from ..scraper_finder import find_roi, get_text
 
 def get_field_value(image_text, image, field_name):
     """
