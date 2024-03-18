@@ -14,7 +14,7 @@ import numpy as np
 # tesseract_path = os.path.join(dir_name_path, 'tesseract', 'tesseract.exe')
 # pytesseract.pytesseract.tesseract_cmd = tesseract_path
 
-print("dirnamepath: " + dir_name_path)
+
 
 def get_text(image, mode='data', psm=6):
     """
