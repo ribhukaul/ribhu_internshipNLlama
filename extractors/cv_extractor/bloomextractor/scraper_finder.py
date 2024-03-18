@@ -5,8 +5,16 @@ import pytesseract
 import numpy as np
 #
 
-pytesseract.pytesseract.tesseract_cmd ='/extractors/cv_extractor/tesseract/tesseract.exe'
+#pytesseract.pytesseract.tesseract_cmd ='/extractors/cv_extractor/tesseract/tesseract.exe'
 
+# path of this script
+import os
+dir_name_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# tesseract_path
+tesseract_path = os.path.join(dir_name_path, 'tesseract', 'tesseract.exe')
+pytesseract.pytesseract.tesseract_cmd = tesseract_path
+
+print("dirnamepath: " + dir_name_path)
 
 def get_text(image, mode='data', psm=6):
     """
