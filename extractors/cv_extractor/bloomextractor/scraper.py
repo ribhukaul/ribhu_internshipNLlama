@@ -6,7 +6,7 @@ from extractors.cv_extractor.bloomextractor.utils import recognize_image_type
 
 
 
-def extract_data_from_ss(image_path: str, parallel: bool=True) -> Dict[str, str]:
+def extract_data_from_ss(image_path: str, parallel: bool=False) -> Dict[str, str]:
 
     ss_type =recognize_image_type(image_path)
 

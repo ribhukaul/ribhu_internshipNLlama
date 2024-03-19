@@ -31,8 +31,11 @@ class DesFieldExtractor(Extractor):
         self.image_path = image_path
         self.info = {"ss_type": "DES"}
         self.image = preprocess_image(self.image_path)
+        print("processed image")
         self.processed_image = self._reduce_image_scope()
+        print("GETTING TEXT")
         self.text_d = get_text(self.processed_image)
+        print('got text')
         self.text_d_original = get_text(self.image)
       
 
@@ -216,6 +219,7 @@ class DesFieldExtractor(Extractor):
         """
         # Run specirfic extraction for certain fields or general ones
         for field in FIELDS.keys():
+            print(field)
             if field == "description":
                 print(8)                
             try:
