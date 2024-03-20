@@ -17,6 +17,7 @@ class ThreadFunction(threading.Thread):
         threading.Thread.__init__(self)
         self.function = function
         self.args = args
+        self.result = None
     def run(self):
         if self.args is None:
             self.result = self.function()
