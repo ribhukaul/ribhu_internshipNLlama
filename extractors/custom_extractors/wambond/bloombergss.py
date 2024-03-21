@@ -58,12 +58,15 @@ class WamBondBloombergSS(Extractor):
         file_estr = {}
         
         for img_path in self.doc_path:
+            
+            x = extract_data_from_ss(img_path)
 
             file_estr[img_path] = {
                 "function": extract_data_from_ss, "args": {"image_path": img_path}
             }
 
-        results = self.threader(file_estr)
+        results = x#self.threader(file_estr)
+        
 
         # clean the results
 

@@ -41,16 +41,23 @@ class DesFieldExtractor(Extractor):
 
     def _reduce_image_scope(self):
         "Reduces image size for the desired columns"
+        print("Processing...")
         processed_image = preprocess_image(self.image_path)
+        print("processed..")
         # Look for key words and trim the image from there
         words = {"Pages":100, "Industry":-8}
         for word in words:
+                
                 text = get_text(processed_image)
+                print("finding ROI..")
                 roi = find_roi(text, word)
+                print("found ROI..")
                 if roi is not None:
                     xmin, _, _, _ = roi
                     processed_image = processed_image[:, xmin+ words[word]:]
                     return processed_image
+        print("No ROI found..")
+        return None            
 
     def _get_row_info(self, field):
         "Get value on a key-value paur text value corresponding to a desired key"
