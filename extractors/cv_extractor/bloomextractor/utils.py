@@ -16,6 +16,9 @@ def recognize_image_type(image_path):
     # Upload image and get text
     image = cv2.imread(str(image_path))
     text = get_text(image, mode='string').lower()
+    print('THIS IS A TEST:')
+    print(get_text(image).lower())
+
 
     # Words to find
     des = ["name", 'industry', 'security', 'mkt iss', 'rank', 'coupon', 'cpn freq',
