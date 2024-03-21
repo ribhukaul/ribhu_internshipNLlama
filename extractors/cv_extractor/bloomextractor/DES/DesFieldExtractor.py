@@ -31,6 +31,7 @@ class DesFieldExtractor(Extractor):
         self.image_path = image_path
         self.info = {"ss_type": "DES"}
         self.image = preprocess_image(self.image_path)
+        print(self.image)
         print("processed image")
         self.processed_image = self._reduce_image_scope()
         print("GETTING TEXT")

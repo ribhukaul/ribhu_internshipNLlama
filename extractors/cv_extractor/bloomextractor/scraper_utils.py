@@ -118,11 +118,14 @@ def preprocess_image(image_path: Path) -> np.ndarray:
     # kernel = np.ones((1, 1), np.uint8)
     # img_dilation = cv2.dilate(thresh1, kernel, iterations=1)
     # img_erode = cv2.erode(img_dilation, kernel, iterations=1)
-
+    #
+    print("image_path:", image_path)
     image = cv2.imread(str(image_path))
+    print("red image:", image)
     image = cv2.resize(image, None, fx=1.2, fy=1.2, interpolation=cv2.INTER_CUBIC)
-    
+    print("resized image:", image)
     
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    print("gray image:", gray)
     return gray
 
