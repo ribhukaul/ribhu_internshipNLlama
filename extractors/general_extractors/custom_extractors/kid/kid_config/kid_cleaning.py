@@ -62,6 +62,12 @@ regex_cleaning = {
             "indicatore_sintetico_rischio": REGEX_NUMBER,
             "date": REGEX_DATE,
         },
+        "general_info_kid_governance": {
+            "isin": "[A-Z0-9]{12}",
+            "periodo_detenzione_raccomandato": ANY,
+            "indicatore_sintetico_rischio": REGEX_NUMBER,
+            "date": REGEX_DATE,
+        },
         "performance": {
             "favorable_return": REGEX_NUMBERS_COMMA,
             "favorable_return_rhp": REGEX_NUMBERS_COMMA,

@@ -3,7 +3,7 @@ from extractors.general_extractors.utils import select_desired_page
 from extractors.general_extractors.utils import num_tokens_from_string
 from langchain.prompts import PromptTemplate
 #from .config.tags import *
-from extractors.configs.prompts.tags.general import DocLanguage
+from extractors.configs.extraction_config.tags.general_tags import DocLanguage
 
 from ..models import Models
 
@@ -161,7 +161,7 @@ def tag_only(pages, type, language, file_id, rhp="multiple"):
     return extraction
 
 
-def llm_extraction_and_tag(pages, language, type, file_id):
+def llm_extraction_and_tag(pages, language, type, file_id, specific_page=None):
     """
     extracts information from pages using a language model and tags it using a schema
     creates prompt and schema based on language and type
@@ -179,7 +179,8 @@ def llm_extraction_and_tag(pages, language, type, file_id):
     template = prompts[language][type]
     pydantic_class = table_schemas[language][type]
     prompt = PromptTemplate(input_variables=["context"], template=template)
-
+    if specific_page is not None:
+        pages = [pages[specific_page]]
     # Select model size based on context
     total_token = num_tokens_from_string(prompt.template.format(context=pages))
     if total_token > 4000:

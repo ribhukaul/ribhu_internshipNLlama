@@ -17,23 +17,18 @@ from extractors.general_extractors.custom_extractors.certificates.certificates_c
     TabellaMainInfoBNP,
 )
 
-from extractors.general_extractors.custom_extractors.kid.kid_config.kid_tags import (
-    InformazioniBase,
-    TabellaScenariPerformance,
-    TabellaScenariPerformanceCredem,
-    TabellaRiy,
-    TabellaCostiIngresso,
-    TabellaCostiGestione,
-    InformazioniBaseGkid,
-    TabellaScenariPerformanceGkid,
-    TabellaRiyPercGkid,
-    TabellaRiyEurGkid,
-    TabellaCostiIngressoGkid,
-    TabellaCostiGestioneGkid,
-    PerformanceScenarios,
-    TableRiy,
-)
+#KID
+from extractors.configs.extraction_config.tags.kid_tags import (
+    InformazioniBase, TabellaScenariPerformance, TabellaRiy, TabellaCostiIngresso, TabellaCostiGestione, PerformanceScenarios, TableRiy,
+    ScenariPerformanceAbsoluteEuro)
+#GKID
+from extractors.configs.extraction_config.tags.gkid_tags import (
+    InformazioniBaseGkid, TabellaRiyPercGkid, TabellaRiyEurGkid, TabellaCostiIngressoGkid, TabellaCostiGestioneGkid)
+# WAMINSURANCE 
+from extractors.configs.extraction_config.tags.waminsurance.waminsurance_tags import (
+    InformazioniBaseKidGov, TabellaScenariPerformanceCredem, IsDisclaimerThere)
 
+# CERTIFICATES
 
 prompts = {
     "it": {
@@ -43,6 +38,16 @@ prompts = {
             - Data di realizzazione del documento
             DOCUMENTO:
             {context}""",
+        "general_info_kid_governance": """Dal documento seguente, estrai 
+            - Periodo di detenzione raccomandato o per quanto tempo si presuppone di detenere il prodotto(anni), converti in anni se necessario
+            - indicatore sintetico di rischio
+            - Data di realizzazione del documento
+            - è presente nella prima parte della prima pagina il disclaimer: 'State per acquistare un prodotto che non è semplice e può essere di difficile comprensione"?
+            DOCUMENTO:
+            {context}""",
+        'is_product_complex': """Nel documento seguente è presente il disclaimer: 'State per acquistare un prodotto che non è semplice e può essere di difficile comprensione'?
+            DOCUMENTO:{context}""",
+
         "performance1y": """Considerando la seguente tabella,estrai qual'è il rendimento percentuale dei seguenti scenari:
             - STRESS
             - SFAVOREVOLE
@@ -70,7 +75,7 @@ prompts = {
  
             TABELLA:
                 {context}?""",
-        "market": """"Dal documento seguente cita ciò che si dice sugli investitori al dettaglio cui si intende commercializzare il prodotto
+        "target_market": """"Dal documento seguente cita ciò che si dice sugli investitori al dettaglio cui si intende commercializzare il prodotto
         ---ritorna solamente la citazione niente introduzione
         ---dovrebbero essere multiple lunghe frasi
         ---ritorna solamente ciò che è riportato nel documento non rifrasare, non puoi aggiungere niente,non voglio introduzione, fornisci la risposta esatta
@@ -231,7 +236,7 @@ prompts = {
 
             DOCUMENTO:
             {context}""",
-            "first_info_vontobel":"""
+        "first_info_vontobel":"""
             from the following document, extract:
             -title, found after: "Final Terms for"
             -the ISIN
@@ -239,7 +244,7 @@ prompts = {
             DOCUMENT:
             {context}
             """,
-            "main_info_vontobel":"""
+        "main_info_vontobel":"""
             from the following document, extract:
             -Settlement Currency
             -Fixing Date
@@ -265,10 +270,22 @@ prompts = {
             DOCUMENT:
             {context}
             """,
-            "deductables_vontobel":"""
+        "deductables_vontobel":"""
             from the following document, extract:
             -Issue Price
             -Exchange Listing , often under 'Stock Exchange Listing'
+            DOCUMENT:
+            {context}
+            """,
+        "main_info_vontobel_2": """
+            from the following document, extract:
+            -Bonus Amount
+            -Bonus Threshold
+            -Barrier Event
+            -Observation Dates, can be a lot
+            -Bonus Payment Date(s)
+            -Valuation Date (s)
+            -Early Redemption Date (n) 
             DOCUMENT:
             {context}
             """,
@@ -279,13 +296,15 @@ prompts = {
 table_schemas = {
     "it": {
         "general_info": InformazioniBase,
+        "general_info_kid_governance": InformazioniBaseKidGov,
+        "is_product_complex": IsDisclaimerThere,
         "performance": TabellaScenariPerformance,
+        "performance_abs": ScenariPerformanceAbsoluteEuro,
         "performance_credem": TabellaScenariPerformanceCredem,
         "riy": TabellaRiy,
         "costi_ingresso": TabellaCostiIngresso,
         "costi_gestione": TabellaCostiGestione,
         "general_info_gkid": InformazioniBaseGkid,
-        "performance-gkid": TabellaScenariPerformanceGkid,
         "riy%/-gkid": TabellaRiyPercGkid,
         "riy€-gkid": TabellaRiyEurGkid,
         "costi_ingresso_gkid": TabellaCostiIngressoGkid,

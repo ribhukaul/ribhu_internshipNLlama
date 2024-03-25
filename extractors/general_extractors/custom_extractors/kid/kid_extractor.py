@@ -41,7 +41,7 @@ class KidExtractor(Extractor):
             ]
         )
 
-    def extract_general_data(self):
+    def extract_general_data(self, general_info_schema="general_info"):
         """
         Extract general data from the document. Namely RHP and SRI.
 
@@ -50,7 +50,7 @@ class KidExtractor(Extractor):
         """
         try:
             # extract and clean
-            extraction = llm_extraction_and_tag(self.text, self.language, "general_info", self.file_id)
+            extraction = llm_extraction_and_tag(self.text, self.language, general_info_schema, self.file_id)
             extraction = clean_response_regex("general_info", self.language, extraction)
             extraction = dict(extraction)
 
@@ -87,7 +87,7 @@ class KidExtractor(Extractor):
         isin = re.search(r"[A-Z]{2}[A-Z0-9]{9}\d", to_search)
         return isin.group(0) if isin else "-"
     
-    def extract_market(self, market_type="market"):
+    def extract_market(self, market_type="target_market"):
         """extracts market from the document
 
         Args:

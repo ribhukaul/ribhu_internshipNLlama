@@ -1,0 +1,145 @@
+"""
+This file contains the tags used to extract the data from the KID and GKID documents.
+"""
+
+from typing import List
+
+from pydantic import BaseModel, Field
+
+NF = "not found"
+NA = "N/A"
+
+
+#######
+# KID #
+#######
+class InformazioniBase(BaseModel):
+    indicatore_sintetico_rischio: int = Field(NF, description="Indicatore Sintetico di Rischio")
+    periodo_detenzione_raccomandato: str = Field(NF, description="periodo di detenzione raccomandato in anni")
+    date: str = Field(NF, description="data di realizzazione del documento")
+
+
+class TabellaScenariPerformance(BaseModel):
+    stress_return: str = Field(NF, description="Rendimento percetuale(%) o '-' 1 anno scenario di stress")
+    sfavorevole_return: str = Field(NF, description="Rendimento percentuale(%) o '-'  a 1 anno scenario sfavorevole ")
+    moderato_return: str = Field(NF, description="Rendimento percentuale(%) o '-'  1 anno scenario moderato")
+    favorable_return: str = Field(NF, description="Rendimento percentuale(%) o '-'  a 1 anno scenario favorevole")
+    stress_return_rhp: str = Field(NF, description="Rendimento percetuale(%) a RHP anni scenario di stress")
+    sfavorevole_return_rhp: str = Field(NF, description="Rendimento percentuale(%) a RHP anni scenario sfavorevole")
+    moderato_return_rhp: str = Field(NF, description="Rendimento percentuale(%) a RHP anni scenario moderato")
+    favorable_return_rhp: str = Field(NF, description="Rendimento percentuale(%) a RHP anni scenario favorevole")
+    scenario_morte_1: str = Field(NF, description="scenario morte o decesso, Valore in euro(€) o '-'  a 1 anno scenario moderato")
+    scenario_morte_rhp: str = Field(NF, description="scenario morte o decesso, Valore in euro(€) a RHP anni scenario moderato")
+
+class ScenariPerformanceAbsoluteEuro(BaseModel):
+    stress_amount: str = Field(NF, description="Ammontare in € o '-' 1 anno scenario di stress")
+    sfavorevole_amount: str = Field(NF, description="Ammontare in € o '-'  a 1 anno scenario sfavorevole ")
+    moderato_amount: str = Field(NF, description="Ammontare in € o '-'  1 anno scenario moderato")
+    favorable_amount: str = Field(NF, description="Ammontare in € o '-'  a 1 anno scenario favorevole")
+    stress_amount_rhp: str = Field(NF, description="Ammontare in € a RHP anni scenario di stress")
+    sfavorevole_amount_rhp: str = Field(NF, description="Ammontare in € a RHP anni scenario sfavorevole")
+    moderato_amount_rhp: str = Field(NF, description="Ammontare in € a RHP anni scenario moderato")
+    favorable_amount_rhp: str = Field(NF, description="Ammontare in € a RHP anni scenario favorevole")
+
+
+class TabellaRiy(BaseModel):
+    # 1 ANNO
+    incidenza_costo_1: str = Field(
+        NF, description="Impatto sul rendimento annuale dei costi in caso di uscida dopo 1 anno in PERCENTUALE%"
+    )
+    # RHP
+    incidenza_costo_rhp: str = Field(
+        NF, description="Impatto sul rendimento annuale dei costi in caso di uscida dopo RHP anni in PERCENTUALE%"
+    )
+
+
+class TabellaCostiIngresso(BaseModel):
+    costi_ingresso: str = Field(
+        NF, description="Costi di ingresso in PERCENTUALE %(nella colonna più a destra, può essere n/a)"
+    )
+    costi_uscita: str = Field(
+        NF, description="Costi di uscita in PERCENTUALE %(nella colonna più a destra, può essere n/a)"
+    )
+
+
+class TabellaCostiGestione(BaseModel):
+    commissione_gestione: str = Field(NF, description="Commissioni di gestione in PERCENTUALE % (colonna di destra)")
+    commissione_transazione: str = Field(NF, description="Costi di transazione in PERCENTUALE % (colonna di destra)")
+    commissione_performance: str = Field(
+        NF, description="Commissioni di performance IN PERCENTUALE % (colonna a destra)"
+    )
+
+
+########
+# GKID #
+########
+
+
+
+### ENGLISH
+class PerformanceScenarios(BaseModel):
+    # 1 Year
+    stress_return: str = Field(NF, description="1-year stress scenario percentage return")
+    # stress_valore: str = Field(NF, description="1-year stress scenario monetary value")
+    sfavorevole_return: str = Field(NF, description="Unfavorable scenario percentage return")
+    # sfavorevole_valore: str = Field(NF, description="Unfavorable scenario 1-year monetary value")
+    moderato_return: str = Field(NF, description="Moderate scenario percentage return")
+    moderato_valore: str = Field(NF, description="Moderate scenario 1-year monetary value")
+    favorable_return: str = Field(NF, description="Favorable scenario percentage return")
+    # favorable_valore: str = Field(NF, description="Favorable scenario 1-year monetary value")
+
+    # RHP (presumably referring to Risk-Adjusted Horizon Period)
+    stress_return_rhp: str = Field(NF, description="RHP stress scenario percentage return")
+    # stress_valore_rhp: str = Field(NF, description="RHP stress scenario monetary value")
+    sfavorevole_return_rhp: str = Field(NF, description="RHP unfavorable scenario percentage return")
+    # sfavorevole_valore_rhp: str = Field(NF, description="RHP unfavorable scenario monetary value")
+    moderato_return_rhp: str = Field(NF, description="RHP moderate scenario percentage return")
+    moderato_valore_rhp: str = Field(NF, description="RHP moderate scenario monetary value")
+    favorable_return_rhp: str = Field(NF, description="RHP favorable scenario percentage return")
+    favorable_valore_rhp: str = Field(NF, description="RHP favorable scenario monetary value")
+
+
+class TableRiy(BaseModel):
+    # 1 Year
+    costo_1: str = Field(NF, description="Cost after 1 year")
+    incidenza_costo_1: str = Field(NF, description="Cost incidence in percentage after 1 year")
+    # RHP
+    costo_thp: str = Field(NF, description="Cost after RHP years")
+    incidenza_costo_rhp: str = Field(NF, description="Cost incidence in percentage after 1 year")
+    costo_3: str = Field(NF, description="Cost after RHP years")
+
+
+
+### ENGLISH
+class PerformanceScenarios(BaseModel):
+    # 1 Year
+    stress_return: str = Field(NF, description="1-year stress scenario percentage return")
+    # stress_valore: str = Field(NF, description="1-year stress scenario monetary value")
+    sfavorevole_return: str = Field(NF, description="Unfavorable scenario percentage return")
+    # sfavorevole_valore: str = Field(NF, description="Unfavorable scenario 1-year monetary value")
+    moderato_return: str = Field(NF, description="Moderate scenario percentage return")
+    moderato_valore: str = Field(NF, description="Moderate scenario 1-year monetary value")
+    favorable_return: str = Field(NF, description="Favorable scenario percentage return")
+    # favorable_valore: str = Field(NF, description="Favorable scenario 1-year monetary value")
+
+    # RHP (presumably referring to Risk-Adjusted Horizon Period)
+    stress_return_rhp: str = Field(NF, description="RHP stress scenario percentage return")
+    # stress_valore_rhp: str = Field(NF, description="RHP stress scenario monetary value")
+    sfavorevole_return_rhp: str = Field(NF, description="RHP unfavorable scenario percentage return")
+    # sfavorevole_valore_rhp: str = Field(NF, description="RHP unfavorable scenario monetary value")
+    moderato_return_rhp: str = Field(NF, description="RHP moderate scenario percentage return")
+    moderato_valore_rhp: str = Field(NF, description="RHP moderate scenario monetary value")
+    favorable_return_rhp: str = Field(NF, description="RHP favorable scenario percentage return")
+    favorable_valore_rhp: str = Field(NF, description="RHP favorable scenario monetary value")
+
+
+class TableRiy(BaseModel):
+    # 1 Year
+    costo_1: str = Field(NF, description="Cost after 1 year")
+    incidenza_costo_1: str = Field(NF, description="Cost incidence in percentage after 1 year")
+    # RHP
+    costo_thp: str = Field(NF, description="Cost after RHP years")
+    incidenza_costo_rhp: str = Field(NF, description="Cost incidence in percentage after 1 year")
+    costo_3: str = Field(NF, description="Cost after RHP years")
+
+    

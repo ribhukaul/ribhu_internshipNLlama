@@ -2,15 +2,32 @@ import os
 
 from extractors.models import Models
 from extractors.general_extractors.custom_extractors.kid.kid_extractor import KidExtractor
+from extractors.general_extractors.llm_functions import llm_extraction_and_tag, tag_only
+from extractors.general_extractors.config.prompt_config import IsDisclaimerThere
 
 
-class WamInsuranceKidExtractor(KidExtractor):
+class WamInsuranceKidGovernanceExtractor(KidExtractor):
 
     def __init__(self, doc_path) -> None:
         self.doc_path = doc_path
         super().__init__(doc_path, "it")
 
-        
+    def is_product_complex(self):
+        """extracts if the product is complex
+
+        Returns:
+            dict(): extracted data
+        """
+        try:
+            #extraction = llm_extraction_and_tag(self.text, self.language, 'is_product_complex', self.file_id, specific_page=0)
+            
+            extraction = Models.tag(self.text[0].page_content[:1800], IsDisclaimerThere, self.file_id)
+            
+            return dict(extraction)
+        except Exception as error:
+            print("is_product_complex error" + repr(error))
+            return dict([("ERROR", "ERROR")])
+    
     def process(self):
         """main processor in different phases, first phases extracts the tables and general information,
         and target market, second phase extracts the rest of the fields.
@@ -24,13 +41,15 @@ class WamInsuranceKidExtractor(KidExtractor):
             functions_parameters = {
                 "tables": {"function":self.get_tables}, 
                 "basic_information": {"function":self.extract_general_data},
-                "market": {"function":self.extract_market}
+                #"is_product_complex": {"function":self.is_product_complex},
+                "target_market": {"function":self.extract_market}
                 }
             results = self.threader(functions_parameters)
 
             tables = results["tables"]
             basic_information = results["basic_information"]
-            market = results["market"]
+            market = results["target_market"]
+            # is_product_complex = self.is_product_complex()
 
         except Exception as error:
             print("first stage error" + repr(error))
@@ -42,22 +61,34 @@ class WamInsuranceKidExtractor(KidExtractor):
                 "costs": {"function":self.extract_entryexit_costs, "args":{"table":tables["costi_ingresso"]}},
                 "management_costs": {"function":self.extract_management_costs, "args": {"table":tables["costi_gestione"]}},
                 "performance": {"function":self.extract_performances, "args":{"table":tables["performance"]}}
+                #"performance_abs": {"fucntion": self.extract_performances_abs, "args": {"table": tables["performance"], "rhp": self.rhp}},
                 }
             results = self.threader(functions_parameters)
             riy = results["riy"]
             exit_entry_costs = results["costs"]
             management_costs = results["management_costs"]
             performance = results["performance"]       
+            #performance_abs = results["performance_abs"]
 
         except Exception as error:
             print("second stage error" + repr(error))
 
         try:
             
-            # REVIEW: what name do they need?
+            #     # REVIEW: what name do they need?
             filename = os.path.splitext(os.path.basename(self.doc_path))[0]
 
             api_costs = self._process_costs()
+
+            # test = {
+            #     **dict(basic_information),
+            #     **dict(performance_abs),
+            #     # **dict(riy),
+            #     # **dict(exit_entry_costs),
+            #     # **dict(management_costs),
+            #     # **dict(market),
+            #     # "api_costs": api_costs,
+            # }
 
             complete = self.create_output(
                 "waminsurance",
@@ -79,8 +110,8 @@ class WamInsuranceKidExtractor(KidExtractor):
             filename = os.path.splitext(os.path.basename(self.doc_path))[0]
             complete = dict([(filename), dict()])
 
-        print(complete)
+        # print(complete)
         Models.clear_resources_file(filename)
 
-        return complete
+        return complete#test
 

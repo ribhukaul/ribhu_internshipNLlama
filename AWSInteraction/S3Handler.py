@@ -43,7 +43,7 @@ class S3ExtractionHandler:
         if download_path == "":
             # get file extension
             extension = file_key.split('.')[-1]
-            file_name = str(uuid.uuid4()) + extension
+            file_name = str(uuid.uuid4()) + '.' + extension
             download_path = os.path.join(self.download_folder, file_name)
         try:
             self.s3.download_file(self.bucket, file_key, download_path)
