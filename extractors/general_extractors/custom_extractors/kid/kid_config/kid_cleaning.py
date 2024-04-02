@@ -79,6 +79,28 @@ regex_cleaning = {
             "stress_return_rhp": REGEX_NUMBERS_COMMA,
             "scenario_morte_1": "",
             "scenario_morte_rhp": "",
+
+        },
+        "performance_abs": {
+            'stress_amount':REGEX_NUMBERS_COMMA,
+            'sfavorevole_amount':REGEX_NUMBERS_COMMA,
+            'moderato_amount':REGEX_NUMBERS_COMMA,
+            'favorable_amount':REGEX_NUMBERS_COMMA,
+            'stress_amount_rhp':REGEX_NUMBERS_COMMA,
+            'sfavorevole_amount_rhp':REGEX_NUMBERS_COMMA,
+            'moderato_amount_rhp':REGEX_NUMBERS_COMMA,
+            'favorable_amount_rhp':REGEX_NUMBERS_COMMA,
+        },
+        "performance_rhp_2": {
+            'stress_amount_x':REGEX_NUMBERS_COMMA,
+            'sfavorevole_amount_x':REGEX_NUMBERS_COMMA,
+            'moderato_amount_x':REGEX_NUMBERS_COMMA,
+            'favorable_amount_x':REGEX_NUMBERS_COMMA,
+            # 'stress_return_x':REGEX_NUMBERS_COMMA,
+            # 'sfavorevole_return_x':REGEX_NUMBERS_COMMA,
+            # 'moderato_return_x':REGEX_NUMBERS_COMMA,
+            # 'favorable_return_x':REGEX_NUMBERS_COMMA,
+            'scenario_morte_x':REGEX_NUMBERS_COMMA,
         },
         "performance_morte": {
             "scenario_morte_1": REGEX_NUMBERS_COMMA,
@@ -89,8 +111,12 @@ regex_cleaning = {
             "date": REGEX_DATE,
         },
         "riy": {
-            "incidenza_costo_1": REGEX_NUMBERS_COMMA,
-            "incidenza_costo_rhp": REGEX_NUMBERS_COMMA,
+            "incidenza_costo_perc_1year": REGEX_NUMBERS_COMMA,
+            "incidenza_costo_perc_rhp": REGEX_NUMBERS_COMMA,
+            "incidenza_costo_perc_xyear": REGEX_NUMBERS_COMMA,
+            "costi_totali_eur_xyear": REGEX_NUMBERS_COMMA,
+            "costi_totali_eur_rhp": REGEX_NUMBERS_COMMA,
+            "costi_totali_eur_1year": REGEX_NUMBERS_COMMA,
         },
         "costi_ingresso": {
             "costi_ingresso": REGEX_NUMBERS_COMMA,
