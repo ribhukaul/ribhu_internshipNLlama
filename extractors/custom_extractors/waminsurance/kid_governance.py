@@ -69,7 +69,7 @@ class WamInsuranceKidGovernanceExtractor(KidExtractor):
   
             complete = self.create_output(
                 "waminsurance",
-                "kid_governance",
+                "kidgovernance",
                 {
                     "file_name": filename,
                     **dict(basic_information),
