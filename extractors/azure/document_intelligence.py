@@ -4,13 +4,14 @@ from azure.ai.documentintelligence import DocumentIntelligenceClient
 from azure.core.credentials import AzureKeyCredential
 
 from extractors.general_extractors.utils import format_pages_num
+ #from azure.ai.formrecognizer import DocumentAnalysisClient
 
 # Will need authentication for prod app
 # https://medium.com/@tophamcherie/using-python-to-programmatically-authenticate-to-azure-use-resources-6997ff326fb6
 
 
 def analyze_general_documents(
-    doc_path, specific_pages=None, language="it", api_version="2023-10-31-preview", query_list=None
+    doc_path, specific_pages=None, language="it", api_version="2024-02-29-preview", query_list=None
 ):
     """Analyze a document with the Azure Form Recognizer API.
 
@@ -37,6 +38,7 @@ def analyze_general_documents(
     document_analysis_client = DocumentIntelligenceClient(
         endpoint=endpoint, credential=AzureKeyCredential(key), api_version=api_version
     )
+    #document_analysis_client = DocumentAnalysisClient(endpoint, AzureKeyCredential(key), api_version=api_version)
     features_chosen = ["ocrHighResolution"]
     if query_list is not None:
         features_chosen.append("queryFields")
@@ -85,7 +87,7 @@ def table_json_to_df(json_data):
 
 
 def get_tables_from_doc(
-    doc_path, specific_pages=None, language="it", api_version="2023-10-31-preview", query_list=None
+    doc_path, specific_pages=None, language="it", api_version="2024-02-29-preview", query_list=None
 ):
     """Get tables from a document, can be used generally to save, or directly for query_list, in that case, return query_list also
 
