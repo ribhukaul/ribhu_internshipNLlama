@@ -8,7 +8,8 @@ from ...llm_functions import (
     llm_extraction_and_tag,
 )
 from .kid_utils import clean_response_regex, clean_response_strips
-
+from extractors.general_extractors.config.prompt_config import IsDisclaimerThere
+from extractors.general_extractors.config.prompt_config import prompts, table_schemas, word_representation
 
 class KidExtractor(Extractor):
 
@@ -26,6 +27,8 @@ class KidExtractor(Extractor):
             performance_table,_ = self._extract_table("performance")
             costi_ingresso_table,_ = self._extract_table("costi_ingresso", black_list_pages=[0])
             costi_gestione_table,_ = self._extract_table("costi_gestione")
+            #riy, _ = self._extract_table("riy", black_list_pages=[0])
+            
         except Exception as error:
             print("calc table error" + repr(error))
             error_list = [performance_table, costi_ingresso_table, costi_gestione_table]
@@ -86,6 +89,22 @@ class KidExtractor(Extractor):
         to_search = self.text[0].page_content[20:1600]
         isin = re.search(r"[A-Z]{2}[A-Z0-9]{9}\d", to_search)
         return isin.group(0) if isin else "-"
+    
+    def is_product_complex(self):
+        """extracts if the product is complex
+
+        Returns:
+            dict(): extracted data
+        """
+        try:
+            #extraction = llm_extraction_and_tag(self.text, self.language, 'is_product_complex', self.file_id, specific_page=0)
+            
+            extraction = Models.tag(self.text[0].page_content[:1800], IsDisclaimerThere, self.file_id)
+            
+            return dict(extraction)
+        except Exception as error:
+            print("is_product_complex error" + repr(error))
+            return dict([("ERROR", "ERROR")])
     
     def extract_market(self, market_type="target_market"):
         """extracts market from the document

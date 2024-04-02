@@ -12,21 +12,6 @@ class WamInsuranceKidGovernanceExtractor(KidExtractor):
         self.doc_path = doc_path
         super().__init__(doc_path, "it")
 
-    def is_product_complex(self):
-        """extracts if the product is complex
-
-        Returns:
-            dict(): extracted data
-        """
-        try:
-            #extraction = llm_extraction_and_tag(self.text, self.language, 'is_product_complex', self.file_id, specific_page=0)
-            
-            extraction = Models.tag(self.text[0].page_content[:1800], IsDisclaimerThere, self.file_id)
-            
-            return dict(extraction)
-        except Exception as error:
-            print("is_product_complex error" + repr(error))
-            return dict([("ERROR", "ERROR")])
     
     def process(self):
         """main processor in different phases, first phases extracts the tables and general information,
@@ -41,7 +26,7 @@ class WamInsuranceKidGovernanceExtractor(KidExtractor):
             functions_parameters = {
                 "tables": {"function":self.get_tables}, 
                 "basic_information": {"function":self.extract_general_data},
-                #"is_product_complex": {"function":self.is_product_complex},
+                "is_product_complex": {"function":self.is_product_complex},
                 "target_market": {"function":self.extract_market}
                 }
             results = self.threader(functions_parameters)
@@ -49,7 +34,7 @@ class WamInsuranceKidGovernanceExtractor(KidExtractor):
             tables = results["tables"]
             basic_information = results["basic_information"]
             market = results["target_market"]
-            # is_product_complex = self.is_product_complex()
+            is_product_complex = results["is_product_complex"]
 
         except Exception as error:
             print("first stage error" + repr(error))
