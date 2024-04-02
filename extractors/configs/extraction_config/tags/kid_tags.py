@@ -44,13 +44,46 @@ class ScenariPerformanceAbsoluteEuro(BaseModel):
 
 class TabellaRiy(BaseModel):
     # 1 ANNO
-    incidenza_costo_1: str = Field(
+    incidenza_costo_perc_1year: Optional[str] = Field(
         NF, description="Impatto sul rendimento annuale dei costi in caso di uscida dopo 1 anno in PERCENTUALE%"
     )
+    costi_totali_eur_1year: Optional[str] = Field(
+        NF, description="Costi totali dopo 1 anno in EURO €"
+    )
     # RHP
-    incidenza_costo_rhp: str = Field(
+    incidenza_costo_perc_rhp: str = Field(
         NF, description="Impatto sul rendimento annuale dei costi in caso di uscida dopo RHP anni in PERCENTUALE%"
     )
+    costi_totali_eur_rhp: float = Field(
+        NF, description="Costi totali dopo RHP anni in EURO €"
+    )
+
+
+class TabellaRiyRHP2(BaseModel):
+    # 1 YEAR
+    incidenza_costo_perc_1year: Optional[str] = Field(
+        NF, description="Impatto sul rendimento annuale dei costi in caso di uscida dopo 1 anno in PERCENTUALE%"
+    )
+    costi_totali_eur_1year: Optional[str] = Field(
+        NF, description="Costi totali dopo 1 anno in EURO €"
+    )
+    # RHP/2
+    incidenza_costo_perc_xyear: str = Field(
+        NF, description="Impatto sul rendimento annuale dei costi in caso di uscida dopo X anni in PERCENTUALE%"
+    )
+    costi_totali_eur_xyear: float = Field(
+        NF, description="Costi totali dopo X anni in EURO €"
+    )
+    # RHP
+    incidenza_costo_perc_rhp: str = Field(
+        NF, description="Impatto sul rendimento annuale dei costi in caso di uscida dopo RHP anni in PERCENTUALE%"
+    )
+
+    costi_totali_eur_rhp: float = Field(
+        NF, description="Costi totali dopo RHP anni in EURO €"
+    )
+
+
 
 
 class TabellaCostiIngresso(BaseModel):

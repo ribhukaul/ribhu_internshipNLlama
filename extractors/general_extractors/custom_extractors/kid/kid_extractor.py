@@ -3,13 +3,17 @@ import re
 
 from ...llm_functions import complex_table_inspection, general_table_inspection, llm_extraction, tag_only
 from ...extractor import Extractor
-
+from extractors.models import Models
+from extractors.general_extractors.utils import upload_df_as_excel
 from ...llm_functions import (
     llm_extraction_and_tag,
 )
 from .kid_utils import clean_response_regex, clean_response_strips
+from math import ceil
+from extractors.general_extractors.utils import select_desired_page
 from extractors.general_extractors.config.prompt_config import IsDisclaimerThere
 from extractors.general_extractors.config.prompt_config import prompts, table_schemas, word_representation
+from extractors.configs.extraction_config.prompts.kid_prompts import performance_rhp_2, performance_abs
 
 class KidExtractor(Extractor):
 
@@ -51,6 +55,7 @@ class KidExtractor(Extractor):
 
         Returns: dict(): data extracted
         """
+        extraction = dict()
         try:
             # extract and clean
             extraction = llm_extraction_and_tag(self.text, self.language, general_info_schema, self.file_id)
@@ -98,7 +103,6 @@ class KidExtractor(Extractor):
         """
         try:
             #extraction = llm_extraction_and_tag(self.text, self.language, 'is_product_complex', self.file_id, specific_page=0)
-            
             extraction = Models.tag(self.text[0].page_content[:1800], IsDisclaimerThere, self.file_id)
             
             return dict(extraction)
@@ -130,26 +134,67 @@ class KidExtractor(Extractor):
         market = dict([("target_market", market)])
         return market
 
-    #REVIEW: NEED TO UPLOAD TABLE AS DF
-    def extract_riy(self, page=1):
+    # OLD METHOD
+    # def extract_riy(self, page=1):
+    #     """extracts riy from the document
+
+    #     Returns:
+    #         dict(): riy extracted
+    #     """
+    #     try:
+    #         # Select page with RIY
+    #         extraction_riy = tag_only(self.text[page:], "riy", self.language, self.file_id, rhp=self.rhp)
+    #         extraction_riy = clean_response_regex("riy", self.language, extraction_riy)
+    #     except Exception as error:
+    #         print("extract riy error" + repr(error))
+    #         error_list = ["incidenza_costo_1", "incidenza_costo_rhp"]
+
+    #         extraction_riy = {
+    #             key: (extraction_riy[key] if extraction_riy.get(key) is not None else "ERROR") for key in error_list
+    #         }
+
+    #     return extraction_riy
+    
+    def extract_riy(self):
         """extracts riy from the document
 
         Returns:
             dict(): riy extracted
         """
         try:
-            # Select page with RIY
-            extraction_riy = tag_only(self.text[page:], "riy", self.language, self.file_id, rhp=self.rhp)
+            rhp = int(self.rhp)
+            schema = table_schemas['it']['riy']
+            # Set starting page & select desired page
+            strat_page = 0 if len(self.text) < 3 else 1
+            keywords = word_representation['it']['riy']
+            reference_text = self.text[strat_page:]
+            page = select_desired_page(reference_text, keywords)
+            page = reference_text[int(page)]
+            
+            # If RHP >=10 we also need to get the values at RHP/2
+            if rhp is not None and rhp >=10:
+                year = ceil(rhp/2)
+                prompt = prompts['it']['riy_rhp2']
+                schema = table_schemas['it']['riy_rhp2']             
+                total_prompt = prompt.format(year, rhp, page.page_content)
+                extraction_riy = Models.tag(total_prompt, schema, self.file_id)         
+            else:
+                prompt = prompts['it']['riy']
+                total_prompt = prompt.format(rhp, page.page_content)
+                extraction_riy = Models.tag(total_prompt, schema, self.file_id)
+
+            # Clean response
             extraction_riy = clean_response_regex("riy", self.language, extraction_riy)
+            
         except Exception as error:
             print("extract riy error" + repr(error))
-            error_list = ["incidenza_costo_1", "incidenza_costo_rhp"]
-
-            extraction_riy = {
-                key: (extraction_riy[key] if extraction_riy.get(key) is not None else "ERROR") for key in error_list
+            error_list = [k for k in schema.schema()['properties'].keys()]
+            performance = {
+                key: (performance[key] if performance.get(key) is not None else "ERROR") for key in error_list
             }
-
+    
         return extraction_riy
+    
 
     #REVIEW: NEED TO UPLOAD TABLE AS DF
     def extract_entryexit_costs(self, table):

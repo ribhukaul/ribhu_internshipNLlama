@@ -19,7 +19,7 @@ from extractors.general_extractors.custom_extractors.certificates.certificates_c
 
 #KID
 from extractors.configs.extraction_config.tags.kid_tags import (
-    InformazioniBase, TabellaScenariPerformance, TabellaRiy, TabellaCostiIngresso, TabellaCostiGestione, PerformanceScenarios, TableRiy,
+    InformazioniBase, TabellaScenariPerformance, TabellaRiy,TabellaRiyRHP2, TabellaCostiIngresso, TabellaCostiGestione, PerformanceScenarios, TableRiy,
     ScenariPerformanceAbsoluteEuro)
 #GKID
 from extractors.configs.extraction_config.tags.gkid_tags import (
@@ -84,6 +84,17 @@ prompts = {
 
             DOCUMENTO:
             {context}""",
+        "riy_rhp2": """La prima cifra (sia per i costi totali che per incidenza annuale dei costi) riguarda 1 anno, poi X anni e infine RHP anni.
+                Se ne manca 1, manca quello a 1 anno (in tal caso è rimpiazzato da un trattino (-))
+                #####
+                Considera che X={}anni, RHP={}anni, 
+                ####
+                DOCUMENT={}""",
+        "riy": """La prima cifra (sia per i costi totali che per incidenza annuale dei costi) riguarda 1 anno e poi RHP anni.
+                ###
+                RHP={}
+                ###
+                DOCUMENT={}""",
         "general_info_gkid": """Dal documento seguente, estrai
             - Periodo di detenzione raccomandato 
             - indicatore sintetico di rischio minimo o peggiore(da:)(il primo)
@@ -302,6 +313,7 @@ table_schemas = {
         "performance_abs": ScenariPerformanceAbsoluteEuro,
         "performance_credem": TabellaScenariPerformanceCredem,
         "riy": TabellaRiy,
+        "riy_rhp2": TabellaRiyRHP2,
         "costi_ingresso": TabellaCostiIngresso,
         "costi_gestione": TabellaCostiGestione,
         "general_info_gkid": InformazioniBaseGkid,

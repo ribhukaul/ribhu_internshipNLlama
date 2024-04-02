@@ -42,7 +42,7 @@ class WamInsuranceKidGovernanceExtractor(KidExtractor):
         # SECOND STAGE: extract RIY, costs, commissions and performances
         try:
             functions_parameters = {
-                "riy": {"function":self.extract_riy}, 
+                "riy": {"function":self.extract_riy},
                 "costs": {"function":self.extract_entryexit_costs, "args":{"table":tables["costi_ingresso"]}},
                 "management_costs": {"function":self.extract_management_costs, "args": {"table":tables["costi_gestione"]}},
                 "performance": {"function":self.extract_performances, "args":{"table":tables["performance"]}}
@@ -65,16 +65,7 @@ class WamInsuranceKidGovernanceExtractor(KidExtractor):
 
             api_costs = self._process_costs()
 
-            # test = {
-            #     **dict(basic_information),
-            #     **dict(performance_abs),
-            #     # **dict(riy),
-            #     # **dict(exit_entry_costs),
-            #     # **dict(management_costs),
-            #     # **dict(market),
-            #     # "api_costs": api_costs,
-            # }
-
+  
             complete = self.create_output(
                 "waminsurance",
                 "kid",
@@ -98,5 +89,5 @@ class WamInsuranceKidGovernanceExtractor(KidExtractor):
         # print(complete)
         Models.clear_resources_file(filename)
 
-        return complete#test
+        return complete
 

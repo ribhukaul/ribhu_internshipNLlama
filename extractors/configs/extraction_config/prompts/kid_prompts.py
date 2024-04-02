@@ -5,6 +5,9 @@ general_info = """Dal documento seguente, estrai
             DOCUMENTO:
             {context}"""
 
+is_product_complex = """Nel documento seguente è presente il disclaimer: 'State per acquistare un prodotto che non è semplice e può essere di difficile comprensione'?
+            DOCUMENTO:{context}"""
+
 performance1y = """"Considerando la seguente tabella,estrai qual'è il rendimento percentuale dei seguenti scenari:
             - STRESS
             - SFAVOREVOLE
