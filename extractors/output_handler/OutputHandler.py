@@ -88,9 +88,10 @@ class OutputHandler:
 
     config_selector = {
         "waminsurance": {
-            "kid": kid.kid,
+            "kidgovernance": kidgovernance.kid,
             "kidcredem": kidcredem.kidcredem,
-            "gkid": gkid.gkid,
+            "kidmodule": kidmodule.kid,
+            "gkidgovernance": gkidgovernance.gkid,
             },
         "wamderivati": {
             "complexity": complexity.complexity,
