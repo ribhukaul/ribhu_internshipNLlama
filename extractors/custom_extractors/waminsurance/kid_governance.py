@@ -33,7 +33,7 @@ class WamInsuranceKidGovernanceExtractor(KidExtractor):
 
             tables = results["tables"]
             basic_information = results["basic_information"]
-            market = results["target_market"]
+            target_market = results["target_market"]
             is_product_complex = results["is_product_complex"]
 
         except Exception as error:
@@ -45,26 +45,27 @@ class WamInsuranceKidGovernanceExtractor(KidExtractor):
                 "riy": {"function":self.extract_riy},
                 "costs": {"function":self.extract_entryexit_costs, "args":{"table":tables["costi_ingresso"]}},
                 "management_costs": {"function":self.extract_management_costs, "args": {"table":tables["costi_gestione"]}},
-                "performance": {"function":self.extract_performances, "args":{"table":tables["performance"]}}
-                #"performance_abs": {"fucntion": self.extract_performances_abs, "args": {"table": tables["performance"], "rhp": self.rhp}},
+                "performance": {"function":self.extract_performances, "args":{"table":tables["performance"]}},
+                "performance_abs": {"function": self.extract_performances_abs, "args": {"table": tables["performance"], "rhp": self.rhp}},
+                "performance_rhp2": {"function": self.extract_performances_rhp_2, "args": {"table": tables["performance"], "rhp": self.rhp}},
                 }
             results = self.threader(functions_parameters)
             riy = results["riy"]
             exit_entry_costs = results["costs"]
             management_costs = results["management_costs"]
             performance = results["performance"]       
-            #performance_abs = results["performance_abs"]
+            performance_abs = results["performance_abs"]
+            performance_rhp2 = results["performance_rhp2"]
+            
 
         except Exception as error:
             print("second stage error" + repr(error))
 
         try:
-            
             #     # REVIEW: what name do they need?
             filename = os.path.splitext(os.path.basename(self.doc_path))[0]
 
             api_costs = self._process_costs()
-
   
             complete = self.create_output(
                 "waminsurance",
@@ -72,11 +73,14 @@ class WamInsuranceKidGovernanceExtractor(KidExtractor):
                 {
                     "file_name": filename,
                     **dict(basic_information),
+                    **dict(is_product_complex),
                     **dict(performance),
+                    **dict(performance_rhp2),
+                    **dict(performance_abs),
                     **dict(riy),
                     **dict(exit_entry_costs),
                     **dict(management_costs),
-                    **dict(market),
+                    **dict(target_market),
                     "api_costs": api_costs,
                 }
             )

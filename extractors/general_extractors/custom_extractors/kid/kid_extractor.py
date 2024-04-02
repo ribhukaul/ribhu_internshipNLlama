@@ -287,6 +287,123 @@ class KidExtractor(Extractor):
 
         return performance
 
+    def extract_performances_abs(self, table, rhp):
+        """extracts performances from scenarios in the document
+
+        Args:
+            table (pandas.dataframe): table containing the performances
+
+        Returns:
+            dict(): dict containing the performances
+        """
+        performance = dict()
+        try:
+            schema = table_schemas['it']['performance_abs']
+            # eliminate the row where 'minimo' is mentioned
+            # SOlo per il primo valore in cui minimo è presente
+            table = table[~table.iloc[:, 0].str.contains('caso vita', case=False, na=False)]
+            table = table[~table.iloc[:, 0].str.contains('importo investito nel tempo', case=False, na=False)]
+            table = table.drop(table.iloc[:, 0].str.contains('minimo', case=False, na=False).idxmax())
+            table = table[~table.iloc[:, 0].str.contains('scenario di morte', case=False, na=False)]
+            table = table[~table.iloc[:, 0].str.contains('decesso dell\'assicurato', case=False, na=False)]
+
+            table = table.reset_index(drop=True)
+            # Fill row names where empty
+            table = self.__adjust_performance_table(table, 'stress')
+            table = self.__adjust_performance_table(table, 'sfavorevole')
+            table = self.__adjust_performance_table(table, 'moderato')
+            table = self.__adjust_performance_table(table, 'favorevole')
+
+            table_upload = upload_df_as_excel(table)
+
+            if rhp is None:
+                adapt_extraction = "CONSIDERA 1 ANNO , EXTRACTION={}".format(table_upload)
+            else:
+                adapt_extraction = performance_abs.format(rhp=rhp, context=table_upload)
+
+            # Extract performances                        
+            performance_abs_res = Models.tag(adapt_extraction, schema, self.file_id)
+            performance_abs_res = clean_response_regex("performance_abs", self.language, performance_abs_res)
+
+        except Exception as error:
+            print("extract performances error" + repr(error))
+            error_list = [k for k in schema.schema()['properties'].keys()]
+            performance_abs_res = {
+                key: (performance[key] if performance.get(key) is not None else "ERROR") for key in error_list
+            }
+
+        return performance_abs_res
+
+    def extract_performances_rhp_2(self, table, rhp):
+            """extracts performances from scenarios in the document
+
+            Args:
+                table (pandas.dataframe): table containing the performances
+
+            Returns:
+                dict(): dict containing the performances
+            """
+            performance_rhp_2_res = dict()
+            try:
+                rhp= int(rhp)
+                schema = table_schemas['it']['performance_rhp_2']
+                if rhp is not None and rhp >=10:
+                    year = ceil(rhp/2)
+                    
+                    # Adjust table
+                    table = table[~table.iloc[:, 0].str.contains('caso vita', case=False, na=False)]
+                    table = table[~table.iloc[:, 0].str.contains('importo investito nel tempo', case=False, na=False)]
+                    # Drop the FIRST row where 'minimo' is mentioned
+                    table = table.drop(table.iloc[:, 0].str.contains('minimo', case=False, na=False).idxmax())
+                    # Drop last col (used for RHP's values)
+                    table = table.iloc[:, :-1]
+
+                    # Fill row names where empty
+                    table = table.reset_index(drop=True)
+                    table = self.__adjust_performance_table(table, 'stress')
+                    table = self.__adjust_performance_table(table, 'sfavorevole')
+                    table = self.__adjust_performance_table(table, 'moderato')
+                    table = self.__adjust_performance_table(table, 'favorevole')
+
+                    # Get table from excel & create prompt
+                    table_upload = upload_df_as_excel(table)
+                    adapt_extraction = performance_rhp_2.format(year=year, context=table_upload)
+                    # Tagging
+                    performance_rhp_2_res = Models.tag(adapt_extraction, schema, self.file_id)
+                    performance_rhp_2_res = clean_response_regex("performance_rhp_2", self.language, performance_rhp_2_res)
+                else:
+                    performance_rhp_2_res = dict()
+                    for k in schema.schema()['properties'].keys():
+                        performance_rhp_2_res[k] = ""
+
+            except Exception as error:
+                print("extract performances error" + repr(error))
+                error_list = [k for k in schema.schema()['properties'].keys()]
+                performance_rhp_2_res = {
+                    key: (performance_rhp_2_res[key] if performance_rhp_2_res.get(key) is not None else "ERROR") for key in error_list
+                }
+
+            return performance_rhp_2_res
+    
+    def __adjust_performance_table(self, table, word_to_adjust):
+        """Adjusts the table by filling the row names where empty
+
+        Args:
+            table (pd.DataFrame): table to adjust
+            word_to_adjust (str): word to adjust in the dataframe cell
+
+        Returns:
+            pd.DataFrame: Adjsuted dataframe
+        """
+        word_mask = table.iloc[:, 0].str.contains(word_to_adjust, case=False, na=False)
+        stress_index = word_mask.index[word_mask].tolist()
+        for i in stress_index:
+            # If the row is empty, fill it with the word to adjust
+            if table.iloc[i-1, 0] == '':
+                table.iloc[i-1, 0] = word_to_adjust
+    
+        return table
+    
 
 if __name__ == "__main__":
     # testing

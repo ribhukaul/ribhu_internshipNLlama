@@ -29,14 +29,32 @@ performancerhp = """Considerando la seguente tabella,estrai il rendimento percen
             TABELLA:
                 {context}?"""
 
-performancemorte = """Considerando la seguente tabella fornita,
-        -dopo o nella la sezione scenario di morte o decesso di evento assicurato
-        estrai i possibili rimborsi ai beneficiari al netto dei costi
-        -se trovi 3 valori, ritorna solo il primo e l'ultimo
-        -ritorna sempre 2 valori, non di più non di meno
+performance_rhp_2 = """I primi valori in euro riguardano lo scenario di stress, poi sfavorevole moderato ed infine favorevole.
+                    I valori in riferimento a uno scenario sono espressi prima in euro e poi in percentuale(queste informazioni ti possono servire nel caso in cui
+                    le colonne di riferimento per capire di che scenario si tratti, sono formattate male).
+                    (L'informazione che ti interessa è nell'ultima colonna)
+                    ####
+                    X={year}
+                    ####
+                    document={context}"""
 
-            TABELLA:
-                {context}?"""
+performance_abs = """Considera che escludendo la riga dello scenario minimo. I primi valori in euro riguardano lo scenario di stress, poi sfavorevole
+                moderato ed infine favorevole. I valori in riferimento a uno scenario sono espressi prima in euro e poi in percentuale(queste informazioni ti possono servire nel caso in cui
+                le colonne di riferimento per capire di che scenario si tratti, sono formattate male).
+                ####
+                RHP={rhp}
+                ####
+                DOCUMENT={context}"""
+
+
+# performancemorte = """Considerando la seguente tabella fornita,
+#         -dopo o nella la sezione scenario di morte o decesso di evento assicurato
+#         estrai i possibili rimborsi ai beneficiari al netto dei costi
+#         -se trovi 3 valori, ritorna solo il primo e l'ultimo
+#         -ritorna sempre 2 valori, non di più non di meno
+
+#             TABELLA:
+#                 {context}?"""
 
 market = """"Dal documento seguente cita ciò che si dice sugli investitori al dettaglio cui si intende commercializzare il prodotto
         ---ritorna solamente la citazione niente introduzione

@@ -32,14 +32,28 @@ class TabellaScenariPerformance(BaseModel):
     scenario_morte_rhp: str = Field(NF, description="scenario morte o decesso, Valore in euro(€) a RHP anni scenario moderato")
 
 class ScenariPerformanceAbsoluteEuro(BaseModel):
-    stress_amount: str = Field(NF, description="Ammontare in € o '-' 1 anno scenario di stress")
-    sfavorevole_amount: str = Field(NF, description="Ammontare in € o '-'  a 1 anno scenario sfavorevole ")
-    moderato_amount: str = Field(NF, description="Ammontare in € o '-'  1 anno scenario moderato")
-    favorable_amount: str = Field(NF, description="Ammontare in € o '-'  a 1 anno scenario favorevole")
-    stress_amount_rhp: str = Field(NF, description="Ammontare in € a RHP anni scenario di stress")
-    sfavorevole_amount_rhp: str = Field(NF, description="Ammontare in € a RHP anni scenario sfavorevole")
-    moderato_amount_rhp: str = Field(NF, description="Ammontare in € a RHP anni scenario moderato")
-    favorable_amount_rhp: str = Field(NF, description="Ammontare in € a RHP anni scenario favorevole")
+
+    stress_amount: str = Field(NF, description="Ammontare in € o '-' 1 anno(prima colonna) scenario di stress")
+    sfavorevole_amount: str = Field(NF, description="Ammontare in € o '-'  a 1 anno(prima colonna) scenario sfavorevole ")
+    moderato_amount: str = Field(NF, description="Ammontare in € o '-'  1 anno(prima colonna) scenario moderato")
+    favorable_amount: str = Field(NF, description="Ammontare in € o '-'  a 1 anno(prima colonna) scenario favorevole")
+    stress_amount_rhp: str = Field(NF, description="Ammontare in € a RHP anni(ultima colonna) scenario di stress")
+    sfavorevole_amount_rhp: str = Field(NF, description="Ammontare in € a RHP anni(ultima colonna) scenario sfavorevole")
+    moderato_amount_rhp: str = Field(NF, description="Ammontare in € a RHP anni(ultima colonna) scenario moderato")
+    favorable_amount_rhp: str = Field(NF, description="Ammontare in € a RHP anni(ultima colonna) scenario favorevole")
+
+
+class ScenariPerformanceRHP2(BaseModel):
+
+    stress_amount_x: str = Field(NF, description="Ammontare in € a X anni(ultima colonna) scenario di stress")
+    sfavorevole_amount_x: str = Field(NF, description="Ammontare in € a X anni(ultima colonna) scenario sfavorevole")
+    moderato_amount_x: str = Field(NF, description="Ammontare in € a X anni(ultima colonna) scenario moderato")
+    favorable_amount_x: str = Field(NF, description="Ammontare in € a X anni(ultima colonna) scenario favorevole")
+    stress_return_x: str = Field(NF, description="Rendimento percetuale(%) a X anni scenario di stress")
+    sfavorevole_return_x: str = Field(NF, description="Rendimento percentuale(%) a X anni scenario sfavorevole")
+    moderato_return_x: str = Field(NF, description="Rendimento percentuale(%) a X anni scenario moderato")
+    favorable_return_x: str = Field(NF, description="Rendimento percentuale(%) a X anni scenario favorevole")
+    scenario_morte_x: str = Field(NF, description="scenario morte o decesso, Valore in euro(€) a X anni scenario moderato")
 
 
 class TabellaRiy(BaseModel):
