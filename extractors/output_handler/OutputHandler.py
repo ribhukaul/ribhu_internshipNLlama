@@ -1,4 +1,4 @@
-from .configs.waminsurance import gkid, kid, kidcredem
+from .configs.waminsurance import gkidgovernance, kidcredem, kidmodule, kidgovernance
 from .configs.wamderivati import complexity, bnp
 from .configs.wamasset import kidasset
 from .configs.wambond import bloombergss

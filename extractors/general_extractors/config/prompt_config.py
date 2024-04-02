@@ -20,7 +20,7 @@ from extractors.general_extractors.custom_extractors.certificates.certificates_c
 #KID
 from extractors.configs.extraction_config.tags.kid_tags import (
     InformazioniBase, TabellaScenariPerformance, TabellaRiy,TabellaRiyRHP2, TabellaCostiIngresso, TabellaCostiGestione, PerformanceScenarios, TableRiy,
-    ScenariPerformanceAbsoluteEuro)
+    ScenariPerformanceAbsoluteEuro, ScenariPerformanceRHP2)
 #GKID
 from extractors.configs.extraction_config.tags.gkid_tags import (
     InformazioniBaseGkid, TabellaRiyPercGkid, TabellaRiyEurGkid, TabellaCostiIngressoGkid, TabellaCostiGestioneGkid)
@@ -45,9 +45,6 @@ prompts = {
             - è presente nella prima parte della prima pagina il disclaimer: 'State per acquistare un prodotto che non è semplice e può essere di difficile comprensione"?
             DOCUMENTO:
             {context}""",
-        'is_product_complex': """Nel documento seguente è presente il disclaimer: 'State per acquistare un prodotto che non è semplice e può essere di difficile comprensione'?
-            DOCUMENTO:{context}""",
-
         "performance1y": """Considerando la seguente tabella,estrai qual'è il rendimento percentuale dei seguenti scenari:
             - STRESS
             - SFAVOREVOLE
@@ -311,6 +308,7 @@ table_schemas = {
         "is_product_complex": IsDisclaimerThere,
         "performance": TabellaScenariPerformance,
         "performance_abs": ScenariPerformanceAbsoluteEuro,
+        'performance_rhp_2': ScenariPerformanceRHP2,
         "performance_credem": TabellaScenariPerformanceCredem,
         "riy": TabellaRiy,
         "riy_rhp2": TabellaRiyRHP2,
