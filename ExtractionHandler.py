@@ -4,14 +4,7 @@ import threading
 import json
 
 from AWSInteraction.S3Handler import S3ExtractionHandler
-from extractors.custom_extractors.waminsurance.kid_governance import WamInsuranceKidGovernanceExtractor
-from extractors.custom_extractors.waminsurance.kid_module import WamInsuranceKidModuleExtractor
-from extractors.custom_extractors.waminsurance.gkid_goverannce import WamInsuranceGKidExtractor
-from extractors.custom_extractors.waminsurance.kid_credem import WamInsuranceKidCredemExtractor
-from extractors.custom_extractors.wamasset.fullkid import WamAssetKidExtractor
-
-from extractors.custom_extractors.wamderivati.complexity import WamDerivatiComplexity
-from extractors.custom_extractors.wambond.bloombergss import WamBondBloombergSS
+from extractors.custom_extractors.custom_extractos import custom_extractors
 
 # TODO: 
 # - documentare
@@ -76,35 +69,11 @@ class ExtractionHandler:
         json: extracted data in sjon format
     """
 
-    # Switch case for custom extraction based on: -tenant -extraction type
-    custom_extractors = {
-        'waminsurance': {
-            'kidgovernance': WamInsuranceKidGovernanceExtractor,
-            'kidmodule': WamInsuranceKidModuleExtractor,
-            'gkidgovernance': WamInsuranceGKidExtractor,
-            'kidcredem': WamInsuranceKidCredemExtractor
-            },
-        'wamderivati': {
-            'complexity': WamDerivatiComplexity,
-            'productionderivatives':''
-            },
-        'wamfondi': {
-            'peergroup': ''
-        },
-        'wambond': {
-            'bloombergss': WamBondBloombergSS
-        },
-        'wamasset':{
-            'kidasset': WamAssetKidExtractor
-        },
-        'sim':{}
-    }
-
     def __init__(self, request_context) -> None:
         self.request_context = request_context
         self.tenant = request_context.payload['TENANT']
         self.extractor_type = request_context.payload['extractor_type']
-        self.extactor = self.custom_extractors[self.tenant][self.extractor_type]
+        self.extactor = custom_extractors[self.tenant][self.extractor_type]
         self.extractions = {}
         self.local_saved_files = {} 
 
