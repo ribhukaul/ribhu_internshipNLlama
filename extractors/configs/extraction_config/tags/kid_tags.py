@@ -5,6 +5,7 @@ This file contains the tags used to extract the data from the KID and GKID docum
 from typing import List
 
 from pydantic import BaseModel, Field
+from pydantic.fields import Optional
 
 NF = "not found"
 NA = "N/A"
