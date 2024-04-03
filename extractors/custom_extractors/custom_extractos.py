@@ -1,6 +1,6 @@
 from extractors.custom_extractors.waminsurance.kid_governance import WamInsuranceKidGovernanceExtractor
 from extractors.custom_extractors.waminsurance.kid_module import WamInsuranceKidModuleExtractor
-from extractors.custom_extractors.waminsurance.gkid_goverannce import WamInsuranceGKidExtractor
+from extractors.custom_extractors.waminsurance.gkid_goverannce import WamInsuranceGKidGovernanceExtractor
 from extractors.custom_extractors.waminsurance.kid_credem import WamInsuranceKidCredemExtractor
 from extractors.custom_extractors.wamasset.fullkid import WamAssetKidExtractor
 
@@ -11,8 +11,9 @@ from extractors.custom_extractors.wambond.bloombergss import WamBondBloombergSS
 custom_extractors = {
         'waminsurance': {
             'kidgovernance': WamInsuranceKidGovernanceExtractor,
+            'gkidgovernance': WamInsuranceGKidGovernanceExtractor,
             'kidmodule':  WamInsuranceKidModuleExtractor,
-            'gkidgovernance': WamInsuranceGKidExtractor,
+            
             'kidcredem': WamInsuranceKidCredemExtractor
             },
         'wamderivati': {

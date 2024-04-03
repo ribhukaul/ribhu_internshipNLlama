@@ -4,7 +4,7 @@ from extractors.models import Models
 from extractors.general_extractors.custom_extractors.kid.gkid_extractor import GKidExtractor
 
 
-class WamInsuranceGKidExtractor(GKidExtractor):
+class WamInsuranceGKidGovernanceExtractor(GKidExtractor):
 
     def __init__(self, doc_path) -> None:
         self.doc_path = doc_path
@@ -22,9 +22,13 @@ class WamInsuranceGKidExtractor(GKidExtractor):
                 "tables": {"function": self.get_tables},
                 "basic_information": {"function": self.extract_general_data},
                 "market": {"function": self.extract_market, "args": {"market_type": "market_gkid"}},
+                "is_product_complex": {"function": self.is_product_complex},
             }
             results = self.threader(functions_parameters)
-            tables, basic_information, market = results["tables"], results["basic_information"], results["market"]
+            tables = results["tables"]
+            basic_information = results["basic_information"]
+            market = results["market"]
+            is_product_complex = results["is_product_complex"]
            
 
         except Exception as error:
@@ -48,13 +52,16 @@ class WamInsuranceGKidExtractor(GKidExtractor):
             api_costs = self._process_costs()
 
             # raccordo
-            complete = self.create_output("waminsurance", "gkid",
+            complete = self.create_output(
+                "waminsurance", 
+                "gkidgovernance",
                 {
                     "file_name": filename,
                     **dict(basic_information),
                     **dict(riy),
                     **dict(costs),
                     **dict(market),
+                    **dict(is_product_complex),
                     "api_costs": api_costs,
                 },
             )

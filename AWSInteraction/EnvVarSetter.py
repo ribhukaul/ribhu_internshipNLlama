@@ -96,9 +96,3 @@ class EnvVarSetter():
         else:
             print(f"Variable group {variable_group} not found in the config file.")
 
-
-# if __name__ == "__main__":
-#     envVarSetter = EnvVarSetter()
-#     envVarSetter.set_locally_saved_env_vars()
-#     pass
-
