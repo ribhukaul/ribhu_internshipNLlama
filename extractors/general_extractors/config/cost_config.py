@@ -15,7 +15,7 @@ cost_per_token = {
         "gpt-3.5-turbo-16k": 0.0000014,
         "gpt-3.5-turbo": 0.0000019,
     },
-    "azure": 0.01,
+    "azure": 0.016,
 }
 available_costs = [
     "gpt-4-turbo",
