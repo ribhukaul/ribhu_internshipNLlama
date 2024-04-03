@@ -24,13 +24,13 @@ class WamInsuranceKidModuleExtractor(KidExtractor):
             functions_parameters = {
                 "tables": {"function":self.get_tables}, 
                 "basic_information": {"function":self.extract_general_data},
-                "market": {"function":self.extract_market}
+                "target_market": {"function":self.extract_market}
                 }
             results = self.threader(functions_parameters)
 
             tables = results["tables"]
             basic_information = results["basic_information"]
-            market = results["market"]
+            target_market = results["target_market"]
 
         except Exception as error:
             print("first stage error" + repr(error))
@@ -61,7 +61,7 @@ class WamInsuranceKidModuleExtractor(KidExtractor):
 
             complete = self.create_output(
                 "waminsurance",
-                "kid",
+                "kidmodule",
                 {
                     "file_name": filename,
                     **dict(basic_information),
@@ -69,7 +69,7 @@ class WamInsuranceKidModuleExtractor(KidExtractor):
                     **dict(riy),
                     **dict(exit_entry_costs),
                     **dict(management_costs),
-                    **dict(market),
+                    **dict(target_market),
                     "api_costs": api_costs,
                 }
             )

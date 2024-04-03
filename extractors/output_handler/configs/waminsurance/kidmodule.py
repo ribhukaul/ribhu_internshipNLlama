@@ -173,6 +173,7 @@ kid = {
             "decimals_of": 2,
             "range_of": PERCENT_RANGE        
             },
+        # COSTS AND COMMISSIONS
         "costi_ingresso": {
             "field_name": "cod_entry_costs_perc",
             "renaming": "Costi ingresso",
@@ -246,8 +247,9 @@ kid = {
         },
         "section3": {
             "name": "Costi e Commissioni",
-            "list": ["cod_costi_ingresso", "cod_costi_uscita", "cod_commissioni_di_gestione", "cod_costi_di_transazione", "cod_commissioni_di_performance"]
-        },
+            "list": ["cod_entry_costs_perc", "cod_exit_costs_perc", "cod_management_costs_perc", "cod_transaction_costs_perc",
+                    "cod_performance_costs_perc"]
+                },
         "section4": {
             "name": "Target Market",
             "list": ["cod_target_market"]

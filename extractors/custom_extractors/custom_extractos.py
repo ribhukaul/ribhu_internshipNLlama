@@ -13,8 +13,7 @@ custom_extractors = {
             'kidgovernance': WamInsuranceKidGovernanceExtractor,
             'gkidgovernance': WamInsuranceGKidGovernanceExtractor,
             'kidcredem': WamInsuranceKidCredemExtractor,
-            
-            'kidcredem': WamInsuranceKidCredemExtractor
+            'kidmodule':  WamInsuranceKidModuleExtractor            
             },
         'wamderivati': {
             'complexity': WamDerivatiComplexity,
