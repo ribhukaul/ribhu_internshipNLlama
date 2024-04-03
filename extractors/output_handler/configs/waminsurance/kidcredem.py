@@ -81,7 +81,7 @@ kidcredem = {
             "range_of": PERCENT_RANGE        
             },
         # REDUCTION IN YIELD
-        "incidenza_costo_1": {
+        "incidenza_costo_perc_1year": {
             "field_name": "cod_riy_perc_1y",
             "renaming": "RIY 1Y %",
             "allow_null": TRUE,
@@ -90,7 +90,7 @@ kidcredem = {
             "decimals_of": 2,
             "range_of": PERCENT_RANGE        
             },
-        "incidenza_costo_rhp": {
+        "incidenza_costo_perc_rhp": {
             "field_name": "cod_riy_perc_rhp",
             "renaming": "RIY RHP %",
             "allow_null": FALSE,

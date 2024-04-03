@@ -19,7 +19,7 @@ from extractors.general_extractors.custom_extractors.certificates.certificates_c
 
 #KID
 from extractors.configs.extraction_config.tags.kid_tags import (
-    InformazioniBase, TabellaScenariPerformance, TabellaRiy,TabellaRiyRHP2, TabellaCostiIngresso, TabellaCostiGestione, PerformanceScenarios, TableRiy,
+    InformazioniBase, TabellaScenariPerformance, TabellaRiy, TabellaRiyCredem, TabellaRiyRHP2, TabellaCostiIngresso, TabellaCostiGestione, PerformanceScenarios, TableRiy,
     ScenariPerformanceAbsoluteEuro, ScenariPerformanceRHP2)
 #GKID
 from extractors.configs.extraction_config.tags.gkid_tags import (
@@ -88,6 +88,11 @@ prompts = {
                 ####
                 DOCUMENT={}""",
         "riy": """La prima cifra (sia per i costi totali che per incidenza annuale dei costi) riguarda 1 anno e poi RHP anni.
+                ###
+                RHP={}
+                ###
+                DOCUMENT={}""",
+        "riy_credem": """La prima cifra (sia per i costi totali che per incidenza annuale dei costi) riguarda 1 anno e poi RHP anni.
                 ###
                 RHP={}
                 ###
@@ -311,6 +316,7 @@ table_schemas = {
         'performance_rhp_2': ScenariPerformanceRHP2,
         "performance_credem": TabellaScenariPerformanceCredem,
         "riy": TabellaRiy,
+        "riy_credem": TabellaRiyCredem,
         "riy_rhp2": TabellaRiyRHP2,
         "costi_ingresso": TabellaCostiIngresso,
         "costi_gestione": TabellaCostiGestione,
