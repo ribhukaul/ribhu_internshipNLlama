@@ -38,7 +38,7 @@ class WamInsuranceKidModuleExtractor(KidExtractor):
         # SECOND STAGE: extract RIY, costs, commissions and performances
         try:
             functions_parameters = {
-                "riy": {"function":self.extract_riy}, 
+                "riy": {"function":self.extract_riy_small}, 
                 "costs": {"function":self.extract_entryexit_costs, "args":{"table":tables["costi_ingresso"]}},
                 "management_costs": {"function":self.extract_management_costs, "args": {"table":tables["costi_gestione"]}},
                 "performance": {"function":self.extract_performances, "args":{"table":tables["performance"]}}

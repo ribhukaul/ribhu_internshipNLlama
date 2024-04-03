@@ -70,39 +70,7 @@ class WamInsuranceKidCredemExtractor(KidExtractor):
 
         return performance
     
-    def extract_riy(self):
-        """extracts riy from the document
 
-        Returns:
-            dict(): riy extracted
-        """
-        try:
-            rhp = int(self.rhp)
-            
-            # Set starting page & select desired page
-            strat_page = 0 if len(self.text) < 3 else 1
-            keywords = word_representation['it']['riy']
-            reference_text = self.text[strat_page:]
-            page = select_desired_page(reference_text, keywords)
-            page = reference_text[int(page)]
-
-            # Set prompt and extract
-            schema = table_schemas['it']['riy_credem']
-            prompt = prompts['it']['riy_credem']
-            total_prompt = prompt.format(rhp, page.page_content)
-            extraction_riy = Models.tag(total_prompt, schema, self.file_id)         
-
-            # Clean response
-            extraction_riy = clean_response_regex("riy", self.language, extraction_riy)
-            
-        except Exception as error:
-            print("extract riy error" + repr(error))
-            error_list = [k for k in schema.schema()['properties'].keys()]
-            performance = {
-                key: (performance[key] if performance.get(key) is not None else "ERROR") for key in error_list
-            }
-    
-        return extraction_riy
     def process(self):
         """main processor in different phases, first phases extracts the tables and general information,
         and target market, second phase extracts the rest of the fields.
@@ -128,7 +96,7 @@ class WamInsuranceKidCredemExtractor(KidExtractor):
         # SECOND STAGE: extract RIY, costs, commissions and performances
         try:
             functions_parameters = {
-                "riy": {"function":self.extract_riy}, 
+                "riy": {"function":self.extract_riy_small}, 
                 "performance": {"function":self.extract_performances, "args":{"table":tables["performance"]}}
                 }
             results = self.threader(functions_parameters)

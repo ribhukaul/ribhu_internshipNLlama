@@ -72,8 +72,8 @@ class TabellaRiy(BaseModel):
     costi_totali_eur_rhp: float = Field(
         NF, description="Costi totali dopo RHP anni in EURO €"
     )
-    
-class TabellaRiyCredem(BaseModel):
+
+class TabellaRiySmall(BaseModel):
     # 1 ANNO
     incidenza_costo_perc_1year: Optional[str] = Field(
         NF, description="Impatto sul rendimento annuale dei costi in caso di uscida dopo 1 anno in PERCENTUALE%"
