@@ -104,8 +104,9 @@ class KidExtractor(Extractor):
         try:
             #extraction = llm_extraction_and_tag(self.text, self.language, 'is_product_complex', self.file_id, specific_page=0)
             extraction = Models.tag(self.text[0].page_content[:1800], IsDisclaimerThere, self.file_id)
+            extraction = {'is_product_complex':  extraction.is_disclaimer_there}
             
-            return dict(extraction)
+            return extraction
         except Exception as error:
             print("is_product_complex error" + repr(error))
             return dict([("ERROR", "ERROR")])
