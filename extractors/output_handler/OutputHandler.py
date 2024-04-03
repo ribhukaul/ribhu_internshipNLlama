@@ -8,8 +8,12 @@ import datetime
 
 names_of_fields_to_clean_dot=["SMOR RHP (€)", "SMOR 1Y (€)", "RIY 1Y EUR MIN", "RIY 1Y EUR MAX",
                               "RIY RHP/2 EUR MIN", "RIY RHP/2 EUR MAX", "RIY RHP EUR MIN", "RIY RHP EUR MAX"]
-
-# todo possibile eliminazione data array
+code_to_clean_dot = ['cod_stress_scenario_abs_1y', 'cod_stress_scenario_abs_rhp','cod_stress_scenario_abs_rhp2',
+                     'cod_unfavorable_scenario_abs_1y', 'cod_unfavorable_scenario_abs_rhp', 'cod_unfavorable_scenario_abs_rhp2',
+                     'cod_moderate_scenario_abs_1y', 'cod_moderate_scenario_abs_rhp', 'cod_moderate_scenario_abs_rhp2',
+                     'cod_favorable_scenario_abs_1y', 'cod_favorable_scenario_abs_rhp', 'cod_favorable_scenario_abs_rhp2',
+                     'cod_death_scenario_abs_1y', 'cod_death_scenario_abs_rhp', 'cod_death_scenario_abs_rhp2',
+                     'cod_riy_abs_1y', 'cod_riy_abs_rhp', 'cod_riy_abs_rhp2']
 # controlla meglio filename
 # change apicostsss in all extractors
 
@@ -17,6 +21,7 @@ names_of_fields_to_clean_dot=["SMOR RHP (€)", "SMOR 1Y (€)", "RIY 1Y EUR MIN
 class Field:
     def __init__(self, field_config, field_result):
         self.name = field_config.get("renaming", "Unknown Field")
+        self.field_code = field_config.get("field_name", "Unknown Field")
         self.value = field_result
         self.metric = field_config.get("model_of", "N/A")
         self.data_type = field_config.get("type_of", "N/A")
@@ -28,7 +33,8 @@ class Field:
 
     def check_validity(self):
         """clean the value"""
-        if self.name in names_of_fields_to_clean_dot:
+        # Temporary double check
+        if self.name in names_of_fields_to_clean_dot or self.field_code in code_to_clean_dot:
             self.value = str(self.value).replace(".", "")
         if self.data_type == "Float":
             if isinstance(self.value, str):
