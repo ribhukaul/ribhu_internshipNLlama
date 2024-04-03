@@ -197,6 +197,30 @@ class KidExtractor(Extractor):
     
         return extraction_riy
     
+    def extract_riy_small(self):
+        """extracts riy from the document
+
+        Returns:
+            dict(): riy extracted
+        """
+        try:
+            rhp = int(self.rhp)
+            
+            # Set starting page & select desired page
+            strat_page = 0 if len(self.text) < 3 else 1
+            keywords = word_representation['it']['riy']
+            reference_text = self.text[strat_page:]
+            page = select_desired_page(reference_text, keywords)
+            page = reference_text[int(page)]
+
+            # Set prompt and extract
+            schema = table_schemas['it']['riy_small']
+            prompt = prompts['it']['riy_small']
+            total_prompt = prompt.format(rhp, page.page_content)
+            extraction_riy = Models.tag(total_prompt, schema, self.file_id)         
+
+            # Clean response
+            extraction_riy = clean_response_regex("riy", self.language, extraction_riy)
 
     #REVIEW: NEED TO UPLOAD TABLE AS DF
     def extract_entryexit_costs(self, table):
