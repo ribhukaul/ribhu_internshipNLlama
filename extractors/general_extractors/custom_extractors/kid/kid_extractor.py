@@ -221,7 +221,15 @@ class KidExtractor(Extractor):
 
             # Clean response
             extraction_riy = clean_response_regex("riy", self.language, extraction_riy)
-
+            
+        except Exception as error:
+            print("extract riy error" + repr(error))
+            error_list = [k for k in schema.schema()['properties'].keys()]
+            performance = {
+                key: (performance[key] if performance.get(key) is not None else "ERROR") for key in error_list
+            }
+    
+        return extraction_riy
     #REVIEW: NEED TO UPLOAD TABLE AS DF
     def extract_entryexit_costs(self, table):
 
