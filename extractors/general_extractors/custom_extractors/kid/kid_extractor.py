@@ -248,6 +248,29 @@ class KidExtractor(Extractor):
             extraction = {key: (extraction[key] if extraction.get(key) is not None else "ERROR") for key in error_list}
 
         return extraction
+    
+    # redefined extract_entryexit_costs in order to extract the first column of costi di ingresso
+    def extract_middle_costs(self, table):
+        try:
+            from extractors.general_extractors.utils import upload_df_as_excel
+            table = upload_df_as_excel(table)
+            extraction = general_table_inspection(
+                table,
+                "costi_ingresso",
+                self.file_id,
+                language=self.language,
+                add_text=(
+                    "Estrai il valore dei diritti fissi e dei costi una tantum di entrata e di uscita"
+                ),
+            )
+            #xtraction = clean_response_regex("costi_ingresso", self.language, extraction)
+        except Exception as error:
+            print("extract middle costs error" + repr(error))
+            # Initialize a default error structure for the extraction
+            extraction = {key: "ERROR" for key in ["costi_ingresso", "costi_uscita", "costi_ingresso_uscita"]}
+
+        return extraction
+
 
     # REVIEW: NEED TO UPLOAD TABLE AS DF
     def extract_management_costs(self, table):
@@ -268,6 +291,52 @@ class KidExtractor(Extractor):
             extraction = {key: (extraction[key] if extraction.get(key) is not None else "ERROR") for key in error_list}
 
         return extraction
+    
+    #redefined extract_management_cost in order to extract the first column of costi di gestione
+    def extract_management_costs(self, table):
+
+        try:
+            extraction = dict()
+            extraction = general_table_inspection(
+                table,
+                "costi_gestione",
+                self.file_id,
+                language=self.language,
+                add_text="estrai il valore % dopo {} anni".format(self.rhp),
+            )
+            extraction = clean_response_regex("costi_gestione", self.language, extraction)
+        except Exception as error:
+            print("extract management costs error" + repr(error))
+            error_list = ["commissione_gestione", "commissione_transazione", "commissione_performance"]
+            extraction = {key: (extraction[key] if extraction.get(key) is not None else "ERROR") for key in error_list}
+
+        return extraction
+    
+
+    def extract_transaction_costs(self, table):
+
+        try:
+            from extractors.general_extractors.utils import upload_df_as_excel
+            table = upload_df_as_excel(table)
+            extraction = dict()
+            extraction = general_table_inspection(
+                table,
+                "costi_gestione_%",
+                self.file_id,
+                language=self.language,
+                add_text="estrai il valore % dei costi correnti e dei costi di transazione",
+            )
+            #extraction = clean_response_regex("costi_gestione", self.language, extraction)
+        except Exception as error:
+            print("extract management costs error" + repr(error))
+            error_list = ["commissione_gestione", "commissione_transazione", "commissione_performance"]
+            extraction = {key: (extraction[key] if extraction.get(key) is not None else "ERROR") for key in error_list}
+
+        return extraction
+
+
+
+
 
     def extract_performances(self, table):
         """extracts performances from scenarios in the document

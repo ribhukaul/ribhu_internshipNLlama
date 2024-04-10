@@ -113,19 +113,34 @@ class TabellaRiyRHP2(BaseModel):
 
 class TabellaCostiIngresso(BaseModel):
     costi_ingresso: str = Field(
-        NF, description="Costi di ingresso in PERCENTUALE %(nella colonna più a destra, può essere n/a)"
+        NF, description="Costo una tantum di ingresso (nella colonna più a destra, può essere n/a)"
+    )
+    costingresso_dirittifissi: str =Field(
+        NF, description="Diritti fissi d'ingresso valore massimo in Euro"
     )
     costi_uscita: str = Field(
-        NF, description="Costi di uscita in PERCENTUALE %(nella colonna più a destra, può essere n/a)"
+        NF, description="Costo una tantum di uscita (nella colonna più a destra, può essere n/a)"
+    )
+    costiuscita_dirittifissi: str = Field(
+        NF, description="Diritti fissi d'uscita valore massimo in Euro"
+
     )
 
 
 class TabellaCostiGestione(BaseModel):
-    commissione_gestione: str = Field(NF, description="Commissioni di gestione in PERCENTUALE % (colonna di destra)")
-    commissione_transazione: str = Field(NF, description="Costi di transazione in PERCENTUALE % (colonna di destra)")
+    commissione_gestione: str = Field(NF, description="Commissioni di gestione in PERCENTUALE % (colonna a destra)")
+    commissione_transazione: str = Field(NF, description="Costi di transazione in PERCENTUALE % (colonna a destra)")
     commissione_performance: str = Field(
         NF, description="Commissioni di performance IN PERCENTUALE % (colonna a destra)"
     )
+
+class TabellaCostiGestionepercentuale(BaseModel):
+    commissione_gestione: str = Field(NF, description="Commissioni di gestione in PERCENTUALE % (prima colonna)")
+    commissione_transazione: str = Field(NF, description="Costi di transazione in PERCENTUALE % (prima colonna)")
+    commissione_performance: str = Field(
+        NF, description="Commissioni di performance  (prima colonna)"
+    )
+
 
 
 ########
