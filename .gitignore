@@ -199,3 +199,4 @@ pyrightconfig.json
 pyproject.toml
 
 tmp/*
+data_test/Fees_Fondi_GenAi_new.xlsm
