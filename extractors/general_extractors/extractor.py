@@ -82,6 +82,8 @@ class Extractor:
             keywords = word_representation[self.language][type]
             text = [page if i not in black_list_pages else "" for i, page in enumerate(self.text)]
             page = select_desired_page(text, keywords)
+            # page =2
+            
 
             # Get all the tables from the page
             if self.di_tables_pages is not None and page not in self.di_tables_pages.keys():

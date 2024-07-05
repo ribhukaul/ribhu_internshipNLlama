@@ -48,6 +48,98 @@ class KidExtractor(Extractor):
             ]
         )
 
+    def extract_commissioni_gestione1(self, gestione_schema="costi_gestione1"): # Ribhu wrote this method
+        """
+        Extract management fee data (commissioni di gestione) from the document.
+
+        Args:
+            gestione_schema (str): The key used to select the appropriate schema and prompts for extraction.
+
+        Returns:
+            dict: A dictionary containing the extracted data related to management fees.
+        """
+        extraction = dict()
+        try:
+            # Extract data using the configured language model and schema
+            extraction = llm_extraction_and_tag(self.text, self.language, gestione_schema, self.file_id)
+            
+            # Clean the response to ensure it adheres to expected formats
+            cleaned_extraction = clean_response_regex(gestione_schema, self.language, extraction)
+            
+            # Convert cleaned extraction to dictionary if not already
+            if not isinstance(cleaned_extraction, dict):
+                cleaned_extraction = dict(cleaned_extraction)
+            
+            return cleaned_extraction
+        except Exception as error:
+            print("Error extracting management fees: " + repr(error))
+            # Define a list of expected keys that could be error-prone
+            error_list = ["commissione_gestione", "commissione_transazione", "commissione_performance"]
+            extraction = {key: (cleaned_extraction[key] if cleaned_extraction.get(key) is not None else "ERROR") for key in error_list}
+            # Handle any additional default values or cleanup
+            return extraction
+        
+     
+
+    def extract_costi_ingresso_e_uscita(self, cost_table): # This method performs like the one given below but 
+        # rather works on a pandas df instead of a pdf, written by Ribhu
+        """
+         Extract entry & exit cost data (costi di ingresso e uscita) from a DataFrame.
+
+        Args:
+        cost_table (DataFrame): The DataFrame containing the cost data.
+
+        Returns:
+        dict: A dictionary containing the extracted data related to entry costs.
+        """
+        try:
+            # Assuming general_table_inspection is appropriately defined to handle DataFrame
+            extraction = general_table_inspection(
+                table=cost_table,
+                table_type='costo_entrata_e_uscita',  # Adjust the type as needed
+                file_id=self.file_id,
+                language=self.language
+            )
+            return extraction
+        except Exception as error:
+            print(f"Error extracting costs: {repr(error)}")
+            return {"Error": "Error extracting costs"}
+
+    
+    def extract_costi_ingresso_e_uscita1(self, ingresso_schema="costo_entrata_e_uscita"): # Ribhu wrote this method
+        """
+        Extract entry & exit cost data (costi di ingresso) from the document.
+
+        Args:
+            ingresso_schema (str): The key used to select the appropriate schema and prompts for extraction.
+
+        Returns:
+            dict: A dictionary containing the extracted data related to entry costs.
+        """
+        extraction = dict()
+        try:
+            # Extract data using the configured language model and schema
+            extraction = llm_extraction_and_tag(self.text, self.language, ingresso_schema, self.file_id)
+            
+            # Clean the response to ensure it adheres to expected formats
+            cleaned_extraction = clean_response_regex(ingresso_schema, self.language, extraction)
+            
+            # Convert cleaned extraction to dictionary if not already
+            if not isinstance(cleaned_extraction, dict):
+                cleaned_extraction = dict(cleaned_extraction)
+            
+            return cleaned_extraction
+        except Exception as error:
+            print(f"Error extracting {ingresso_schema}: " + repr(error))
+            # Define a list of expected keys that could be error-prone
+            error_list = ["costi_ingresso", "costi_uscita", "spese_correnti"]  # Adjust these keys based on your schema
+            extraction = {key: (cleaned_extraction.get(key, "ERROR")) for key in error_list}
+            # Handle any additional default values or cleanup
+            return extraction    
+
+
+
+
     def extract_general_data(self, general_info_schema="general_info"):
         """
         Extract general data from the document. Namely RHP and SRI.
@@ -249,7 +341,7 @@ class KidExtractor(Extractor):
 
         return extraction
     
-    # redefined extract_entryexit_costs in order to extract the first column of costi di ingresso
+    # redefined extract_entryexit_costs in order to extract the first column of costi di ingresso Simone
     def extract_middle_costs(self, table):
         try:
             from extractors.general_extractors.utils import upload_df_as_excel
@@ -313,7 +405,7 @@ class KidExtractor(Extractor):
         return extraction
     
 
-    def extract_transaction_costs(self, table):
+    def extract_transaction_costs(self, table): # Simone
 
         try:
             from extractors.general_extractors.utils import upload_df_as_excel

@@ -36,7 +36,7 @@ def analyze_general_documents(
 
     # create your `DocumentIntelligenceClient` instance and `AzureKeyCredential` variable
     document_analysis_client = DocumentIntelligenceClient(
-        endpoint=endpoint, credential=AzureKeyCredential(key), api_version=api_version
+        endpoint=endpoint, credential=AzureKeyCredential(key), api_version='2023-10-31-preview'
     )
     #document_analysis_client = DocumentAnalysisClient(endpoint, AzureKeyCredential(key), api_version=api_version)
     features_chosen = ["ocrHighResolution"]

@@ -20,7 +20,7 @@ from extractors.general_extractors.custom_extractors.certificates.certificates_c
 #KID
 from extractors.configs.extraction_config.tags.kid_tags import (
     InformazioniBase, TabellaScenariPerformance, TabellaRiy, TabellaRiySmall, TabellaRiyRHP2, TabellaCostiIngresso, TabellaCostiGestione, TabellaCostiGestionepercentuale, PerformanceScenarios, TableRiy,
-    ScenariPerformanceAbsoluteEuro, ScenariPerformanceRHP2)
+    ScenariPerformanceAbsoluteEuro, ScenariPerformanceRHP2, TabellaCostiIngressoEUscita, TabellaCostiGestioneModified)
 #GKID
 from extractors.configs.extraction_config.tags.gkid_tags import (
     InformazioniBaseGkid, TabellaRiyPercGkid, TabellaRiyEurGkid, TabellaCostiIngressoGkid, TabellaCostiGestioneGkid)
@@ -221,7 +221,27 @@ prompts = {
             Premio/I di Uscita
             DOCUMENTO:
             {context}
-            """,
+            """,               # Ribhu added this prompt
+            "costi_gestione1": """Dal documento seguente, estrai le seguenti informazioni sui:
+            - Commissioni di gestione o spese correnti
+            - Costi di transazione 
+            - Commissione di performance come descritta nel documento, compresi i criteri di richiesta, il calcolo della commissione in base alla performance rispetto al benchmark e la percentuale della commissione
+            DOCUMENTO:
+            {context}
+            """,                 # Ribhu added this prompt, returns detailed response
+            #  "costo_entrata_e_uscita": """Dal documento seguente, estrai le seguenti informazioni sui:
+            #  - Commissioni di ingresso/costi di ingresso: dettagli su eventuali commissioni o costi fissi applicati al momento della sottoscrizione di un servizio o fondo.
+            #  -Commissioni di uscita (Costi di uscita): dettagli riguardanti eventuali spese o commissioni applicabili in caso di ritiro da un servizio o fondo
+            #  -estrarre le spese correnti
+            #  DOCUMENTO:
+            #  {context}
+            #  """,                 # Ribhu added this prompt, gives back fair response
+             "costo_entrata_e_uscita": """Dal documento seguente, estrai le seguenti informazioni sui:
+             -Si prega di estrarre le informazioni "Tariffe di iscrizione o Costi di iscrizione che potrebbero trovarsi nella seconda colonna
+             -Si prega di estrarre le informazioni "Commissioni di uscita o Costi di uscita o Commissioni di rimborso" che potrebbero trovarsi nella seconda colonna 
+             DOCUMENTO:
+             {context}
+             """,                         
     },
     "en": {
         "general_info": """From the following document, extract:
@@ -319,7 +339,9 @@ table_schemas = {
         "riy_small": TabellaRiySmall,
         "riy_rhp2": TabellaRiyRHP2,
         "costi_ingresso": TabellaCostiIngresso,
+        "costo_entrata_e_uscita": TabellaCostiIngressoEUscita,
         "costi_gestione": TabellaCostiGestione,
+        "costi_gestione1": TabellaCostiGestioneModified,
         "costi_gestione_%": TabellaCostiGestionepercentuale,
         "general_info_gkid": InformazioniBaseGkid,
         "riy%/-gkid": TabellaRiyPercGkid,
@@ -357,14 +379,23 @@ word_representation = {
         "performance": ["moderato", "sfavorevole", "favorevole", "stress", "possibile rimborso al"],
         "riy": ["costi totali", "riy"],
         "riy_perc_gkid": ["costi totali", "riy"],
-        "costi_ingresso": ["costi di ingresso", "costi di uscita"],
+
+        # "costi_ingresso" was changed a bit to include some more key words
+        "costi_ingresso": [ "costi di ingresso", "costi di uscita", "Costi una tantum di ingresso o di uscita", "senza penalità",
+            "costi di transazione", "investimenti a lungo termine", "volatilità della", "imposte", "risultati passati",
+            "spese", "spese una tantum ", "spese di rimborso", "spese di sottoscrizione", "composition of costs",
+            "entry costs", "exit cost", "transaction cost", "management fees", "the person advising on or selling you this product"],
+        
+        "spese": ["Spese prelevate dal Fondo nel corso dell'anno", "Spese correnti"],
+        "commissione_performance": ["Commissione di Performance"],
+
         "costi_gestione": [
             "commissioni di gestione",
             "costi di transazione",
             "commissioni di performance",
             "costi amministrativi",
         ],
-        "costi_ingresso_gkid": ["costi di ingresso", "costi di uscita"],
+        "costi_ingresso_gkid": ["costi di ingresso", "costi di uscita"], # This is what I need to use for extracting info
         "costi_gestione_gkid": [
             "commissioni di gestione",
             "costi di transazione",
@@ -396,6 +427,8 @@ word_representation = {
             "stress",
             "might get back",
         ],
+        "costi_ingresso": ["composition of costs", "entry costs", "exit cost"],
+
         "riy": ["total costs", "annual cost"],
     },
 }

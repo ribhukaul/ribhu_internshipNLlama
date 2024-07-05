@@ -80,6 +80,8 @@ def general_table_inspection(
     """
     try:
         schema = table_schemas[language][table_type]
+        from extractors.general_extractors.utils import upload_df_as_excel
+        table = upload_df_as_excel(table)
 
         # First normal extraction, then tagging
         tag_model = "gpt-4-turbo"

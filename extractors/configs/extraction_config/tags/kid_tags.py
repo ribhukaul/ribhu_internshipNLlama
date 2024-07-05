@@ -3,7 +3,6 @@ This file contains the tags used to extract the data from the KID and GKID docum
 """
 
 from typing import List
-
 from pydantic import BaseModel, Field
 from pydantic.fields import Optional
 
@@ -73,7 +72,7 @@ class TabellaRiy(BaseModel):
         NF, description="Costi totali dopo RHP anni in EURO €"
     )
 
-class TabellaRiySmall(BaseModel):
+class TabellaRiySmall(BaseModel):   
     # 1 ANNO
     incidenza_costo_perc_1year: Optional[str] = Field(
         NF, description="Impatto sul rendimento annuale dei costi in caso di uscida dopo 1 anno in PERCENTUALE%"
@@ -110,11 +109,11 @@ class TabellaRiyRHP2(BaseModel):
 
 
 
-
+# Simone
 class TabellaCostiIngresso(BaseModel):
-    costi_ingresso: str = Field(
-        NF, description="Costo una tantum di ingresso (nella colonna più a destra, può essere n/a)"
-    )
+    # costi_ingresso: str = Field(
+    #     NF, description="Costo una tantum di ingresso (nella colonna più a destra, può essere n/a)"
+    # )
     costingresso_dirittifissi: str =Field(
         NF, description="Diritti fissi d'ingresso valore massimo in Euro"
     )
@@ -126,20 +125,33 @@ class TabellaCostiIngresso(BaseModel):
 
     )
 
+class TabellaCostiIngressoEUscita(BaseModel): # Ribhu defined this new class
+    costi_ingresso: str = Field(
+        default=None,
+        description="Le commissioni di ingresso fisse sono previste nella misura massima"
+    )
+    costi_uscita: str = Field(
+        default=None,
+        description="Sono previste commissioni di uscita fisse nella misura massima"
+    )
+    
+
 
 class TabellaCostiGestione(BaseModel):
-    commissione_gestione: str = Field(NF, description="Commissioni di gestione in PERCENTUALE % (colonna a destra)")
+    commissione_gestione: str = Field(NF, description="Commissioni di gestione in PERCENTUALE % (colonna a destr)a")
     commissione_transazione: str = Field(NF, description="Costi di transazione in PERCENTUALE % (colonna a destra)")
-    commissione_performance: str = Field(
-        NF, description="Commissioni di performance IN PERCENTUALE % (colonna a destra)"
-    )
+    commissione_performance: str = Field(NF, description="Commissioni di performance IN PERCENTUALE % (colonna a destra)")
 
+class TabellaCostiGestioneModified(BaseModel):
+    commissione_gestione: str = Field(None, description="Commissioni di gestione registrate nel documento")
+    commissione_transazione: str = Field(None, description="Costi di transazione registrati nel documento")
+    commissione_performance: str = Field(None, description="commissione di prestazione ricodificata nel documento")
+   
+#Simone
 class TabellaCostiGestionepercentuale(BaseModel):
     commissione_gestione: str = Field(NF, description="Commissioni di gestione in PERCENTUALE % (prima colonna)")
     commissione_transazione: str = Field(NF, description="Costi di transazione in PERCENTUALE % (prima colonna)")
-    commissione_performance: str = Field(
-        NF, description="Commissioni di performance  (prima colonna)"
-    )
+    commissione_performance: str = Field(NF, description="Commissioni di performance  (prima colonna)")
 
 
 

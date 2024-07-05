@@ -47,8 +47,8 @@ def select_desired_table(tables, words_repr):
     # Search all the tables
     for i, table in enumerate(tables):
         for word in words_repr:
-            # print(word)
-            # print(table.apply(lambda col:col.str.count(word, flags=re.IGNORECASE)).sum().sum())
+            print(word)
+            print(table.apply(lambda col:col.str.count(word, flags=re.IGNORECASE)).sum().sum())
 
             counter[str(i)] += table.apply(lambda col: col.str.count(word, flags=re.IGNORECASE)).sum().sum()
 

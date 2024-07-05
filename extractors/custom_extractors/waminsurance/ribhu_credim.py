@@ -8,7 +8,7 @@ from extractors.general_extractors.custom_extractors.kid.kid_utils import clean_
 import pandas as pd
 import os
 
-class WamInsuranceKidCredemExtractor(KidExtractor):
+class WamInsuranceRibhuExtractor(KidExtractor):
 
     def __init__(self, doc_path) -> None:
         self.doc_path = doc_path
@@ -20,7 +20,7 @@ class WamInsuranceKidCredemExtractor(KidExtractor):
         """Table extractor, it extracts the table for 'Composizione dei costi' from the document asynchronously
 
         Returns:
-        dict([pandas.dataframe]): tables as dataframe, written by Ribhu 
+        dict([pandas.dataframe]): tables as dataframe
         """
         try:
             cost_composition_table, _ = self._extract_table("costi_ingresso")
@@ -104,9 +104,7 @@ class WamInsuranceKidCredemExtractor(KidExtractor):
         """
         Main processor to extract commission management and entry cost data from the document.
         Returns:
-        dict: A dictionary containing the filename and extracted data. This methos is preferable over other methods given 
-        below because it uses both extract_costi_ingresso_e_uscita and extract_costi_ingresso_e_uscita1 methods to extract 
-        data and has higher hit ratio. Written by Ribhu
+        dict: A dictionary containing the filename and extracted data.
         """
         
         try:
@@ -185,7 +183,7 @@ class WamInsuranceKidCredemExtractor(KidExtractor):
     
     def process3(self): # Defined by Ribhu
         """
-        Processor to extract commission management and entry cost data from the document.
+        Main processor to extract commission management and entry cost data from the document.
 
         Returns:
             dict: A dictionary containing the filename and extracted data.
